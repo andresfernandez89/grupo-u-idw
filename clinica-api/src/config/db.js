@@ -1,0 +1,30 @@
+import mysql from "mysql2/promise";
+
+export const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+});
+
+export async function testConexion() {
+  try {
+    const con = await pool.getConnection();
+    console.log("Conexión con base de datos OK");
+
+    const [resulst] = await con.query(
+      "SELECT NOW() AS hora_servidor, DATABASE() AS base_datos",
+    );
+    console.log("Datos de prueba");
+    console.table(resulst);
+
+    con.release();
+  } catch (error) {
+    console.log("Error al conectarse a la base de datos", error);
+    console.error({
+      codigo: error.code,
+      msg: error.message,
+    });
+    process.exit(1);
+  }
+}
