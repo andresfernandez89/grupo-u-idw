@@ -1,5 +1,12 @@
-import { Router } from 'express'
+import { Router } from "express";
+import { EspecialidadesController } from "../controllers/especialidades.js";
+import { validarActualizarEspecialidad } from "../validators/especialidades.js";
 
-const router = Router()
+const router = Router();
+const controller = new EspecialidadesController();
 
-export default router
+router.put("/:id", validarActualizarEspecialidad, (req, res) =>
+  controller.update(req, res),
+);
+
+export default router;
