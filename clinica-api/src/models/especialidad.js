@@ -8,4 +8,11 @@ export const EspecialidadModel = {
     );
     return rows[0] ?? null;
   },
+
+  async update(id, nombre) {
+    await pool.query(
+      "UPDATE especialidades SET nombre = ? WHERE id_especialidad = ? AND activo = 1",
+      [nombre, id],
+    );
+  },
 };
