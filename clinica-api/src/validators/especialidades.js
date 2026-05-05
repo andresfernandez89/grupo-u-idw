@@ -12,6 +12,10 @@ export const validarActualizarEspecialidad = [
     .isLength({ max: 120 })
     .withMessage("El nombre no puede superar 120 caracteres"),
 
+  body("activo")
+    .isIn([0, 1])
+    .withMessage("activo debe ser 0 o 1"),
+
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
