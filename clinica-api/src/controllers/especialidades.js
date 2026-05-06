@@ -15,4 +15,15 @@ export class EspecialidadesController {
       res.status(500).json({ message: err.message });
     }
   }
+
+  async browse(req, res) {
+        try {
+          const respuestas = await service.browse()
+          res.json(respuestas)
+    }
+    catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+   }
+
 }

@@ -7,4 +7,8 @@ export class EspecialidadesService {
     await EspecialidadModel.update(id, { nombre, activo })
     return EspecialidadModel.findById(id)
   }
+
+  async browse() {
+    return await EspecialidadModel.findEspecialidades()
+  }
 }
