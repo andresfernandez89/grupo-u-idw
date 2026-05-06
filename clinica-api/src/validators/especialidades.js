@@ -3,6 +3,7 @@ import { param, body, validationResult } from "express-validator";
 export const validarActualizarEspecialidad = [
   param("id")
     .isInt({ min: 1 })
+    .toInt()
     .withMessage("El id debe ser un entero positivo"),
 
   body("nombre")
