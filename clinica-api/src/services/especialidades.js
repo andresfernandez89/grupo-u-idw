@@ -11,4 +11,9 @@ export class EspecialidadesService {
   async browse() {
     return await EspecialidadModel.findEspecialidades()
   }
+
+  async readById(id){
+  return await EspecialidadModel.findById(id)
+  
+  }
 }

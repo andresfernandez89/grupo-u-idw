@@ -25,5 +25,21 @@ export class EspecialidadesController {
       res.status(500).json({ message: err.message });
     }
    }
+ async findById(req,res){
+  try{
+      const id = parseInt(req.params.id);
+      const especialidadEncontrada = await service.readById(id)
 
+      if(!especialidadEncontrada){
+        return res.status(404).json({message: 'No se encontro especialidad con el id solicitado'})
+        
+      } 
+      res.json(especialidadEncontrada)
+      
+
+
+  } catch(error){
+    res.status(500).json({message: err.message})
+  }
+ }
 }
