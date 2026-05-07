@@ -44,6 +44,27 @@ const EspecialidadModel = {
       [nombre, activo, id],
     );
   },
+
+  async delete(id) {
+    let connection;
+    try {
+      connection = await pool.getConnection();
+      await connection.beginTransaction();
+
+      const [result] = await connection.query(
+        "UPDATE especialidades SET activo = 0 WHERE id_especialidad = ? AND activo = 1",
+        [id],
+      );
+
+      await connection.commit();
+      return result.affectedRows;
+    } catch (error) {
+      if (connection) await connection.rollback();
+      throw error;
+    } finally {
+      if (connection) connection.release();
+    }
+  },
 };
 
 export default EspecialidadModel;
