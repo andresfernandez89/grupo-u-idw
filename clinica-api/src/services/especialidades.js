@@ -1,7 +1,7 @@
 import { EspecialidadModel } from "../models/especialidad.js";
 
 export class EspecialidadesService {
-  async createEspecialidad(nombre) {
+  async create(nombre) {
     const existing = await EspecialidadModel.findByNombre(nombre);
     if (existing) {
       throw new Error("El nombre de la especialidad ya está registrado");
@@ -14,6 +14,15 @@ export class EspecialidadesService {
     if (!existente) return null;
     await EspecialidadModel.update(id, { nombre, activo });
     return EspecialidadModel.findById(id);
+  }
+
+  async delete(id) {
+    const existing = await EspecialidadModel.findById(id);
+    if (!existing) {
+      return null;
+    }
+    const affectedRows = await EspecialidadModel.delete(id);
+    return affectedRows === 1;
   }
 }
 
