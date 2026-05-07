@@ -9,9 +9,7 @@ export class EspecialidadesController {
   async create(req, res) {
     try {
       const datos = especialidadesCreate(req.body);
-      const nuevaEspecialidad = await especialidadService.createEspecialidad(
-        datos.nombre,
-      );
+      const nuevaEspecialidad = await especialidadService.create(datos.nombre);
 
       return res.status(201).json({
         success: true,
@@ -43,6 +41,33 @@ export class EspecialidadesController {
       res.json(actualizada);
     } catch (err) {
       res.status(500).json({ message: err.message });
+    }
+  }
+
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+      const deleted = await especialidadService.delete(id);
+
+      if (deleted === null) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Especialidad no encontrada" });
+      }
+
+      if (!deleted) {
+        return res.status(500).json({
+          success: false,
+          message: "Error al eliminar la especialidad",
+        });
+      }
+
+      return res.status(204).send();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: error.message,
+      });
     }
   }
 }
