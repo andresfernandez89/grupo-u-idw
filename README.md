@@ -53,41 +53,48 @@ JWT_SECRET=una_clave_secreta
 ```
 clinica-api/
 ├── app.js                  # Punto de entrada: crea el servidor Express y registra las rutas
-├── .env.example            # Variables de entorno requeridas (plantilla sin valores reales)
-├── logs/                   # Archivos de log generados en tiempo de ejecución (Morgan)
+├── package.json            # Dependencias y scripts del proyecto
+├── .env.example            # Ejemplos de variables de entorno requeridas
+├── .prettierrc             # Configuración de formateo de código
 │
 └── src/
     ├── config/             # Configuración de servicios externos y librerías
-    │   ├── db.js           #   Conexión a la base de datos MySQL (pool de conexiones)
-    │   ├── multer.js       #   Configuración para subir archivos (fotos de perfil)
-    │   └── swagger.js      #   Configuración de la documentación automática de la API
+    │   ├── db.js           #   Conexión a la base de datos MySQL
+    │   ├── multer.js       #   Configuración para subir archivos
+    │   └── swagger.js      #   Configuración de la documentación de la API
+    │
+    ├── middlewares/        # Funciones que se ejecutan antes de llegar al controlador
+    │   ├── auth.js         #   Verifica que el token JWT sea válido
+    │   ├── role.js         #   Verifica que el usuario tenga el rol requerido (1=médico, 2=paciente, 3=admin)
+    │   └── validacion.js   #   Atrapa errores de express-validator y responde 400
     │
     ├── routes/             # Define las URLs disponibles y las conecta con los controladores
-    │   ├── index.js
-    │   ├── auth.js
-    │   ├── medicos.js
-    │   ├── pacientes.js
-    │   ├── turnos.js
-    │   ├── especialidades.js
-    │   ├── obras_sociales.js
-    │   └── estadisticas.js
+    │   └── v1/             #   Versión 1 de la API
+    │       ├── index.js    #     Agrupa todas las rutas y las exporta al app.js
+    │       ├── auth.js
+    │       ├── especialidades.js
+    │       ├── medicos.js
+    │       ├── obras_sociales.js
+    │       ├── pacientes.js
+    │       ├── turnos.js
+    │       └── estadisticas.js
     │
-    ├── controllers/        # Recibe el request HTTP, llama al servicio y devuelve la respuesta
+    ├── controllers/        # Recibe el request HTTP, valida la entrada y devuelve la respuesta
     │   ├── auth.js
+    │   ├── especialidades.js
     │   ├── medicos.js
+    │   ├── obras_sociales.js
     │   ├── pacientes.js
     │   ├── turnos.js
-    │   ├── especialidades.js
-    │   ├── obras_sociales.js
     │   └── estadisticas.js
     │
     ├── services/           # Contiene la lógica de negocio. Llama a los modelos y procesa datos
     │   ├── auth.js
+    │   ├── especialidades.js
     │   ├── medicos.js
+    │   ├── obras_sociales.js
     │   ├── pacientes.js
     │   ├── turnos.js
-    │   ├── especialidades.js
-    │   ├── obras_sociales.js
     │   └── estadisticas.js
     │
     ├── models/             # Acceso a la base de datos. Aquí van las queries SQL
@@ -99,11 +106,11 @@ clinica-api/
     │   ├── obra_social.js
     │   └── estadistica.js
     │
-    ├── middlewares/        # Funciones que se ejecutan antes de llegar al controlador
-    │   ├── auth.js         #   Verifica que el token JWT sea válido
-    │   └── role.js         #   Verifica que el usuario tenga el rol requerido (1=médico, 2=paciente, 3=admin)
-    │
     ├── validators/         # Reglas de validación de los datos que llegan en el request (express-validator)
+    │   └── especialidades.js
+    │
+    ├── dtos/               # Data Transfer Objects. Transforman datos entre la capa HTTP y el dominio
+    │   └── especialidades.dto.js
     │
     └── utils/              # Funciones auxiliares reutilizables en cualquier parte del proyecto
 ```
