@@ -1,1 +1,1 @@
-export const TurnoModel = {}
+export const TurnoModel = {};

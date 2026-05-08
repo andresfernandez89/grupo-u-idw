@@ -1,1 +1,1 @@
-export const EstadisticaModel = {}
+export const EstadisticaModel = {};

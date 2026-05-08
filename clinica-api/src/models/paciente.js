@@ -1,1 +1,1 @@
-export const PacienteModel = {}
+export const PacienteModel = {};
