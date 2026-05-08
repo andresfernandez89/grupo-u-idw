@@ -47,6 +47,7 @@ export const deleteEspecialidadValidator = [
 
 export const getByIdEspecialidadValidator = [
     param("id")
+    .trim()
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
     .toInt(),

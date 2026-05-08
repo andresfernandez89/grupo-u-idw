@@ -1,4 +1,5 @@
-import { EspecialidadModel } from "../models/especialidad.js";
+import EspecialidadModel from "../models/especialidad.js";
+
 
 export class EspecialidadesService {
   async create(nombre) {

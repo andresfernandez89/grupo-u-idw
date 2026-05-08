@@ -46,7 +46,7 @@ export class EspecialidadesController {
 
   async browse(req, res) {
         try {
-          const respuestas = await service.browse()
+          const respuestas = await especialidadService.browse()
           res.json(respuestas)
     }
     catch (err) {
@@ -56,18 +56,16 @@ export class EspecialidadesController {
  async findById(req,res){
   try{
       const id = parseInt(req.params.id);
-      const especialidadEncontrada = await service.readById(id)
+      const especialidadEncontrada = await especialidadService.readById(id)
 
       if(!especialidadEncontrada){
         return res.status(404).json({message: 'No se encontro especialidad con el id solicitado'})
         
       } 
-      res.json(especialidadEncontrada)
-      
-
+      res.json(especialidadEncontrada)     
 
   } catch(error){
-    res.status(500).json({message: err.message})
+    res.status(500).json({message: error.message})
   }
  }
 

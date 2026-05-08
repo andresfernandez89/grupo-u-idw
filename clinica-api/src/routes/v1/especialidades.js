@@ -18,7 +18,7 @@ router.post(
 );
 
 router.put("/:id", updateEspecialidadValidator, (req, res) =>
-  controller.update(req, res),
+  especialidadController.update(req, res),
 );
 
 router.delete(
@@ -28,8 +28,8 @@ router.delete(
   especialidadController.delete.bind(especialidadController),
 );
 
-router.get("/",(req,res)=> controller.browse(req,res))
+router.get("/",(req,res)=> especialidadController.browse(req,res))
 
-router.get("/:id", getByIdEspecialidadValidator , (req,res) => controller.findById(req,res))
+router.get("/:id", getByIdEspecialidadValidator , (req,res) => especialidadController.findById(req,res))
 
 export default router;
