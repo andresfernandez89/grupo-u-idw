@@ -1,7 +1,14 @@
 import EspecialidadModel from "../models/especialidad.js";
 
-
 export class EspecialidadesService {
+  async browse() {
+    return await EspecialidadModel.findEspecialidades();
+  }
+
+  async readById(id) {
+    return await EspecialidadModel.findById(id);
+  }
+
   async create(nombre) {
     const existing = await EspecialidadModel.findByNombre(nombre);
     if (existing) {
@@ -24,15 +31,6 @@ export class EspecialidadesService {
     }
     const affectedRows = await EspecialidadModel.delete(id);
     return affectedRows === 1;
-  }
-
-  async browse() {
-    return await EspecialidadModel.findEspecialidades()
-  }
-
-  async readById(id){
-  return await EspecialidadModel.findById(id)
-  
   }
 }
 
