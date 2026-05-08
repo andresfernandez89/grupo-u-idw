@@ -1,4 +1,5 @@
-import { EspecialidadModel } from "../models/especialidad.js";
+import EspecialidadModel from "../models/especialidad.js";
+
 
 export class EspecialidadesService {
   async create(nombre) {
@@ -23,6 +24,15 @@ export class EspecialidadesService {
     }
     const affectedRows = await EspecialidadModel.delete(id);
     return affectedRows === 1;
+  }
+
+  async browse() {
+    return await EspecialidadModel.findEspecialidades()
+  }
+
+  async readById(id){
+  return await EspecialidadModel.findById(id)
+  
   }
 }
 

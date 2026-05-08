@@ -1,6 +1,14 @@
 import { pool } from "../config/db.js";
 
 const EspecialidadModel = {
+
+  async findEspecialidades(){
+  const [rows] = await pool.query(
+    "SELECT id_especialidad, nombre, activo FROM especialidades"
+  )
+  return rows
+},
+
   async findById(id) {
     const [rows] = await pool.query(
       "SELECT id_especialidad, nombre, activo FROM especialidades WHERE id_especialidad = ? AND activo = 1",

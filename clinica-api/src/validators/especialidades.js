@@ -1,7 +1,7 @@
 import { body, check, param, validationResult } from "express-validator";
 
 export const createEspecialidadValidator = [
-  check("nombre")
+  body("nombre")
     .exists()
     .trim()
     .withMessage("El campo nombre es obligatorio")
@@ -15,7 +15,9 @@ export const createEspecialidadValidator = [
 
 export const updateEspecialidadValidator = [
   param("id")
+    .trim()
     .isInt({ min: 1 })
+    .toInt()
     .withMessage("El id debe ser un entero positivo"),
 
   body("nombre")
@@ -38,8 +40,25 @@ export const updateEspecialidadValidator = [
 export const deleteEspecialidadValidator = [
   param("id")
     .exists()
+    .trim()
     .withMessage("El parámetro id es obligatorio")
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
     .toInt(),
 ];
+
+export const getByIdEspecialidadValidator = [
+    param("id")
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un entero positivo")
+    .toInt(),
+
+    (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+    next();
+  },
+
+]

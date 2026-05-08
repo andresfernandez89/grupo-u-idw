@@ -5,6 +5,7 @@ import {
   createEspecialidadValidator,
   deleteEspecialidadValidator,
   updateEspecialidadValidator,
+  getByIdEspecialidadValidator
 } from "../../validators/especialidades.js";
 
 const router = Router();
@@ -17,7 +18,7 @@ router.post(
 );
 
 router.put("/:id", updateEspecialidadValidator, (req, res) =>
-  controller.update(req, res),
+  especialidadController.update(req, res),
 );
 
 router.delete(
@@ -26,4 +27,9 @@ router.delete(
   handleValidationErrors,
   especialidadController.delete.bind(especialidadController),
 );
+
+router.get("/",(req,res)=> especialidadController.browse(req,res))
+
+router.get("/:id", getByIdEspecialidadValidator , (req,res) => especialidadController.findById(req,res))
+
 export default router;
