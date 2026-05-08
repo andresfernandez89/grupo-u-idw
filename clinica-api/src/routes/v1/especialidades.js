@@ -4,7 +4,8 @@ import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
   createEspecialidadValidator,
   deleteEspecialidadValidator,
-} from "../../validators/especialidades.validators.js";
+  updateEspecialidadValidator,
+} from "../../validators/especialidades.js";
 
 const router = Router();
 
@@ -13,6 +14,10 @@ router.post(
   createEspecialidadValidator,
   handleValidationErrors,
   especialidadController.create.bind(especialidadController),
+);
+
+router.put("/:id", updateEspecialidadValidator, (req, res) =>
+  controller.update(req, res),
 );
 
 router.delete(
