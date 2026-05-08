@@ -1,1 +1,1 @@
-export const ObraSocialModel = {}
+export const ObraSocialModel = {};

@@ -4,11 +4,20 @@ import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
   createEspecialidadValidator,
   deleteEspecialidadValidator,
+  getByIdEspecialidadValidator,
   updateEspecialidadValidator,
-  getByIdEspecialidadValidator
 } from "../../validators/especialidades.js";
 
 const router = Router();
+
+router.get("/", especialidadController.browse.bind(especialidadController));
+
+router.get(
+  "/:id",
+  getByIdEspecialidadValidator,
+  handleValidationErrors,
+  especialidadController.findById.bind(especialidadController),
+);
 
 router.post(
   "/",
@@ -17,8 +26,11 @@ router.post(
   especialidadController.create.bind(especialidadController),
 );
 
-router.put("/:id", updateEspecialidadValidator, (req, res) =>
-  especialidadController.update(req, res),
+router.put(
+  "/:id",
+  updateEspecialidadValidator,
+  handleValidationErrors,
+  especialidadController.update.bind(especialidadController),
 );
 
 router.delete(
@@ -27,9 +39,5 @@ router.delete(
   handleValidationErrors,
   especialidadController.delete.bind(especialidadController),
 );
-
-router.get("/",(req,res)=> especialidadController.browse(req,res))
-
-router.get("/:id", getByIdEspecialidadValidator , (req,res) => especialidadController.findById(req,res))
 
 export default router;

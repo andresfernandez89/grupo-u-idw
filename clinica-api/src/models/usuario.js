@@ -1,1 +1,1 @@
-export const UsuarioModel = {}
+export const UsuarioModel = {};
