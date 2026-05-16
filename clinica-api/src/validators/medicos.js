@@ -70,19 +70,28 @@ export const updateMedicoValidator = [
     .withMessage("El id debe ser un entero positivo"),
 
   body("id_usuario")
-    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El id_usuario es obligatorio")
+    .bail()
     .isInt({ min: 1 })
     .withMessage("El id_usuario debe ser un entero positivo")
     .toInt(),
 
   body("id_especialidad")
-    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El id_especialidad es obligatorio")
+    .bail()
     .isInt({ min: 1 })
     .withMessage("El id_especialidad debe ser un entero positivo")
     .toInt(),
 
   body("matricula")
-    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("La matrícula es obligatoria")
+    .bail()
     .isInt({ min: 1 })
     .withMessage("La matrícula debe ser un entero positivo")
     .toInt(),
@@ -94,9 +103,13 @@ export const updateMedicoValidator = [
     .withMessage("La descripción debe ser un texto"),
 
   body("valor_consulta")
-    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El valor_consulta es obligatorio")
+    .bail()
     .isDecimal()
     .withMessage("El valor de consulta debe ser un número decimal válido")
+    .bail()
     .custom((value) => parseFloat(value) >= 0)
     .withMessage("El valor de consulta debe ser mayor o igual a 0"),
 ];
