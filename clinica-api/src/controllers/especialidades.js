@@ -8,8 +8,23 @@ import especialidadService from "../services/especialidades.js";
 export class EspecialidadesController {
   async browse(req, res) {
     try {
+      const { nombre } = req.query;
+
+      if (nombre) {
+        const especialidad =
+          await especialidadService.findByNombreActivo(nombre);
+
+        if (!especialidad) {
+          return res.status(404).json({
+            message: "No se encontró especialidad con el nombre solicitado",
+          });
+        }
+
+        return res.json(especialidadesResponse(especialidad));
+      }
+
       const respuestas = await especialidadService.browse();
-      res.json(respuestas);
+      res.json(respuestas.map(especialidadesResponse));
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -17,7 +32,7 @@ export class EspecialidadesController {
 
   async findById(req, res) {
     try {
-      const id = parseInt(req.params.id);
+      const { id } = req.params;
       const especialidadEncontrada = await especialidadService.readById(id);
 
       if (!especialidadEncontrada) {
@@ -25,7 +40,7 @@ export class EspecialidadesController {
           message: "No se encontro especialidad con el id solicitado",
         });
       }
-      res.json(especialidadEncontrada);
+      res.json(especialidadesResponse(especialidadEncontrada));
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -55,12 +70,9 @@ export class EspecialidadesController {
 
   async update(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const { nombre, activo } = req.body;
-      const actualizada = await especialidadService.update(id, {
-        nombre,
-        activo,
-      });
+      const { id } = req.params;
+      const datos = especialidadesCreate(req.body);
+      const actualizada = await especialidadService.update(id, datos);
 
       if (!actualizada) {
         return res.status(404).json({

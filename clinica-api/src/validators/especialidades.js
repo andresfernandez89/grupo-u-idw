@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 
 export const getByIdEspecialidadValidator = [
   param("id")
@@ -10,11 +10,9 @@ export const getByIdEspecialidadValidator = [
 
 export const createEspecialidadValidator = [
   body("nombre")
-    .exists()
     .trim()
-    .withMessage("El campo nombre es obligatorio")
     .notEmpty()
-    .withMessage("El nombre no puede estar vacío")
+    .withMessage("El nombre es obligatorio")
     .isString()
     .withMessage("El nombre debe ser un texto")
     .isLength({ max: 120 })
@@ -31,13 +29,25 @@ export const updateEspecialidadValidator = [
   body("nombre")
     .trim()
     .notEmpty()
-    .withMessage("El nombre es requerido")
+    .withMessage("El nombre es obligatorio")
     .isString()
     .withMessage("El nombre debe ser un texto")
     .isLength({ max: 120 })
     .withMessage("El nombre no puede superar 120 caracteres"),
 
-  body("activo").isIn([0, 1]).withMessage("activo debe ser 0 o 1"),
+
+];
+
+export const browseEspecialidadValidator = [
+  query("nombre")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre no puede estar vacío")
+    .isString()
+    .withMessage("El nombre debe ser un texto")
+    .isLength({ max: 120 })
+    .withMessage("El nombre no puede superar 120 caracteres"),
 ];
 
 export const deleteEspecialidadValidator = [

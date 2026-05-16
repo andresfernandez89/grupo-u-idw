@@ -9,6 +9,10 @@ export class EspecialidadesService {
     return await EspecialidadModel.findById(id);
   }
 
+  async findByNombreActivo(nombre) {
+    return await EspecialidadModel.findByNombreActivo(nombre);
+  }
+
   async create(nombre) {
     const existing = await EspecialidadModel.findByNombre(nombre);
     if (existing) {
@@ -17,10 +21,10 @@ export class EspecialidadesService {
     return await EspecialidadModel.create(nombre);
   }
 
-  async update(id, { nombre, activo }) {
+  async update(id, { nombre }) {
     const existente = await EspecialidadModel.findById(id);
     if (!existente) return null;
-    await EspecialidadModel.update(id, { nombre, activo });
+    await EspecialidadModel.update(id, nombre);
     return EspecialidadModel.findById(id);
   }
 
