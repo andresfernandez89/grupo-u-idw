@@ -8,23 +8,27 @@ import especialidadService from "../services/especialidades.js";
 export class EspecialidadesController {
   async browse(req, res) {
     try {
-      const { nombre } = req.query;
+      const filters = {};
+      const page = parseInt(req.query.page) || 1;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+      const sort = req.query.sort;
+      const order = req.query.order;
 
-      if (nombre) {
-        const especialidad =
-          await especialidadService.findByNombreActivo(nombre);
+      if (req.query.nombre) filters.nombre = req.query.nombre;
 
-        if (!especialidad) {
-          return res.status(404).json({
-            message: "No se encontró especialidad con el nombre solicitado",
-          });
-        }
+      const resultado = await especialidadService.browse({
+        filters,
+        sort,
+        order,
+        page,
+        limit,
+      });
 
-        return res.json(especialidadesResponse(especialidad));
-      }
-
-      const respuestas = await especialidadService.browse();
-      res.json(respuestas.map(especialidadesResponse));
+      res.json({
+        success: true,
+        data: resultado.data.map(especialidadesResponse),
+        pagination: resultado.pagination,
+      });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -87,6 +91,10 @@ export class EspecialidadesController {
         data: especialidadesResponse(actualizada),
       });
     } catch (err) {
+      if (err.message.includes("ya está registrado")) {
+        return res.status(409).json({ success: false, message: err.message });
+      }
+
       return res.status(500).json({
         success: false,
         error: err.message,

@@ -49,6 +49,29 @@ export const browseEspecialidadValidator = [
     .withMessage("El nombre debe ser un texto")
     .isLength({ max: 120 })
     .withMessage("El nombre no puede superar 120 caracteres"),
+
+  query("page")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("page debe ser un entero >= 1")
+    .toInt(),
+
+  query("limit")
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage("limit debe ser entre 1 y 100")
+    .toInt(),
+
+  query("sort")
+    .optional()
+    .isIn(["id_especialidad", "nombre"])
+    .withMessage("sort debe ser id_especialidad o nombre"),
+
+  query("order")
+    .optional()
+    .toLowerCase()
+    .isIn(["asc", "desc"])
+    .withMessage("order debe ser asc o desc"),
 ];
 
 export const deleteEspecialidadValidator = [

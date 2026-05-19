@@ -1,11 +1,35 @@
 import { pool } from "../config/db.js";
 
 const EspecialidadModel = {
-  async findEspecialidades() {
-    const [rows] = await pool.query(
-      "SELECT id_especialidad, nombre, activo FROM especialidades WHERE activo = 1",
-    );
+  async findEspecialidades({ filters, limit, offset, sort, order }) {
+    let sql =
+      "SELECT id_especialidad, nombre, activo FROM especialidades WHERE activo = 1";
+    const params = [];
+
+    if (filters.nombre) {
+      sql += " AND nombre = ?";
+      params.push(filters.nombre);
+    }
+
+    sql += ` ORDER BY ${sort} ${order}`;
+    sql += " LIMIT ? OFFSET ?";
+    params.push(limit, offset);
+
+    const [rows] = await pool.query(sql, params);
     return rows;
+  },
+
+  async countEspecialidades({ filters }) {
+    let sql = "SELECT COUNT(*) AS total FROM especialidades WHERE activo = 1";
+    const params = [];
+
+    if (filters.nombre) {
+      sql += " AND nombre = ?";
+      params.push(filters.nombre);
+    }
+
+    const [rows] = await pool.query(sql, params);
+    return rows[0].total;
   },
 
   async findById(id) {
@@ -41,10 +65,11 @@ const EspecialidadModel = {
   },
 
   async update(id, nombre) {
-    await pool.query(
+    const [result] = await pool.query(
       "UPDATE especialidades SET nombre = ? WHERE id_especialidad = ? AND activo = 1",
       [nombre, id],
     );
+    return result.affectedRows;
   },
 
   async delete(id) {
