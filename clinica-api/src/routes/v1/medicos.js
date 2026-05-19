@@ -2,6 +2,7 @@ import { Router } from "express";
 import medicoController from "../../controllers/medicos.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
+  browseMedicoValidator,
   createMedicoValidator,
   deleteMedicoValidator,
   getByEspecialidadMedicoValidator,
@@ -11,7 +12,12 @@ import {
 
 const router = Router();
 
-router.get("/", medicoController.browse.bind(medicoController));
+router.get(
+  "/",
+  browseMedicoValidator,
+  handleValidationErrors,
+  medicoController.browse.bind(medicoController),
+);
 
 router.get(
   "/especialidad/:id_especialidad",

@@ -4,8 +4,31 @@ import medicoService from "../services/medicos.js";
 export class MedicosController {
   async browse(req, res) {
     try {
-      const respuestas = await medicoService.browse();
-      res.json(respuestas.map(medicosResponse));
+      const page = parseInt(req.query.page) || 1;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+      const sort = req.query.sort;
+      const order = req.query.order;
+
+      const filters = {};
+      if (req.query.id_especialidad)
+        filters.id_especialidad = req.query.id_especialidad;
+      if (req.query.matricula) filters.matricula = req.query.matricula;
+      if (req.query.apellido) filters.apellido = req.query.apellido;
+      if (req.query.nombres) filters.nombres = req.query.nombres;
+
+      const resultado = await medicoService.browse({
+        filters,
+        sort,
+        order,
+        page,
+        limit,
+      });
+
+      res.json({
+        success: true,
+        data: resultado.data.map(medicosResponse),
+        pagination: resultado.pagination,
+      });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -30,15 +53,32 @@ export class MedicosController {
   async findByEspecialidad(req, res) {
     try {
       const { id_especialidad } = req.params;
-      const medicos = await medicoService.findByEspecialidad(id_especialidad);
+      const page = parseInt(req.query.page) || 1;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+      const sort = req.query.sort;
+      const order = req.query.order;
 
-      if (!medicos || medicos.length === 0) {
+      const filters = {};
+      if (req.query.matricula) filters.matricula = req.query.matricula;
+      if (req.query.apellido) filters.apellido = req.query.apellido;
+      if (req.query.nombres) filters.nombres = req.query.nombres;
+
+      const resultado = await medicoService.findByEspecialidad(
+        id_especialidad,
+        { filters, sort, order, page, limit },
+      );
+
+      if (!resultado.data || resultado.data.length === 0) {
         return res.status(404).json({
           message: "No se encontraron médicos para la especialidad solicitada",
         });
       }
 
-      res.json(medicos.map(medicosResponse));
+      res.json({
+        success: true,
+        data: resultado.data.map(medicosResponse),
+        pagination: resultado.pagination,
+      });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

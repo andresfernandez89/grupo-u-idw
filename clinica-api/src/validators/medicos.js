@@ -1,4 +1,67 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
+
+const paginationValidators = [
+  query("page")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("page debe ser un entero >= 1")
+    .toInt(),
+
+  query("limit")
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage("limit debe ser entre 1 y 100")
+    .toInt(),
+
+  query("sort")
+    .optional()
+    .isIn(["id_medico", "matricula", "valor_consulta", "apellido", "nombres"])
+    .withMessage("sort debe ser id_medico, matricula, valor_consulta, apellido o nombres"),
+
+  query("order")
+    .optional()
+    .toLowerCase()
+    .isIn(["asc", "desc"])
+    .withMessage("order debe ser asc o desc"),
+];
+
+export const browseMedicoValidator = [
+  query("id_especialidad")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("id_especialidad debe ser un entero positivo")
+    .toInt(),
+
+  query("matricula")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("matricula debe ser un entero positivo")
+    .toInt(),
+
+  query("apellido")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El apellido no puede estar vacío")
+    .bail()
+    .isString()
+    .withMessage("El apellido debe ser un texto")
+    .isLength({ max: 100 })
+    .withMessage("El apellido no puede superar 100 caracteres"),
+
+  query("nombres")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("Los nombres no pueden estar vacíos")
+    .bail()
+    .isString()
+    .withMessage("Los nombres deben ser un texto")
+    .isLength({ max: 100 })
+    .withMessage("Los nombres no pueden superar 100 caracteres"),
+
+  ...paginationValidators,
+];
 
 export const getByEspecialidadMedicoValidator = [
   param("id_especialidad")
@@ -6,6 +69,36 @@ export const getByEspecialidadMedicoValidator = [
     .isInt({ min: 1 })
     .withMessage("El id de especialidad debe ser un entero positivo")
     .toInt(),
+
+  query("matricula")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("matricula debe ser un entero positivo")
+    .toInt(),
+
+  query("apellido")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El apellido no puede estar vacío")
+    .bail()
+    .isString()
+    .withMessage("El apellido debe ser un texto")
+    .isLength({ max: 100 })
+    .withMessage("El apellido no puede superar 100 caracteres"),
+
+  query("nombres")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("Los nombres no pueden estar vacíos")
+    .bail()
+    .isString()
+    .withMessage("Los nombres deben ser un texto")
+    .isLength({ max: 100 })
+    .withMessage("Los nombres no pueden superar 100 caracteres"),
+
+  ...paginationValidators,
 ];
 
 export const getByIdMedicoValidator = [
