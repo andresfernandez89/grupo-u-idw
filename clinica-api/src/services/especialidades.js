@@ -1,12 +1,48 @@
 import EspecialidadModel from "../models/especialidad.js";
 
 export class EspecialidadesService {
-  async browse() {
-    return await EspecialidadModel.findEspecialidades();
+  async browse({
+    filters = {},
+    page = 1,
+    limit = 10,
+    sort = "id_especialidad",
+    order = "asc",
+  }) {
+    const offset = (page - 1) * limit;
+    const allowedSort = ["id_especialidad", "nombre"].includes(sort)
+      ? sort
+      : "id_especialidad";
+    const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
+      ? order.toLowerCase()
+      : "asc";
+
+    const rows = await EspecialidadModel.findEspecialidades({
+      filters,
+      limit,
+      offset,
+      sort: allowedSort,
+      order: allowedOrder,
+    });
+
+    const total = await EspecialidadModel.countEspecialidades({ filters });
+
+    return {
+      data: rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async readById(id) {
     return await EspecialidadModel.findById(id);
+  }
+
+  async findByNombreActivo(nombre) {
+    return await EspecialidadModel.findByNombreActivo(nombre);
   }
 
   async create(nombre) {
@@ -17,10 +53,18 @@ export class EspecialidadesService {
     return await EspecialidadModel.create(nombre);
   }
 
-  async update(id, { nombre, activo }) {
-    const existente = await EspecialidadModel.findById(id);
-    if (!existente) return null;
-    await EspecialidadModel.update(id, { nombre, activo });
+  async update(id, { nombre }) {
+    const existing = await EspecialidadModel.findByNombre(nombre);
+    if (existing && existing.id_especialidad !== id) {
+      throw new Error("El nombre de la especialidad ya está registrado");
+    }
+
+    const affectedRows = await EspecialidadModel.update(id, nombre);
+
+    if (affectedRows === 0) {
+      return null;
+    }
+
     return EspecialidadModel.findById(id);
   }
 

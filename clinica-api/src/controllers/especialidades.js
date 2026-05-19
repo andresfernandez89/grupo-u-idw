@@ -8,8 +8,27 @@ import especialidadService from "../services/especialidades.js";
 export class EspecialidadesController {
   async browse(req, res) {
     try {
-      const respuestas = await especialidadService.browse();
-      res.json(respuestas);
+      const filters = {};
+      const page = parseInt(req.query.page) || 1;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+      const sort = req.query.sort;
+      const order = req.query.order;
+
+      if (req.query.nombre) filters.nombre = req.query.nombre;
+
+      const resultado = await especialidadService.browse({
+        filters,
+        sort,
+        order,
+        page,
+        limit,
+      });
+
+      res.json({
+        success: true,
+        data: resultado.data.map(especialidadesResponse),
+        pagination: resultado.pagination,
+      });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -17,7 +36,7 @@ export class EspecialidadesController {
 
   async findById(req, res) {
     try {
-      const id = parseInt(req.params.id);
+      const { id } = req.params;
       const especialidadEncontrada = await especialidadService.readById(id);
 
       if (!especialidadEncontrada) {
@@ -25,7 +44,7 @@ export class EspecialidadesController {
           message: "No se encontro especialidad con el id solicitado",
         });
       }
-      res.json(especialidadEncontrada);
+      res.json(especialidadesResponse(especialidadEncontrada));
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -55,12 +74,9 @@ export class EspecialidadesController {
 
   async update(req, res) {
     try {
-      const id = parseInt(req.params.id);
-      const { nombre, activo } = req.body;
-      const actualizada = await especialidadService.update(id, {
-        nombre,
-        activo,
-      });
+      const { id } = req.params;
+      const datos = especialidadesCreate(req.body);
+      const actualizada = await especialidadService.update(id, datos);
 
       if (!actualizada) {
         return res.status(404).json({
@@ -75,6 +91,10 @@ export class EspecialidadesController {
         data: especialidadesResponse(actualizada),
       });
     } catch (err) {
+      if (err.message.includes("ya está registrado")) {
+        return res.status(409).json({ success: false, message: err.message });
+      }
+
       return res.status(500).json({
         success: false,
         error: err.message,

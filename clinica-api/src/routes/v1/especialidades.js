@@ -2,6 +2,7 @@ import { Router } from "express";
 import especialidadController from "../../controllers/especialidades.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
+  browseEspecialidadValidator,
   createEspecialidadValidator,
   deleteEspecialidadValidator,
   getByIdEspecialidadValidator,
@@ -10,7 +11,12 @@ import {
 
 const router = Router();
 
-router.get("/", especialidadController.browse.bind(especialidadController));
+router.get(
+  "/",
+  browseEspecialidadValidator,
+  handleValidationErrors,
+  especialidadController.browse.bind(especialidadController),
+);
 
 router.get(
   "/:id",
