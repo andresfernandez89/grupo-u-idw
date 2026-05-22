@@ -25,6 +25,24 @@ export class ObrasSocialesController {
     }
   }
 
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+      const deleted = await obrasSocialesService.delete(id);
+
+      if (deleted === null) {
+        return res.status(404).json({ success: false, message: "Obra social no encontrada" });
+      }
+      if (!deleted) {
+        return res.status(500).json({ success: false, message: "Error al eliminar la obra social" });
+      }
+
+      return res.status(204).send();
+    } catch (err) {
+      return res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
   async update(req, res) {
     try {
       const { id } = req.params;

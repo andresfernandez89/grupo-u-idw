@@ -35,6 +35,14 @@ export class ObrasSocialesService {
     return await ObraSocialModel.findById(id);
   }
 
+  async delete(id) {
+    const existing = await ObraSocialModel.findById(id);
+    if (!existing) return null;
+
+    const affectedRows = await ObraSocialModel.delete(id);
+    return affectedRows === 1;
+  }
+
   async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing && existing.id_obra_social !== id) {

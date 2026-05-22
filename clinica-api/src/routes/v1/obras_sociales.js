@@ -4,6 +4,7 @@ import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
   browseObraSocialValidator,
   createObraSocialValidator,
+  deleteObraSocialValidator,
   getByIdObraSocialValidator,
   updateObraSocialValidator,
 } from "../../validators/obras_sociales.js";
@@ -22,6 +23,13 @@ router.post(
   createObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.create.bind(obrasSocialesController),
+);
+
+router.delete(
+  "/:id",
+  deleteObraSocialValidator,
+  handleValidationErrors,
+  obrasSocialesController.delete.bind(obrasSocialesController),
 );
 
 router.put(

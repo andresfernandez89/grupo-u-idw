@@ -130,6 +130,14 @@ export const updateObraSocialValidator = [
     .toBoolean(),
 ];
 
+export const deleteObraSocialValidator = [
+  param("id")
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un entero positivo")
+    .toInt(),
+];
+
 export const getByIdObraSocialValidator = [
   param("id")
     .trim()

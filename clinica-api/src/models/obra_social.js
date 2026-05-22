@@ -72,6 +72,14 @@ const ObraSocialModel = {
     return result.affectedRows;
   },
 
+  async delete(id) {
+    const [result] = await pool.query(
+      "UPDATE obras_sociales SET activo = 0 WHERE id_obra_social = ? AND activo = 1",
+      [id],
+    );
+    return result.affectedRows;
+  },
+
   async findById(id) {
     const [rows] = await pool.query(
       `SELECT id_obra_social, nombre, descripcion, porcentaje_descuento, es_particular
