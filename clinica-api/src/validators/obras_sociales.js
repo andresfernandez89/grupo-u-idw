@@ -1,4 +1,4 @@
-import { param, query } from "express-validator";
+import { body, param, query } from "express-validator";
 
 const paginationValidators = [
   query("page")
@@ -44,6 +44,45 @@ export const browseObraSocialValidator = [
     .toInt(),
 
   ...paginationValidators,
+];
+
+export const createObraSocialValidator = [
+  body("nombre")
+    .trim()
+    .notEmpty()
+    .withMessage("El nombre es obligatorio")
+    .bail()
+    .isString()
+    .withMessage("El nombre debe ser un texto")
+    .isLength({ max: 120 })
+    .withMessage("El nombre no puede superar 120 caracteres"),
+
+  body("descripcion")
+    .optional()
+    .trim()
+    .isString()
+    .withMessage("La descripción debe ser un texto")
+    .isLength({ max: 255 })
+    .withMessage("La descripción no puede superar 255 caracteres"),
+
+  body("porcentaje_descuento")
+    .trim()
+    .notEmpty()
+    .withMessage("El porcentaje_descuento es obligatorio")
+    .bail()
+    .isDecimal()
+    .withMessage("El porcentaje_descuento debe ser un número decimal")
+    .bail()
+    .custom((v) => parseFloat(v) >= 0 && parseFloat(v) <= 100)
+    .withMessage("El porcentaje_descuento debe estar entre 0 y 100"),
+
+  body("es_particular")
+    .notEmpty()
+    .withMessage("es_particular es obligatorio")
+    .bail()
+    .isBoolean()
+    .withMessage("es_particular debe ser un booleano (true o false)")
+    .toBoolean(),
 ];
 
 export const getByIdObraSocialValidator = [

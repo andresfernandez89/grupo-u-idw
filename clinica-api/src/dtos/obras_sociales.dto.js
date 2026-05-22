@@ -1,3 +1,12 @@
+export function obraSocialCreate(body) {
+  return {
+    nombre: body?.nombre?.trim(),
+    descripcion: body?.descripcion?.trim() || null,
+    porcentaje_descuento: parseFloat(body?.porcentaje_descuento),
+    es_particular: body?.es_particular ? 1 : 0,
+  };
+}
+
 export function obraSocialResponse(os) {
   if (!os) return null;
 

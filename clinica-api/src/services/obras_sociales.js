@@ -34,6 +34,14 @@ export class ObrasSocialesService {
   async readById(id) {
     return await ObraSocialModel.findById(id);
   }
+
+  async create({ nombre, descripcion, porcentaje_descuento, es_particular }) {
+    const existing = await ObraSocialModel.findByNombre(nombre);
+    if (existing) {
+      throw new Error("El nombre de la obra social ya está registrado");
+    }
+    return await ObraSocialModel.create({ nombre, descripcion, porcentaje_descuento, es_particular });
+  }
 }
 
 export default new ObrasSocialesService();

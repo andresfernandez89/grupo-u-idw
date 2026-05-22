@@ -43,6 +43,25 @@ const ObraSocialModel = {
     return rows[0].total;
   },
 
+  async findByNombre(nombre) {
+    const [rows] = await pool.query(
+      `SELECT id_obra_social, nombre, descripcion, porcentaje_descuento, es_particular
+       FROM obras_sociales
+       WHERE nombre = ?`,
+      [nombre],
+    );
+    return rows[0] ?? null;
+  },
+
+  async create({ nombre, descripcion, porcentaje_descuento, es_particular }) {
+    const [result] = await pool.query(
+      `INSERT INTO obras_sociales (nombre, descripcion, porcentaje_descuento, es_particular, activo)
+       VALUES (?, ?, ?, ?, 1)`,
+      [nombre, descripcion, porcentaje_descuento, es_particular],
+    );
+    return { id_obra_social: result.insertId, nombre, descripcion, porcentaje_descuento, es_particular };
+  },
+
   async findById(id) {
     const [rows] = await pool.query(
       `SELECT id_obra_social, nombre, descripcion, porcentaje_descuento, es_particular

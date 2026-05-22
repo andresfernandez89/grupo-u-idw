@@ -1,4 +1,4 @@
-import { obraSocialResponse } from "../dtos/obras_sociales.dto.js";
+import { obraSocialCreate, obraSocialResponse } from "../dtos/obras_sociales.dto.js";
 import obrasSocialesService from "../services/obras_sociales.js";
 
 export class ObrasSocialesController {
@@ -22,6 +22,23 @@ export class ObrasSocialesController {
       });
     } catch (err) {
       res.status(500).json({ message: err.message });
+    }
+  }
+
+  async create(req, res) {
+    try {
+      const datos = obraSocialCreate(req.body);
+      const nueva = await obrasSocialesService.create(datos);
+      return res.status(201).json({
+        success: true,
+        message: "Obra social creada exitosamente",
+        data: obraSocialResponse(nueva),
+      });
+    } catch (err) {
+      if (err.message.includes("ya está registrado")) {
+        return res.status(409).json({ success: false, message: err.message });
+      }
+      return res.status(500).json({ success: false, error: err.message });
     }
   }
 
