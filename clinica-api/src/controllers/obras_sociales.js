@@ -25,6 +25,29 @@ export class ObrasSocialesController {
     }
   }
 
+  async update(req, res) {
+    try {
+      const { id } = req.params;
+      const datos = obraSocialCreate(req.body);
+      const actualizada = await obrasSocialesService.update(id, datos);
+
+      if (!actualizada) {
+        return res.status(404).json({ success: false, message: "Obra social no encontrada" });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Obra social modificada exitosamente",
+        data: obraSocialResponse(actualizada),
+      });
+    } catch (err) {
+      if (err.message.includes("ya está registrado")) {
+        return res.status(409).json({ success: false, message: err.message });
+      }
+      return res.status(500).json({ success: false, error: err.message });
+    }
+  }
+
   async create(req, res) {
     try {
       const datos = obraSocialCreate(req.body);

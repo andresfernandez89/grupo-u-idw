@@ -62,6 +62,16 @@ const ObraSocialModel = {
     return { id_obra_social: result.insertId, nombre, descripcion, porcentaje_descuento, es_particular };
   },
 
+  async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
+    const [result] = await pool.query(
+      `UPDATE obras_sociales
+       SET nombre = ?, descripcion = ?, porcentaje_descuento = ?, es_particular = ?
+       WHERE id_obra_social = ? AND activo = 1`,
+      [nombre, descripcion, porcentaje_descuento, es_particular, id],
+    );
+    return result.affectedRows;
+  },
+
   async findById(id) {
     const [rows] = await pool.query(
       `SELECT id_obra_social, nombre, descripcion, porcentaje_descuento, es_particular

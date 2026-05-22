@@ -5,6 +5,7 @@ import {
   browseObraSocialValidator,
   createObraSocialValidator,
   getByIdObraSocialValidator,
+  updateObraSocialValidator,
 } from "../../validators/obras_sociales.js";
 
 const router = Router();
@@ -21,6 +22,13 @@ router.post(
   createObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.create.bind(obrasSocialesController),
+);
+
+router.put(
+  "/:id",
+  updateObraSocialValidator,
+  handleValidationErrors,
+  obrasSocialesController.update.bind(obrasSocialesController),
 );
 
 router.get(

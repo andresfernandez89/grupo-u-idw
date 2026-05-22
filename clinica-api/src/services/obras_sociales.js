@@ -35,6 +35,19 @@ export class ObrasSocialesService {
     return await ObraSocialModel.findById(id);
   }
 
+  async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
+    const existing = await ObraSocialModel.findByNombre(nombre);
+    if (existing && existing.id_obra_social !== id) {
+      throw new Error("El nombre de la obra social ya está registrado");
+    }
+
+    const affectedRows = await ObraSocialModel.update(id, { nombre, descripcion, porcentaje_descuento, es_particular });
+
+    if (affectedRows === 0) return null;
+
+    return ObraSocialModel.findById(id);
+  }
+
   async create({ nombre, descripcion, porcentaje_descuento, es_particular }) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing) {
