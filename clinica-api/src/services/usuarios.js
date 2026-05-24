@@ -102,6 +102,14 @@ export class UsuariosService {
     return UsuarioModel.findById(id);
   }
 
+  async delete(id) {
+    const existing = await UsuarioModel.findById(id);
+    if (!existing) {
+      return null;
+    }
+    const affectedRows = await UsuarioModel.delete(id);
+    return affectedRows === 1;
+  }
 }
 
 export default new UsuariosService();

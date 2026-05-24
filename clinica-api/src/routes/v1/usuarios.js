@@ -4,8 +4,9 @@ import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
   browseUsuariosValidator,
   createUsuarioValidator,
-  getByIdUsuarioValidator,
   updateUsuarioValidator,
+  deleteUsuarioValidator,
+  getByIdUsuarioValidator,
 } from "../../validators/usuarios.js";
 
 const router = Router();
@@ -38,5 +39,11 @@ router.put(
   usuarioController.update.bind(usuarioController),
 );
 
+router.delete(
+  "/:id",
+  deleteUsuarioValidator,
+  handleValidationErrors,
+  usuarioController.delete.bind(usuarioController),
+);
 
 export default router;

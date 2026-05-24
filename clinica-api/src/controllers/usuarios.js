@@ -105,7 +105,33 @@ export class UsuariosController {
       });
     }
   }
-  
+
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+      const deleted = await usuarioService.delete(id);
+
+      if (deleted === null) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Usuario no encontrado" });
+      }
+
+      if (!deleted) {
+        return res.status(500).json({
+          success: false,
+          message: "Error al eliminar el usuario",
+        });
+      }
+
+      return res.status(204).send();
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
 }
 
 export default new UsuariosController();

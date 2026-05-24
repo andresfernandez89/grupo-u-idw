@@ -210,3 +210,10 @@ export const updateUsuarioValidator = [
     .withMessage("rol debe ser 1 (médico), 2 (paciente) o 3 (admin)"),
 ];
 
+export const deleteUsuarioValidator = [
+  param("id")
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un entero positivo")
+    .toInt(),
+];
