@@ -3,6 +3,7 @@ import usuarioController from "../../controllers/usuarios.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
   browseUsuariosValidator,
+  createUsuarioValidator,
   getByIdUsuarioValidator,
 } from "../../validators/usuarios.js";
 
@@ -21,5 +22,14 @@ router.get(
   handleValidationErrors,
   usuarioController.findById.bind(usuarioController),
 );
+
+router.post(
+  "/",
+  createUsuarioValidator,
+  handleValidationErrors,
+  usuarioController.create.bind(usuarioController),
+);
+
+
 
 export default router;

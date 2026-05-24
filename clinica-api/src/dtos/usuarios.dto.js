@@ -12,3 +12,15 @@ export function usuariosResponse(usuario) {
     activo: usuario.activo === 1,
   };
 }
+
+export function usuariosCreate(body) {
+  return {
+    documento: body?.documento?.trim(),
+    apellido: body?.apellido?.trim(),
+    nombres: body?.nombres?.trim(),
+    email: body?.email?.trim(),
+    contrasenia: body?.contrasenia,
+    foto_path: body?.foto_path?.trim() || '',
+    rol: body?.rol,
+  };
+}

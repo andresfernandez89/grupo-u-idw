@@ -47,6 +47,29 @@ export class UsuariosService {
   async readById(id) {
     return await UsuarioModel.findById(id);
   }
+
+  async create({ documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
+    const emailExistente = await UsuarioModel.findByEmail(email);
+    if (emailExistente) {
+      throw new Error("El email ya está registrado");
+    }
+
+    const docExistente = await UsuarioModel.findByDocumento(documento);
+    if (docExistente) {
+      throw new Error("El documento ya está registrado");
+    }
+
+    return await UsuarioModel.create({
+      documento,
+      apellido,
+      nombres,
+      email,
+      contrasenia,
+      foto_path,
+      rol,
+    });
+  }
+
 }
 
 export default new UsuariosService();

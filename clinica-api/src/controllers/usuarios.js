@@ -1,4 +1,4 @@
-import { usuariosResponse } from "../dtos/usuarios.dto.js";
+import { usuariosCreate, usuariosResponse } from "../dtos/usuarios.dto.js";
 import usuarioService from "../services/usuarios.js";
 
 export class UsuariosController {
@@ -49,6 +49,32 @@ export class UsuariosController {
       res.status(500).json({ message: error.message });
     }
   }
+
+  async create(req, res) {
+    try {
+      const datos = usuariosCreate(req.body);
+      const nuevoUsuario = await usuarioService.create(datos);
+
+      return res.status(201).json({
+        success: true,
+        message: "Usuario creado exitosamente",
+        data: usuariosResponse(nuevoUsuario),
+      });
+    } catch (error) {
+      if (
+        error.message.includes("ya está registrado")
+      ) {
+        return res.status(409).json({ success: false, message: error.message });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+
+
 }
 
 export default new UsuariosController();
