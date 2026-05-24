@@ -107,7 +107,7 @@ const UsuarioModel = {
   }) {
     const [result] = await pool.query(
       "INSERT INTO usuarios (documento, apellido, nombres, email, contrasenia, foto_path, rol, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [documento, apellido, nombres, email, contrasenia, foto_path || null, rol, 1],
+      [documento, apellido, nombres, email, contrasenia, foto_path || '', rol, 1],
     );
     return {
       id_usuario: result.insertId,
@@ -115,7 +115,7 @@ const UsuarioModel = {
       apellido,
       nombres,
       email,
-      foto_path,
+      foto_path: foto_path || '',
       rol,
       activo: 1,
     };
@@ -150,7 +150,7 @@ const UsuarioModel = {
     }
     if (foto_path !== undefined) {
       fields.push("foto_path = ?");
-      params.push(foto_path);
+      params.push(foto_path || '');
     }
     if (rol !== undefined) {
       fields.push("rol = ?");
