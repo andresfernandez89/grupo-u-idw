@@ -5,6 +5,7 @@ import {
   browseUsuariosValidator,
   createUsuarioValidator,
   getByIdUsuarioValidator,
+  updateUsuarioValidator,
 } from "../../validators/usuarios.js";
 
 const router = Router();
@@ -30,6 +31,12 @@ router.post(
   usuarioController.create.bind(usuarioController),
 );
 
+router.put(
+  "/:id",
+  updateUsuarioValidator,
+  handleValidationErrors,
+  usuarioController.update.bind(usuarioController),
+);
 
 
 export default router;

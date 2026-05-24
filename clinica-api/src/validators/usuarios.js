@@ -142,3 +142,71 @@ export const createUsuarioValidator = [
     .withMessage("rol debe ser 1 (médico), 2 (paciente) o 3 (admin)"),
 ];
 
+export const updateUsuarioValidator = [
+  param("id")
+    .trim()
+    .isInt({ min: 1 })
+    .toInt()
+    .withMessage("El id debe ser un entero positivo"),
+
+  body("documento")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El documento no puede estar vacío")
+    .bail()
+    .isString()
+    .withMessage("El documento debe ser un texto")
+    .isLength({ max: 20 })
+    .withMessage("El documento no puede superar 20 caracteres"),
+
+  body("apellido")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El apellido no puede estar vacío")
+    .bail()
+    .isString()
+    .withMessage("El apellido debe ser un texto")
+    .isLength({ max: 100 })
+    .withMessage("El apellido no puede superar 100 caracteres"),
+
+  body("nombres")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("Los nombres no pueden estar vacíos")
+    .bail()
+    .isString()
+    .withMessage("Los nombres deben ser un texto")
+    .isLength({ max: 100 })
+    .withMessage("Los nombres no pueden superar 100 caracteres"),
+
+  body("email")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El email no puede estar vacío")
+    .bail()
+    .isEmail()
+    .withMessage("Debe ser un email válido")
+    .normalizeEmail(),
+
+  body("contrasenia")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("La contraseña no puede estar vacía"),
+
+  body("foto_path")
+    .optional()
+    .trim()
+    .isString()
+    .withMessage("La foto_path debe ser un texto"),
+
+  body("rol")
+    .optional()
+    .isIn([1, 2, 3])
+    .withMessage("rol debe ser 1 (médico), 2 (paciente) o 3 (admin)"),
+];
+

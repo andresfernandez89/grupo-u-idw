@@ -74,7 +74,38 @@ export class UsuariosController {
     }
   }
 
+  async update(req, res) {
+    try {
+      const { id } = req.params;
+      const datos = usuariosCreate(req.body);
+      const actualizado = await usuarioService.update(id, datos);
 
+      if (!actualizado) {
+        return res.status(404).json({
+          success: false,
+          message: "Usuario no encontrado",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Usuario modificado exitosamente",
+        data: usuariosResponse(actualizado),
+      });
+    } catch (err) {
+      if (
+        err.message.includes("ya está registrado")
+      ) {
+        return res.status(409).json({ success: false, message: err.message });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: err.message,
+      });
+    }
+  }
+  
 }
 
 export default new UsuariosController();
