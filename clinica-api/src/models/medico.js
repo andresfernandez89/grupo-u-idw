@@ -1,15 +1,15 @@
 import { pool } from "../config/db.js";
 
 const MedicoModel = {
-  async findMedicos({ limit, offset, sort, order, filters }) {
+  async findMedicos({ filters, limit, offset, sort, order }) {
     let sql = `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
                       m.descripcion, m.valor_consulta,
                       e.nombre AS especialidad,
-                      u.apellido, u.nombres, u.email, u.foto_path
-               FROM medicos m
+                      v.apellido, v.nombres, v.email, v.foto_path
+               FROM v_medicos v
+               JOIN medicos m ON v.id_medico = m.id_medico
                JOIN especialidades e ON m.id_especialidad = e.id_especialidad
-               JOIN usuarios u ON m.id_usuario = u.id_usuario
-               WHERE u.activo = 1`;
+               WHERE 1=1`;
     const params = [];
 
     if (filters.id_especialidad) {
@@ -23,12 +23,12 @@ const MedicoModel = {
     }
 
     if (filters.apellido) {
-      sql += " AND u.apellido = ?";
+      sql += " AND v.apellido = ?";
       params.push(filters.apellido);
     }
 
     if (filters.nombres) {
-      sql += " AND u.nombres = ?";
+      sql += " AND v.nombres = ?";
       params.push(filters.nombres);
     }
 
@@ -42,9 +42,9 @@ const MedicoModel = {
 
   async countMedicos({ filters }) {
     let sql = `SELECT COUNT(*) AS total
-               FROM medicos m
-               JOIN usuarios u ON m.id_usuario = u.id_usuario
-               WHERE u.activo = 1`;
+               FROM v_medicos v
+               JOIN medicos m ON v.id_medico = m.id_medico
+               WHERE 1=1`;
     const params = [];
 
     if (filters.id_especialidad) {
@@ -58,12 +58,12 @@ const MedicoModel = {
     }
 
     if (filters.apellido) {
-      sql += " AND u.apellido = ?";
+      sql += " AND v.apellido = ?";
       params.push(filters.apellido);
     }
 
     if (filters.nombres) {
-      sql += " AND u.nombres = ?";
+      sql += " AND v.nombres = ?";
       params.push(filters.nombres);
     }
 
@@ -76,25 +76,25 @@ const MedicoModel = {
       `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
               m.descripcion, m.valor_consulta,
               e.nombre AS especialidad,
-              u.apellido, u.nombres, u.email, u.foto_path
-       FROM medicos m
+              v.apellido, v.nombres, v.email, v.foto_path
+       FROM v_medicos v
+       JOIN medicos m ON v.id_medico = m.id_medico
        JOIN especialidades e ON m.id_especialidad = e.id_especialidad
-       JOIN usuarios u ON m.id_usuario = u.id_usuario
-       WHERE m.id_medico = ? AND u.activo = 1`,
+       WHERE m.id_medico = ?`,
       [id],
     );
     return rows[0] ?? null;
   },
 
-  async findByEspecialidad(id_especialidad, { limit, offset, sort, order, filters }) {
+  async findByEspecialidad(id_especialidad, { filters, limit, offset, sort, order }) {
     let sql = `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
                         m.descripcion, m.valor_consulta,
                         e.nombre AS especialidad,
-                        u.apellido, u.nombres, u.email, u.foto_path
-                 FROM medicos m
+                        v.apellido, v.nombres, v.email, v.foto_path
+                 FROM v_medicos v
+                 JOIN medicos m ON v.id_medico = m.id_medico
                  JOIN especialidades e ON m.id_especialidad = e.id_especialidad
-                 JOIN usuarios u ON m.id_usuario = u.id_usuario
-                 WHERE m.id_especialidad = ? AND u.activo = 1`;
+                 WHERE m.id_especialidad = ?`;
     const params = [id_especialidad];
 
     if (filters.matricula) {
@@ -103,12 +103,12 @@ const MedicoModel = {
     }
 
     if (filters.apellido) {
-      sql += " AND u.apellido = ?";
+      sql += " AND v.apellido = ?";
       params.push(filters.apellido);
     }
 
     if (filters.nombres) {
-      sql += " AND u.nombres = ?";
+      sql += " AND v.nombres = ?";
       params.push(filters.nombres);
     }
 
@@ -122,9 +122,9 @@ const MedicoModel = {
 
   async countByEspecialidad(id_especialidad, { filters }) {
     let sql = `SELECT COUNT(*) AS total
-               FROM medicos m
-               JOIN usuarios u ON m.id_usuario = u.id_usuario
-               WHERE m.id_especialidad = ? AND u.activo = 1`;
+               FROM v_medicos v
+               JOIN medicos m ON v.id_medico = m.id_medico
+               WHERE m.id_especialidad = ?`;
     const params = [id_especialidad];
 
     if (filters.matricula) {
@@ -133,12 +133,12 @@ const MedicoModel = {
     }
 
     if (filters.apellido) {
-      sql += " AND u.apellido = ?";
+      sql += " AND v.apellido = ?";
       params.push(filters.apellido);
     }
 
     if (filters.nombres) {
-      sql += " AND u.nombres = ?";
+      sql += " AND v.nombres = ?";
       params.push(filters.nombres);
     }
 
