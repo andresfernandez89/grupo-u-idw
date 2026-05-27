@@ -1,7 +1,7 @@
 import MedicoModel from "../models/medico.js";
 
 export class MedicosService {
-  async browse({ page = 1, limit = 10, sort = "id_medico", order = "asc", filters = {} }) {
+  async browse({ filters = {}, page = 1, limit = 10, sort = "id_medico", order = "asc" } = {}) {
     const offset = (page - 1) * limit;
     const allowedSort = [
       "id_medico",
@@ -17,11 +17,11 @@ export class MedicosService {
       : "asc";
 
     const rows = await MedicoModel.findMedicos({
+      filters,
       limit,
       offset,
       sort: allowedSort,
       order: allowedOrder,
-      filters,
     });
 
     const total = await MedicoModel.countMedicos({ filters });
@@ -39,7 +39,7 @@ export class MedicosService {
 
   async findByEspecialidad(
     id_especialidad,
-    { page = 1, limit = 10, sort = "id_medico", order = "asc", filters = {} } = {},
+    { filters = {}, page = 1, limit = 10, sort = "id_medico", order = "asc" } = {},
   ) {
     const offset = (page - 1) * limit;
     const allowedSort = [
@@ -56,11 +56,11 @@ export class MedicosService {
       : "asc";
 
     const rows = await MedicoModel.findByEspecialidad(id_especialidad, {
+      filters,
       limit,
       offset,
       sort: allowedSort,
       order: allowedOrder,
-      filters,
     });
 
     const total = await MedicoModel.countByEspecialidad(id_especialidad, { filters });
