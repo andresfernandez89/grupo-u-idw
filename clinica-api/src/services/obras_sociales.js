@@ -58,10 +58,23 @@ export class ObrasSocialesService {
 
   async create({ nombre, descripcion, porcentaje_descuento, es_particular }) {
     const existing = await ObraSocialModel.findByNombre(nombre);
-    if (existing) {
+
+    if (!existing) {
+      return await ObraSocialModel.create({ nombre, descripcion, porcentaje_descuento, es_particular });
+    }
+
+    if (existing.activo === 1) {
       throw new Error("El nombre de la obra social ya está registrado");
     }
-    return await ObraSocialModel.create({ nombre, descripcion, porcentaje_descuento, es_particular });
+
+    // existing.activo === 0 → reactivar (ADR-001 Opción C)
+    await ObraSocialModel.reactivate(existing.id_obra_social, {
+      nombre,
+      descripcion,
+      porcentaje_descuento,
+      es_particular,
+    });
+    return await ObraSocialModel.findById(existing.id_obra_social);
   }
 }
 

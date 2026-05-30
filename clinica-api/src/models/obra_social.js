@@ -45,7 +45,7 @@ const ObraSocialModel = {
 
   async findByNombre(nombre) {
     const [rows] = await pool.query(
-      `SELECT id_obra_social, nombre, descripcion, porcentaje_descuento, es_particular
+      `SELECT id_obra_social, nombre, descripcion, porcentaje_descuento, es_particular, activo
        FROM obras_sociales
        WHERE nombre = ?`,
       [nombre],
@@ -76,6 +76,16 @@ const ObraSocialModel = {
     const [result] = await pool.query(
       "UPDATE obras_sociales SET activo = 0 WHERE id_obra_social = ? AND activo = 1",
       [id],
+    );
+    return result.affectedRows;
+  },
+
+  async reactivate(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
+    const [result] = await pool.query(
+      `UPDATE obras_sociales
+       SET nombre = ?, descripcion = ?, porcentaje_descuento = ?, es_particular = ?, activo = 1
+       WHERE id_obra_social = ?`,
+      [nombre, descripcion, porcentaje_descuento, es_particular, id],
     );
     return result.affectedRows;
   },
