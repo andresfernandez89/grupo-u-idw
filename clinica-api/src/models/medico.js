@@ -147,8 +147,15 @@ const MedicoModel = {
   },
 
   async findByMatricula(matricula) {
+    // JOIN a la tabla base usuarios (no la vista) para ver el soft-delete:
+    // la matrícula es UNIQUE pero el flag activo vive en usuarios. Necesario
+    // para distinguir colisión activa (409) de borrada (reactivar) — ADR-001.
     const [rows] = await pool.query(
-      "SELECT id_medico, id_usuario, id_especialidad, matricula, descripcion, valor_consulta FROM medicos WHERE matricula = ?",
+      `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
+              m.descripcion, m.valor_consulta, u.activo
+       FROM medicos m
+       JOIN usuarios u ON m.id_usuario = u.id_usuario
+       WHERE m.matricula = ?`,
       [matricula],
     );
     return rows[0] ?? null;
@@ -179,13 +186,33 @@ const MedicoModel = {
     id,
     { id_usuario, id_especialidad, matricula, descripcion, valor_consulta },
   ) {
+    // Guarda defensiva: solo actualiza si el usuario asociado está activo,
+    // para no mutar un médico soft-deleted.
     const [result] = await pool.query(
-      `UPDATE medicos
-       SET id_usuario = ?, id_especialidad = ?, matricula = ?, descripcion = ?, valor_consulta = ?
-       WHERE id_medico = ?`,
+      `UPDATE medicos m
+       JOIN usuarios u ON m.id_usuario = u.id_usuario
+       SET m.id_usuario = ?, m.id_especialidad = ?, m.matricula = ?, m.descripcion = ?, m.valor_consulta = ?
+       WHERE m.id_medico = ? AND u.activo = 1`,
       [id_usuario, id_especialidad, matricula, descripcion, valor_consulta, id],
     );
     return result.affectedRows;
+  },
+
+  async reactivate(
+    conn,
+    { id_medico, id_usuario, id_especialidad, matricula, descripcion, valor_consulta },
+  ) {
+    // Reactiva el usuario ya asociado a esa matrícula (id_usuario NO cambia, ADR-001)
+    // y sobrescribe los campos del médico. Debe correr dentro de una transacción.
+    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [
+      id_usuario,
+    ]);
+    await conn.query(
+      `UPDATE medicos
+       SET id_especialidad = ?, matricula = ?, descripcion = ?, valor_consulta = ?
+       WHERE id_medico = ?`,
+      [id_especialidad, matricula, descripcion, valor_consulta, id_medico],
+    );
   },
 
   async delete(id_usuario) {

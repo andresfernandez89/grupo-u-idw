@@ -98,6 +98,9 @@ export class MedicosController {
       if (error.message.includes("ya está registrada")) {
         return res.status(409).json({ success: false, message: error.message });
       }
+      if (error.message.includes("no está activa")) {
+        return res.status(400).json({ success: false, message: error.message });
+      }
 
       return res.status(500).json({
         success: false,
@@ -128,6 +131,9 @@ export class MedicosController {
     } catch (err) {
       if (err.message.includes("ya está registrada")) {
         return res.status(409).json({ success: false, message: err.message });
+      }
+      if (err.message.includes("no está activa")) {
+        return res.status(400).json({ success: false, message: err.message });
       }
 
       return res.status(500).json({
