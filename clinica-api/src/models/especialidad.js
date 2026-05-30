@@ -79,6 +79,14 @@ const EspecialidadModel = {
     );
     return result.affectedRows;
   },
+
+  async reactivate(id, nombre) {
+    const [result] = await pool.query(
+      "UPDATE especialidades SET nombre = ?, activo = 1 WHERE id_especialidad = ?",
+      [nombre, id],
+    );
+    return result.affectedRows;
+  },
 };
 
 export default EspecialidadModel;
