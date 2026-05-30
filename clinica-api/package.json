@@ -2,11 +2,11 @@
   "name": "clinica-api",
   "version": "1.0.0",
   "description": "API REST para sistema de gestión de clínica médica",
-  "main": "app.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "node --env-file=.env --watch app.js",
+    "start": "node server.js",
+    "dev": "node --env-file=.env --watch server.js",
     "format": "prettier --write ."
   },
   "keywords": [],
