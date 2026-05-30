@@ -60,8 +60,15 @@ const PacienteModel = {
   },
 
   async findByIdUsuario(id_usuario) {
+    // JOIN a la tabla base usuarios (no la vista) para ver el soft-delete:
+    // id_usuario es único de facto en pacientes pero el flag activo vive en
+    // usuarios. Necesario para distinguir colisión activa (409) de borrada
+    // (reactivar) — ADR-001.
     const [rows] = await pool.query(
-      `SELECT id_paciente, id_usuario, id_obra_social FROM pacientes WHERE id_usuario = ?`,
+      `SELECT p.id_paciente, p.id_usuario, p.id_obra_social, u.activo
+       FROM pacientes p
+       JOIN usuarios u ON p.id_usuario = u.id_usuario
+       WHERE p.id_usuario = ?`,
       [id_usuario],
     );
     return rows[0] ?? null;
@@ -76,11 +83,28 @@ const PacienteModel = {
   },
 
   async update(id, { id_obra_social }) {
+    // Guarda defensiva: solo actualiza si el usuario asociado está activo,
+    // para no mutar un paciente soft-deleted.
     const [result] = await pool.query(
-      `UPDATE pacientes SET id_obra_social = ? WHERE id_paciente = ?`,
+      `UPDATE pacientes p
+       JOIN usuarios u ON p.id_usuario = u.id_usuario
+       SET p.id_obra_social = ?
+       WHERE p.id_paciente = ? AND u.activo = 1`,
       [id_obra_social, id],
     );
     return result.affectedRows;
+  },
+
+  async reactivate(conn, { id_paciente, id_usuario, id_obra_social }) {
+    // Reactiva el usuario asociado y sobrescribe la obra social del paciente.
+    // Debe correr dentro de una transacción.
+    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [
+      id_usuario,
+    ]);
+    await conn.query(
+      "UPDATE pacientes SET id_obra_social = ? WHERE id_paciente = ?",
+      [id_obra_social, id_paciente],
+    );
   },
 
   async delete(id_usuario) {

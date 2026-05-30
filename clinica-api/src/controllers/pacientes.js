@@ -65,6 +65,9 @@ export class PacientesController {
       if (err.message.includes("ya tiene")) {
         return res.status(409).json({ success: false, message: err.message });
       }
+      if (err.message.includes("no está activa")) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
       return res.status(500).json({ success: false, error: err.message });
     }
   }
@@ -87,6 +90,9 @@ export class PacientesController {
         data: pacienteResponse(actualizado),
       });
     } catch (err) {
+      if (err.message.includes("no está activa")) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
       return res.status(500).json({ success: false, error: err.message });
     }
   }
