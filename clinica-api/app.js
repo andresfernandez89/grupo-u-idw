@@ -1,8 +1,12 @@
 import cors from "cors";
 import express from "express";
+import helmet from "helmet";
 import v1Router from "./src/routes/v1/index.js";
 
 const app = express();
+
+// Security headers (hardening)
+app.use(helmet());
 
 // Middlewares
 const corsOptions = {
