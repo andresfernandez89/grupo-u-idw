@@ -60,8 +60,12 @@ const PacienteModel = {
   },
 
   async findByIdUsuario(id_usuario) {
+    // Unimos (JOIN) pacientes con usuarios para leer el campo "activo". Un usuario tiene un solo paciente, pero la marca de borrado (activo) está en "usuarios". Necesitamos saber si es un paciente activo (duplicado) o borrado (se puede revivir). Usamos las tablas reales y NO la vista v_pacientes, que oculta borrados.
     const [rows] = await pool.query(
-      `SELECT id_paciente, id_usuario, id_obra_social FROM pacientes WHERE id_usuario = ?`,
+      `SELECT p.id_paciente, p.id_usuario, p.id_obra_social, u.activo
+       FROM pacientes p
+       JOIN usuarios u ON p.id_usuario = u.id_usuario
+       WHERE p.id_usuario = ?`,
       [id_usuario],
     );
     return rows[0] ?? null;
@@ -76,11 +80,27 @@ const PacienteModel = {
   },
 
   async update(id, { id_obra_social }) {
+    // Guarda defensiva: solo actualiza si el usuario asociado está activo,
+    // para no mutar un paciente soft-deleted.
     const [result] = await pool.query(
-      `UPDATE pacientes SET id_obra_social = ? WHERE id_paciente = ?`,
+      `UPDATE pacientes p
+       JOIN usuarios u ON p.id_usuario = u.id_usuario
+       SET p.id_obra_social = ?
+       WHERE p.id_paciente = ? AND u.activo = 1`,
       [id_obra_social, id],
     );
     return result.affectedRows;
+  },
+
+  async reactivate(conn, { id_paciente, id_usuario, id_obra_social }) {
+    // Reactiva el usuario asociado y sobrescribe la obra social del paciente. Debe correr dentro de una transacción.
+    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [
+      id_usuario,
+    ]);
+    await conn.query(
+      "UPDATE pacientes SET id_obra_social = ? WHERE id_paciente = ?",
+      [id_obra_social, id_paciente],
+    );
   },
 
   async delete(id_usuario) {

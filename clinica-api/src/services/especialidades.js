@@ -47,10 +47,18 @@ export class EspecialidadesService {
 
   async create(nombre) {
     const existing = await EspecialidadModel.findByNombre(nombre);
-    if (existing) {
+
+    if (!existing) {
+      return await EspecialidadModel.create(nombre);
+    }
+
+    if (existing.activo === 1) {
       throw new Error("El nombre de la especialidad ya está registrado");
     }
-    return await EspecialidadModel.create(nombre);
+
+    // existing.activo === 0 → reactivar (ADR-001 Opción C)
+    await EspecialidadModel.reactivate(existing.id_especialidad, nombre);
+    return await EspecialidadModel.findById(existing.id_especialidad);
   }
 
   async update(id, { nombre }) {
