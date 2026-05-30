@@ -1,12 +1,31 @@
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import morgan from "morgan";
+import { createStream } from "rotating-file-stream";
+import fs from "fs";
+import path from "path";
 import v1Router from "./src/routes/v1/index.js";
 
 const app = express();
 
 // Security headers (hardening)
 app.use(helmet());
+
+// Access logs with monthly rotation
+const logsDir = path.resolve("logs");
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+const accessLogStream = createStream("access.log", {
+  interval: "1M",
+  path: logsDir,
+  compress: "gzip",
+  maxFiles: 36,
+});
+
+app.use(morgan("combined", { stream: accessLogStream }));
 
 // Middlewares
 const corsOptions = {
