@@ -1,9 +1,19 @@
 import ObraSocialModel from "../models/obra_social.js";
 
 export class ObrasSocialesService {
-  async browse({ page = 1, limit = 10, sort = "id_obra_social", order = "asc", filters = {} } = {}) {
+  async browse({
+    page = 1,
+    limit = 10,
+    sort = "id_obra_social",
+    order = "asc",
+    filters = {},
+  } = {}) {
     const offset = (page - 1) * limit;
-    const allowedSort = ["id_obra_social", "nombre", "porcentaje_descuento"].includes(sort)
+    const allowedSort = [
+      "id_obra_social",
+      "nombre",
+      "porcentaje_descuento",
+    ].includes(sort)
       ? sort
       : "id_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -43,13 +53,21 @@ export class ObrasSocialesService {
     return affectedRows === 1;
   }
 
-  async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
+  async update(
+    id,
+    { nombre, descripcion, porcentaje_descuento, es_particular },
+  ) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing && existing.id_obra_social !== id) {
       throw new Error("El nombre de la obra social ya está registrado");
     }
 
-    const affectedRows = await ObraSocialModel.update(id, { nombre, descripcion, porcentaje_descuento, es_particular });
+    const affectedRows = await ObraSocialModel.update(id, {
+      nombre,
+      descripcion,
+      porcentaje_descuento,
+      es_particular,
+    });
 
     if (affectedRows === 0) return null;
 
@@ -60,7 +78,12 @@ export class ObrasSocialesService {
     const existing = await ObraSocialModel.findByNombre(nombre);
 
     if (!existing) {
-      return await ObraSocialModel.create({ nombre, descripcion, porcentaje_descuento, es_particular });
+      return await ObraSocialModel.create({
+        nombre,
+        descripcion,
+        porcentaje_descuento,
+        es_particular,
+      });
     }
 
     if (existing.activo === 1) {

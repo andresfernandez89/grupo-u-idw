@@ -86,7 +86,10 @@ const MedicoModel = {
     return rows[0] ?? null;
   },
 
-  async findByEspecialidad(id_especialidad, { filters, limit, offset, sort, order }) {
+  async findByEspecialidad(
+    id_especialidad,
+    { filters, limit, offset, sort, order },
+  ) {
     let sql = `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
                         m.descripcion, m.valor_consulta,
                         e.nombre AS especialidad,
@@ -147,9 +150,7 @@ const MedicoModel = {
   },
 
   async findByMatricula(matricula) {
-    // JOIN a la tabla base usuarios (no la vista) para ver el soft-delete:
-    // la matrícula es UNIQUE pero el flag activo vive en usuarios. Necesario
-    // para distinguir colisión activa (409) de borrada (reactivar) — ADR-001.
+    // Unimos (JOIN) medicos con usuarios para leer el campo "activo". La matrícula no se repite y vive en "medicos", pero la marca de borrado (activo) está en "usuarios". Necesitamos saber si una matrícula repetida es de un médico activo (es duplicado) o de uno borrado (se puede revivir). Usamos las tablas reales y NO la vista v_medicos, porque la vista esconde los borrados.
     const [rows] = await pool.query(
       `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
               m.descripcion, m.valor_consulta, u.activo
@@ -200,7 +201,14 @@ const MedicoModel = {
 
   async reactivate(
     conn,
-    { id_medico, id_usuario, id_especialidad, matricula, descripcion, valor_consulta },
+    {
+      id_medico,
+      id_usuario,
+      id_especialidad,
+      matricula,
+      descripcion,
+      valor_consulta,
+    },
   ) {
     // Reactiva el usuario ya asociado a esa matrícula (id_usuario NO cambia, ADR-001)
     // y sobrescribe los campos del médico. Debe correr dentro de una transacción.

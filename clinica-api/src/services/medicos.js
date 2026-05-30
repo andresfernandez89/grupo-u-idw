@@ -3,7 +3,13 @@ import EspecialidadModel from "../models/especialidad.js";
 import { withTransaction } from "../config/db.js";
 
 export class MedicosService {
-  async browse({ filters = {}, page = 1, limit = 10, sort = "id_medico", order = "asc" } = {}) {
+  async browse({
+    filters = {},
+    page = 1,
+    limit = 10,
+    sort = "id_medico",
+    order = "asc",
+  } = {}) {
     const offset = (page - 1) * limit;
     const allowedSort = [
       "id_medico",
@@ -41,7 +47,13 @@ export class MedicosService {
 
   async findByEspecialidad(
     id_especialidad,
-    { filters = {}, page = 1, limit = 10, sort = "id_medico", order = "asc" } = {},
+    {
+      filters = {},
+      page = 1,
+      limit = 10,
+      sort = "id_medico",
+      order = "asc",
+    } = {},
   ) {
     const offset = (page - 1) * limit;
     const allowedSort = [
@@ -65,7 +77,9 @@ export class MedicosService {
       order: allowedOrder,
     });
 
-    const total = await MedicoModel.countByEspecialidad(id_especialidad, { filters });
+    const total = await MedicoModel.countByEspecialidad(id_especialidad, {
+      filters,
+    });
 
     return {
       data: rows,

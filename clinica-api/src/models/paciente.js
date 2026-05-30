@@ -60,10 +60,7 @@ const PacienteModel = {
   },
 
   async findByIdUsuario(id_usuario) {
-    // JOIN a la tabla base usuarios (no la vista) para ver el soft-delete:
-    // id_usuario es único de facto en pacientes pero el flag activo vive en
-    // usuarios. Necesario para distinguir colisión activa (409) de borrada
-    // (reactivar) — ADR-001.
+    // Unimos (JOIN) pacientes con usuarios para leer el campo "activo". Un usuario tiene un solo paciente, pero la marca de borrado (activo) está en "usuarios". Necesitamos saber si es un paciente activo (duplicado) o borrado (se puede revivir). Usamos las tablas reales y NO la vista v_pacientes, que oculta borrados.
     const [rows] = await pool.query(
       `SELECT p.id_paciente, p.id_usuario, p.id_obra_social, u.activo
        FROM pacientes p
@@ -96,8 +93,7 @@ const PacienteModel = {
   },
 
   async reactivate(conn, { id_paciente, id_usuario, id_obra_social }) {
-    // Reactiva el usuario asociado y sobrescribe la obra social del paciente.
-    // Debe correr dentro de una transacción.
+    // Reactiva el usuario asociado y sobrescribe la obra social del paciente. Debe correr dentro de una transacción.
     await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [
       id_usuario,
     ]);
