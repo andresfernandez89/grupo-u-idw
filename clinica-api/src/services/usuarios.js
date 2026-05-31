@@ -71,18 +71,14 @@ export class UsuariosService {
   }
 
   async update(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
-    if (email) {
-      const emailExistente = await UsuarioModel.findByEmail(email);
-      if (emailExistente && emailExistente.id_usuario !== id) {
-        throw new Error("El email ya está registrado por otro usuario");
-      }
+    const emailExistente = await UsuarioModel.findByEmail(email);
+    if (emailExistente && emailExistente.id_usuario !== id) {
+      throw new Error("El email ya está registrado por otro usuario");
     }
 
-    if (documento) {
-      const docExistente = await UsuarioModel.findByDocumento(documento);
-      if (docExistente && docExistente.id_usuario !== id) {
-        throw new Error("El documento ya está registrado por otro usuario");
-      }
+    const docExistente = await UsuarioModel.findByDocumento(documento);
+    if (docExistente && docExistente.id_usuario !== id) {
+      throw new Error("El documento ya está registrado por otro usuario");
     }
 
     const affectedRows = await UsuarioModel.update(id, {

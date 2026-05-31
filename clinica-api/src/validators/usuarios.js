@@ -150,10 +150,9 @@ export const updateUsuarioValidator = [
     .withMessage("El id debe ser un entero positivo"),
 
   body("documento")
-    .optional()
     .trim()
     .notEmpty()
-    .withMessage("El documento no puede estar vacío")
+    .withMessage("El documento es obligatorio")
     .bail()
     .isString()
     .withMessage("El documento debe ser un texto")
@@ -161,10 +160,9 @@ export const updateUsuarioValidator = [
     .withMessage("El documento no puede superar 20 caracteres"),
 
   body("apellido")
-    .optional()
     .trim()
     .notEmpty()
-    .withMessage("El apellido no puede estar vacío")
+    .withMessage("El apellido es obligatorio")
     .bail()
     .isString()
     .withMessage("El apellido debe ser un texto")
@@ -172,10 +170,9 @@ export const updateUsuarioValidator = [
     .withMessage("El apellido no puede superar 100 caracteres"),
 
   body("nombres")
-    .optional()
     .trim()
     .notEmpty()
-    .withMessage("Los nombres no pueden estar vacíos")
+    .withMessage("Los nombres son obligatorios")
     .bail()
     .isString()
     .withMessage("Los nombres deben ser un texto")
@@ -183,20 +180,18 @@ export const updateUsuarioValidator = [
     .withMessage("Los nombres no pueden superar 100 caracteres"),
 
   body("email")
-    .optional()
     .trim()
     .notEmpty()
-    .withMessage("El email no puede estar vacío")
+    .withMessage("El email es obligatorio")
     .bail()
     .isEmail()
     .withMessage("Debe ser un email válido")
     .normalizeEmail(),
 
   body("contrasenia")
-    .optional()
     .trim()
     .notEmpty()
-    .withMessage("La contraseña no puede estar vacía"),
+    .withMessage("La contraseña es obligatoria"),
 
   body("foto_path")
     .optional()
@@ -205,7 +200,10 @@ export const updateUsuarioValidator = [
     .withMessage("La foto_path debe ser un texto"),
 
   body("rol")
-    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El rol es obligatorio")
+    .bail()
     .isIn([1, 2, 3])
     .withMessage("rol debe ser 1 (médico), 2 (paciente) o 3 (admin)"),
 ];

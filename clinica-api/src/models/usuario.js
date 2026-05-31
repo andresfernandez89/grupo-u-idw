@@ -125,44 +125,11 @@ const UsuarioModel = {
     id,
     { documento, apellido, nombres, email, contrasenia, foto_path, rol },
   ) {
-    const fields = [];
-    const params = [];
-
-    if (documento !== undefined) {
-      fields.push("documento = ?");
-      params.push(documento);
-    }
-    if (apellido !== undefined) {
-      fields.push("apellido = ?");
-      params.push(apellido);
-    }
-    if (nombres !== undefined) {
-      fields.push("nombres = ?");
-      params.push(nombres);
-    }
-    if (email !== undefined) {
-      fields.push("email = ?");
-      params.push(email);
-    }
-    if (contrasenia !== undefined) {
-      fields.push("contrasenia = ?");
-      params.push(contrasenia);
-    }
-    if (foto_path !== undefined) {
-      fields.push("foto_path = ?");
-      params.push(foto_path || '');
-    }
-    if (rol !== undefined) {
-      fields.push("rol = ?");
-      params.push(rol);
-    }
-
-    if (fields.length === 0) return 0;
-
-    params.push(id);
     const [result] = await pool.query(
-      `UPDATE usuarios SET ${fields.join(", ")} WHERE id_usuario = ? AND activo = 1`,
-      params,
+      `UPDATE usuarios
+       SET documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
+       WHERE id_usuario = ? AND activo = 1`,
+      [documento, apellido, nombres, email, contrasenia, foto_path || '', rol, id],
     );
     return result.affectedRows;
   },
