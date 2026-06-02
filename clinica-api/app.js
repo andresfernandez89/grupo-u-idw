@@ -1,32 +1,33 @@
 import cors from "cors";
 import express from "express";
-import { testConexion } from "./src/config/db.js";
+import fs from "fs";
+import helmet from "helmet";
+import morgan from "morgan";
+import path from "path";
+import { createStream } from "rotating-file-stream";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpecs from "./src/config/swagger.js";
 import v1Router from "./src/routes/v1/index.js";
 
-process.loadEnvFile();
+const app = express();
 
-function validateEnv() {
-  const missing = [];
+// Security headers (hardening)
+app.use(helmet());
 
-  if (!process.env.DB_HOST) missing.push("DB_HOST");
-  if (!process.env.DB_USER) missing.push("DB_USER");
-  if (!process.env.DB_PASSWORD) missing.push("DB_PASSWORD");
-  if (!process.env.DB_NAME) missing.push("DB_NAME");
-  if (!process.env.CORS_ORIGIN) missing.push("CORS_ORIGIN");
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Faltan variables de entorno obligatorias: ${missing.join(", ")}`,
-    );
-  }
+// Access logs with monthly rotation
+const logsDir = path.resolve("logs");
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
 }
 
-validateEnv();
+const accessLogStream = createStream("access.log", {
+  interval: "1M",
+  path: logsDir,
+  compress: "gzip",
+  maxFiles: 36,
+});
 
-await testConexion();
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(morgan("combined", { stream: accessLogStream }));
 
 // Middlewares
 const corsOptions = {
@@ -43,8 +44,7 @@ app.use(express.json());
 app.use("/api", v1Router);
 app.use("/api/v1", v1Router);
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+// Swagger documentation UI
+app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 export default app;
