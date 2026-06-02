@@ -1,10 +1,12 @@
 import cors from "cors";
 import express from "express";
+import fs from "fs";
 import helmet from "helmet";
 import morgan from "morgan";
-import { createStream } from "rotating-file-stream";
-import fs from "fs";
 import path from "path";
+import { createStream } from "rotating-file-stream";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpecs from "./src/config/swagger.js";
 import v1Router from "./src/routes/v1/index.js";
 
 const app = express();
@@ -41,5 +43,8 @@ app.use(express.json());
 // Routes
 app.use("/api", v1Router);
 app.use("/api/v1", v1Router);
+
+// Swagger documentation UI
+app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 export default app;
