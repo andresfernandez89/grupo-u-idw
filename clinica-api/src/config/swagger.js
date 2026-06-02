@@ -116,6 +116,54 @@ const options = {
             },
           },
         },
+        Paciente: {
+          type: "object",
+          properties: {
+            id: { type: "integer", description: "ID del paciente" },
+            id_usuario: {
+              type: "integer",
+              description: "ID del usuario asociado",
+            },
+            apellido: { type: "string", description: "Apellido del paciente" },
+            nombres: { type: "string", description: "Nombres del paciente" },
+            email: {
+              type: "string",
+              format: "email",
+              description: "Email del paciente",
+            },
+            foto_path: {
+              type: "string",
+              nullable: true,
+              description: "Ruta de la foto del paciente",
+            },
+            obra_social: {
+              type: "object",
+              properties: {
+                id: { type: "integer", description: "ID de la obra social" },
+                descripcion: {
+                  type: "string",
+                  description: "Nombre de la obra social",
+                },
+              },
+            },
+          },
+        },
+        PacienteCreate: {
+          type: "object",
+          required: ["id_usuario", "id_obra_social"],
+          properties: {
+            id_usuario: {
+              type: "integer",
+              description: "ID del usuario a vincular",
+              minimum: 1,
+            },
+            id_obra_social: {
+              type: "integer",
+              description: "ID de la obra social",
+              minimum: 1,
+            },
+          },
+        },
         Error: {
           type: "object",
           properties: {
