@@ -21,7 +21,7 @@ export class ObrasSocialesController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -90,13 +90,14 @@ export class ObrasSocialesController {
 
       if (!obraSocial) {
         return res.status(404).json({
+          success: false,
           message: "No se encontró obra social con el id solicitado",
         });
       }
 
-      res.json(obraSocialResponse(obraSocial));
+      res.json({ success: true, data: obraSocialResponse(obraSocial) });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 }
