@@ -168,6 +168,58 @@ const options = {
             },
           },
         },
+        ObraSocial: {
+          type: "object",
+          properties: {
+            id: { type: "integer", description: "ID de la obra social" },
+            nombre: {
+              type: "string",
+              description: "Nombre de la obra social",
+            },
+            descripcion: {
+              type: "string",
+              nullable: true,
+              description: "Descripción de la obra social",
+            },
+            porcentaje_descuento: {
+              type: "number",
+              format: "float",
+              description: "Porcentaje de descuento aplicado",
+            },
+            es_particular: {
+              type: "boolean",
+              description: "Indica si corresponde a atención particular",
+            },
+          },
+        },
+        ObraSocialInput: {
+          type: "object",
+          required: ["nombre", "porcentaje_descuento", "es_particular"],
+          properties: {
+            nombre: {
+              type: "string",
+              description: "Nombre de la obra social",
+              maxLength: 120,
+            },
+            descripcion: {
+              type: "string",
+              nullable: true,
+              description: "Descripción de la obra social",
+              maxLength: 255,
+            },
+            porcentaje_descuento: {
+              type: "number",
+              format: "float",
+              description: "Porcentaje de descuento",
+              minimum: 0,
+              maximum: 100,
+            },
+            es_particular: {
+              type: "boolean",
+              description: "Indica si corresponde a atención particular",
+            },
+          },
+        },
         Error: {
           type: "object",
           properties: {
