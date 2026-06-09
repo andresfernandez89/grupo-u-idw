@@ -236,6 +236,68 @@ const options = {
             totalPages: { type: "integer" },
           },
         },
+        Turno: {
+          type: "object",
+          properties: {
+            id: { type: "integer", description: "ID del turno" },
+            id_medico: {
+              type: "integer",
+              description: "ID del médico asignado",
+            },
+            id_paciente: {
+              type: "integer",
+              description: "ID del paciente",
+            },
+            id_obra_social: {
+              type: "integer",
+              description: "ID de la obra social",
+            },
+            fecha_hora: {
+              type: "string",
+              format: "date-time",
+              description: "Fecha y hora del turno",
+            },
+            valor_total: {
+              type: "number",
+              format: "float",
+              description: "Valor total calculado de la consulta",
+            },
+            atendido: {
+              type: "boolean",
+              description: "Indica si el turno ya fue atendido",
+            },
+            activo: {
+              type: "boolean",
+              description: "Indica si el turno está activo",
+            },
+          },
+        },
+        TurnoCreate: {
+          type: "object",
+          required: ["id_medico", "id_paciente", "id_obra_social", "fecha_hora"],
+          properties: {
+            id_medico: {
+              type: "integer",
+              description: "ID del médico",
+              minimum: 1,
+            },
+            id_paciente: {
+              type: "integer",
+              description: "ID del paciente",
+              minimum: 1,
+            },
+            id_obra_social: {
+              type: "integer",
+              description: "ID de la obra social",
+              minimum: 1,
+            },
+            fecha_hora: {
+              type: "string",
+              format: "date-time",
+              description: "Fecha y hora del turno (ISO 8601)",
+            },
+          },
+        },
       },
     },
   },
