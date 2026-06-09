@@ -64,6 +64,7 @@ export const getByIdPacienteValidator = [
     .trim()
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
+    .bail()
     .toInt(),
 ];
 
@@ -90,6 +91,7 @@ export const updatePacienteValidator = [
     .trim()
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
+    .bail()
     .toInt(),
 
   body("id_obra_social")
@@ -106,5 +108,6 @@ export const deletePacienteValidator = [
     .trim()
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
+    .bail()
     .toInt(),
 ];
