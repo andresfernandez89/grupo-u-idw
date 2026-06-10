@@ -1,3 +1,4 @@
+import { clearCache } from "../config/cache.js";
 import EspecialidadModel from "../models/especialidad.js";
 
 export class EspecialidadesService {
@@ -49,7 +50,9 @@ export class EspecialidadesService {
     const existing = await EspecialidadModel.findByNombre(nombre);
 
     if (!existing) {
-      return await EspecialidadModel.create(nombre);
+      const nueva = await EspecialidadModel.create(nombre);
+      clearCache("/especialidades");
+      return nueva;
     }
 
     if (existing.activo === 1) {
@@ -58,6 +61,7 @@ export class EspecialidadesService {
 
     // existing.activo === 0 → reactivar (ADR-001 Opción C)
     await EspecialidadModel.reactivate(existing.id_especialidad, nombre);
+    clearCache("/especialidades");
     return await EspecialidadModel.findById(existing.id_especialidad);
   }
 
@@ -73,6 +77,7 @@ export class EspecialidadesService {
       return null;
     }
 
+    clearCache("/especialidades");
     return EspecialidadModel.findById(id);
   }
 
@@ -82,6 +87,7 @@ export class EspecialidadesService {
       return null;
     }
     const affectedRows = await EspecialidadModel.delete(id);
+    clearCache("/especialidades");
     return affectedRows === 1;
   }
 }
