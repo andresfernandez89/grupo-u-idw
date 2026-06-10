@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { cache } from "../../config/cache.js";
 import especialidadController from "../../controllers/especialidades.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -81,6 +82,7 @@ const router = Router();
  */
 router.get(
   "/",
+  cache("5 minutes"),
   browseEspecialidadValidator,
   handleValidationErrors,
   especialidadController.browse.bind(especialidadController),
@@ -122,6 +124,7 @@ router.get(
  */
 router.get(
   "/:id",
+  cache("5 minutes"),
   getByIdEspecialidadValidator,
   handleValidationErrors,
   especialidadController.findById.bind(especialidadController),
