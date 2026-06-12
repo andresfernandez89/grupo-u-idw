@@ -88,6 +88,18 @@ const UsuarioModel = {
     return rows[0] ?? null;
   },
 
+  async findByEmailYPassword(email, contrasenia) {
+    const [rows] = await pool.query(
+      `SELECT id_usuario, documento, apellido, nombres, email, foto_path, rol, activo
+       FROM usuarios
+       WHERE email = ?
+         AND contrasenia = SHA2(?, 256)
+         AND activo = 1`,
+      [email, contrasenia],
+    );
+    return rows[0] ?? null;
+  },
+
   async findByDocumento(documento) {
     const [rows] = await pool.query(
       "SELECT id_usuario, documento, apellido, nombres, email, foto_path, rol, activo FROM usuarios WHERE documento = ?",
@@ -107,7 +119,16 @@ const UsuarioModel = {
   }) {
     const [result] = await pool.query(
       "INSERT INTO usuarios (documento, apellido, nombres, email, contrasenia, foto_path, rol, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [documento, apellido, nombres, email, contrasenia, foto_path || '', rol, 1],
+      [
+        documento,
+        apellido,
+        nombres,
+        email,
+        contrasenia,
+        foto_path || "",
+        rol,
+        1,
+      ],
     );
     return {
       id_usuario: result.insertId,
@@ -115,7 +136,7 @@ const UsuarioModel = {
       apellido,
       nombres,
       email,
-      foto_path: foto_path || '',
+      foto_path: foto_path || "",
       rol,
       activo: 1,
     };
@@ -129,7 +150,16 @@ const UsuarioModel = {
       `UPDATE usuarios
        SET documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
        WHERE id_usuario = ? AND activo = 1`,
-      [documento, apellido, nombres, email, contrasenia, foto_path || '', rol, id],
+      [
+        documento,
+        apellido,
+        nombres,
+        email,
+        contrasenia,
+        foto_path || "",
+        rol,
+        id,
+      ],
     );
     return result.affectedRows;
   },

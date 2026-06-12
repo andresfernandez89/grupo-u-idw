@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticate } from "../../middlewares/auth.js";
 import medicoController from "../../controllers/medicos.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -18,6 +19,8 @@ const router = Router();
  *   get:
  *     summary: Obtiene la lista de médicos con paginación y filtros
  *     tags: [Médicos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: id_especialidad
@@ -103,6 +106,7 @@ const router = Router();
  */
 router.get(
   "/",
+  authenticate,
   browseMedicoValidator,
   handleValidationErrors,
   medicoController.browse.bind(medicoController),
@@ -114,6 +118,8 @@ router.get(
  *   get:
  *     summary: Obtiene médicos filtrados por especialidad
  *     tags: [Médicos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id_especialidad
@@ -205,6 +211,7 @@ router.get(
  */
 router.get(
   "/especialidad/:id_especialidad",
+  authenticate,
   getByEspecialidadMedicoValidator,
   handleValidationErrors,
   medicoController.findByEspecialidad.bind(medicoController),
@@ -216,6 +223,8 @@ router.get(
  *   get:
  *     summary: Obtiene un médico por su ID
  *     tags: [Médicos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -246,6 +255,7 @@ router.get(
  */
 router.get(
   "/:id",
+  authenticate,
   getByIdMedicoValidator,
   handleValidationErrors,
   medicoController.findById.bind(medicoController),
@@ -257,6 +267,8 @@ router.get(
  *   post:
  *     summary: Crea un nuevo médico
  *     tags: [Médicos]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -298,6 +310,7 @@ router.get(
  */
 router.post(
   "/",
+  authenticate,
   createMedicoValidator,
   handleValidationErrors,
   medicoController.create.bind(medicoController),
@@ -309,6 +322,8 @@ router.post(
  *   put:
  *     summary: Actualiza un médico existente
  *     tags: [Médicos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -364,6 +379,7 @@ router.post(
  */
 router.put(
   "/:id",
+  authenticate,
   updateMedicoValidator,
   handleValidationErrors,
   medicoController.update.bind(medicoController),
@@ -375,6 +391,8 @@ router.put(
  *   delete:
  *     summary: Elimina (desactiva) un médico
  *     tags: [Médicos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -401,6 +419,7 @@ router.put(
  */
 router.delete(
   "/:id",
+  authenticate,
   deleteMedicoValidator,
   handleValidationErrors,
   medicoController.delete.bind(medicoController),

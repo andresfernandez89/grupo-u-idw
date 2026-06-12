@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticate } from "../../middlewares/auth.js";
 import turnosController from "../../controllers/turnos.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -18,6 +19,8 @@ const router = Router();
  *   get:
  *     summary: Obtiene la lista de turnos con paginación y filtros
  *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: id_medico
@@ -117,6 +120,7 @@ const router = Router();
  */
 router.get(
   "/",
+  authenticate,
   browseTurnoValidator,
   handleValidationErrors,
   turnosController.browse.bind(turnosController),
@@ -128,6 +132,8 @@ router.get(
  *   get:
  *     summary: Obtiene un turno por su ID
  *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -158,6 +164,7 @@ router.get(
  */
 router.get(
   "/:id",
+  authenticate,
   getByIdTurnoValidator,
   handleValidationErrors,
   turnosController.findById.bind(turnosController),
@@ -169,6 +176,8 @@ router.get(
  *   post:
  *     summary: Crea un nuevo turno
  *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -210,6 +219,7 @@ router.get(
  */
 router.post(
   "/",
+  authenticate,
   createTurnoValidator,
   handleValidationErrors,
   turnosController.create.bind(turnosController),
@@ -221,6 +231,8 @@ router.post(
  *   put:
  *     summary: Actualiza un turno existente
  *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -276,6 +288,7 @@ router.post(
  */
 router.put(
   "/:id",
+  authenticate,
   updateTurnoValidator,
   handleValidationErrors,
   turnosController.update.bind(turnosController),
@@ -284,9 +297,11 @@ router.put(
 /**
  * @openapi
   * /turnos/{id}/atendido:
-  *   patch:
-  *     summary: Marca un turno como atendido
+ *   patch:
+ *     summary: Marca un turno como atendido
  *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -324,6 +339,7 @@ router.put(
  */
 router.patch(
   "/:id/atendido",
+  authenticate,
   marcarAtendidoValidator,
   handleValidationErrors,
   turnosController.marcarAtendido.bind(turnosController),
@@ -335,6 +351,8 @@ router.patch(
  *   delete:
  *     summary: Elimina (desactiva) un turno
  *     tags: [Turnos]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -361,6 +379,7 @@ router.patch(
  */
 router.delete(
   "/:id",
+  authenticate,
   deleteTurnoValidator,
   handleValidationErrors,
   turnosController.delete.bind(turnosController),

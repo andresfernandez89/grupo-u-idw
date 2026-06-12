@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authenticate } from "../../middlewares/auth.js";
 import pacientesController from "../../controllers/pacientes.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -17,6 +18,8 @@ const router = Router();
  *   get:
  *     summary: Obtiene la lista de pacientes con paginación y filtros
  *     tags: [Pacientes]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: apellido
@@ -95,6 +98,7 @@ const router = Router();
  */
 router.get(
   "/",
+  authenticate,
   browsePacienteValidator,
   handleValidationErrors,
   pacientesController.browse.bind(pacientesController),
@@ -106,6 +110,8 @@ router.get(
  *   get:
  *     summary: Obtiene un paciente por su ID
  *     tags: [Pacientes]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -136,6 +142,7 @@ router.get(
  */
 router.get(
   "/:id",
+  authenticate,
   getByIdPacienteValidator,
   handleValidationErrors,
   pacientesController.findById.bind(pacientesController),
@@ -147,6 +154,8 @@ router.get(
  *   post:
  *     summary: Crea un nuevo paciente
  *     tags: [Pacientes]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -188,6 +197,7 @@ router.get(
  */
 router.post(
   "/",
+  authenticate,
   createPacienteValidator,
   handleValidationErrors,
   pacientesController.create.bind(pacientesController),
@@ -199,6 +209,8 @@ router.post(
  *   put:
  *     summary: Actualiza un paciente existente
  *     tags: [Pacientes]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -248,6 +260,7 @@ router.post(
  */
 router.put(
   "/:id",
+  authenticate,
   updatePacienteValidator,
   handleValidationErrors,
   pacientesController.update.bind(pacientesController),
@@ -259,6 +272,8 @@ router.put(
  *   delete:
  *     summary: Elimina (desactiva) un paciente
  *     tags: [Pacientes]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -285,6 +300,7 @@ router.put(
  */
 router.delete(
   "/:id",
+  authenticate,
   deletePacienteValidator,
   handleValidationErrors,
   pacientesController.delete.bind(pacientesController),

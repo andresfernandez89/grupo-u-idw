@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { cache } from "../../config/cache.js";
+import { authenticate } from "../../middlewares/auth.js";
 import especialidadController from "../../controllers/especialidades.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -18,6 +19,8 @@ const router = Router();
  *   get:
  *     summary: Obtiene la lista de especialidades con paginación y filtros
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: nombre
@@ -82,6 +85,7 @@ const router = Router();
  */
 router.get(
   "/",
+  authenticate,
   cache("5 minutes"),
   browseEspecialidadValidator,
   handleValidationErrors,
@@ -94,6 +98,8 @@ router.get(
  *   get:
  *     summary: Obtiene una especialidad por su ID
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -124,6 +130,7 @@ router.get(
  */
 router.get(
   "/:id",
+  authenticate,
   cache("5 minutes"),
   getByIdEspecialidadValidator,
   handleValidationErrors,
@@ -136,6 +143,8 @@ router.get(
  *   post:
  *     summary: Crea una nueva especialidad
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -171,6 +180,7 @@ router.get(
  */
 router.post(
   "/",
+  authenticate,
   createEspecialidadValidator,
   handleValidationErrors,
   especialidadController.create.bind(especialidadController),
@@ -182,6 +192,8 @@ router.post(
  *   put:
  *     summary: Actualiza una especialidad existente
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -231,6 +243,7 @@ router.post(
  */
 router.put(
   "/:id",
+  authenticate,
   updateEspecialidadValidator,
   handleValidationErrors,
   especialidadController.update.bind(especialidadController),
@@ -242,6 +255,8 @@ router.put(
  *   delete:
  *     summary: Elimina (desactiva) una especialidad
  *     tags: [Especialidades]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -268,6 +283,7 @@ router.put(
  */
 router.delete(
   "/:id",
+  authenticate,
   deleteEspecialidadValidator,
   handleValidationErrors,
   especialidadController.delete.bind(especialidadController),
