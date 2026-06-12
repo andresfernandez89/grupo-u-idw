@@ -18,12 +18,6 @@ router.get(
   medicosObrasSocialesController.browse.bind(medicosObrasSocialesController),
 );
 
-router.get(
-  "/:id",
-  getByIdMedicoObraSocialValidator,
-  handleValidationErrors,
-  medicosObrasSocialesController.findById.bind(medicosObrasSocialesController),
-);
 
 router.post(
   "/",
