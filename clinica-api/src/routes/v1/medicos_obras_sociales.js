@@ -26,13 +26,6 @@ router.post(
   medicosObrasSocialesController.create.bind(medicosObrasSocialesController),
 );
 
-router.put(
-  "/:id",
-  updateMedicoObraSocialValidator,
-  handleValidationErrors,
-  medicosObrasSocialesController.update.bind(medicosObrasSocialesController),
-);
-
 router.delete(
   "/:id",
   deleteMedicoObraSocialValidator,
