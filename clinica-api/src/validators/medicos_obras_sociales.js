@@ -88,10 +88,16 @@ export const updateMedicoObraSocialValidator = [
 ];
 
 export const deleteMedicoObraSocialValidator = [
-  param("id")
+  param("id_medico")
     .trim()
     .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
+    .withMessage("El id_medico debe ser un entero positivo")
+    .toInt(),
+
+  param("id_obra_social")
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("El id_obra_social debe ser un entero positivo")
     .toInt(),
 ];
 

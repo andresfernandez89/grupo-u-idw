@@ -63,7 +63,7 @@ const MedicoObraSocialModel = {
     return rows[0] ?? null;
   },
 
-  async findByMedicoAndObraSocial(id_medico, id_obra_social) {
+  async findByMedicoObraSocial(id_medico, id_obra_social) {
     const [rows] = await pool.query(
       `SELECT id_medico_obra_social, id_medico, id_obra_social, activo
        FROM medicos_obras_sociales
@@ -96,6 +96,14 @@ const MedicoObraSocialModel = {
     const [result] = await pool.query(
       "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico_obra_social = ? AND activo = 1",
       [id],
+    );
+    return result.affectedRows;
+  },
+
+  async deleteByMedicoObraSocial(id_medico, id_obra_social) {
+    const [result] = await pool.query(
+      "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico = ? AND id_obra_social = ? AND activo = 1",
+      [id_medico, id_obra_social],
     );
     return result.affectedRows;
   },

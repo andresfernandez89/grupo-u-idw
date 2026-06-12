@@ -91,8 +91,8 @@ export class MedicosObrasSocialesController {
 
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      const deleted = await medicosObrasSocialesService.delete(id);
+      const { id_medico, id_obra_social } = req.params;
+      const deleted = await medicosObrasSocialesService.delete(id_medico, id_obra_social);
 
       if (deleted === null) {
         return res.status(404).json({ success: false, message: "Relación médico-obra social no encontrada" });

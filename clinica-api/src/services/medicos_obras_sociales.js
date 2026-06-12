@@ -1,6 +1,4 @@
 import MedicoObraSocialModel from "../models/medico_obra_social.js";
-import MedicoModel from "../models/medico.js";
-import ObraSocialModel from "../models/obra_social.js";
 
 export class MedicosObrasSocialesService {
   async browse({
@@ -48,7 +46,7 @@ export class MedicosObrasSocialesService {
   }
 
   async create({ id_medico, id_obra_social }) {
-    const existing = await MedicoObraSocialModel.findByMedicoAndObraSocial(
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,
       id_obra_social,
     );
@@ -61,7 +59,7 @@ export class MedicosObrasSocialesService {
   }
 
   async update(id, { id_medico, id_obra_social }) {
-    const existing = await MedicoObraSocialModel.findByMedicoAndObraSocial(
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,
       id_obra_social,
     );
@@ -80,11 +78,17 @@ export class MedicosObrasSocialesService {
     return MedicoObraSocialModel.findById(id);
   }
 
-  async delete(id) {
-    const existing = await MedicoObraSocialModel.findById(id);
+  async delete(id_medico, id_obra_social) {
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
+      id_medico,
+      id_obra_social,
+    );
     if (!existing) return null;
 
-    const affectedRows = await MedicoObraSocialModel.delete(id);
+    const affectedRows = await MedicoObraSocialModel.deleteByMedicoObraSocial(
+      id_medico,
+      id_obra_social,
+    );
     return affectedRows === 1;
   }
 }

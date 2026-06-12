@@ -27,7 +27,7 @@ router.post(
 );
 
 router.delete(
-  "/:id",
+  "/:id_medico/:id_obra_social",
   deleteMedicoObraSocialValidator,
   handleValidationErrors,
   medicosObrasSocialesController.delete.bind(medicosObrasSocialesController),
