@@ -33,7 +33,23 @@ const router = Router();
  */
 router.post(
   "/login",
-  passport.authenticate("local", { session: false }),
+  (req, res, next) => {
+    passport.authenticate("local", { session: false }, (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: info?.message || "Usuario o contraseña incorrectos",
+        });
+      }
+
+      req.user = user;
+      next();
+    })(req, res, next);
+  },
   authController.login.bind(authController),
 );
 
