@@ -30,6 +30,7 @@
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
     "passport-local": "1.0.0",
+    "pdfkit": "^0.19.1",
     "rotating-file-stream": "3.2.9",
     "swagger-jsdoc": "6.3.0",
     "swagger-ui-express": "5.0.1"
