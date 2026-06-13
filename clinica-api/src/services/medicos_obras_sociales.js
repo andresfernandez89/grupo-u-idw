@@ -70,26 +70,6 @@ export class MedicosObrasSocialesService {
     return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
   }
 
-  async update(id, { id_medico, id_obra_social }) {
-    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
-      id_medico,
-      id_obra_social,
-    );
-
-    if (existing && existing.id_medico_obra_social !== id) {
-      throw new Error("El médico ya tiene asignada esa obra social");
-    }
-
-    const affectedRows = await MedicoObraSocialModel.update(id, {
-      id_medico,
-      id_obra_social,
-    });
-
-    if (affectedRows === 0) return null;
-
-    return MedicoObraSocialModel.findById(id);
-  }
-
   async delete(id_medico, id_obra_social) {
     const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,

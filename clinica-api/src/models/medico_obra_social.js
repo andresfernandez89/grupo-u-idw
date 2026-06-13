@@ -82,24 +82,6 @@ const MedicoObraSocialModel = {
     return { id_medico_obra_social: result.insertId, id_medico, id_obra_social };
   },
 
-  async update(id, { id_medico, id_obra_social }) {
-    const [result] = await pool.query(
-      `UPDATE medicos_obras_sociales
-       SET id_medico = ?, id_obra_social = ?
-       WHERE id_medico_obra_social = ? AND activo = 1`,
-      [id_medico, id_obra_social, id],
-    );
-    return result.affectedRows;
-  },
-
-  async delete(id) {
-    const [result] = await pool.query(
-      "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico_obra_social = ? AND activo = 1",
-      [id],
-    );
-    return result.affectedRows;
-  },
-
   async deleteByMedicoObraSocial(id_medico, id_obra_social) {
     const [result] = await pool.query(
       "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico = ? AND id_obra_social = ? AND activo = 1",

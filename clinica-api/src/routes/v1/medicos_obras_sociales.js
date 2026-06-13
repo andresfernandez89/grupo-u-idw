@@ -5,8 +5,6 @@ import {
   browseMedicoObraSocialValidator,
   createMedicoObraSocialValidator,
   deleteMedicoObraSocialValidator,
-  getByIdMedicoObraSocialValidator,
-  updateMedicoObraSocialValidator,
 } from "../../validators/medicos_obras_sociales.js";
 
 const router = Router();
