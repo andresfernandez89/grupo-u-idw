@@ -6,6 +6,7 @@ import {
   createObraSocialValidator,
   deleteObraSocialValidator,
   getByIdObraSocialValidator,
+  getMedicosObraSocialValidator,
   updateObraSocialValidator,
 } from "../../validators/obras_sociales.js";
 
@@ -305,6 +306,62 @@ router.put(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
+/**
+ * @openapi
+ * /obras-sociales/{id}/medicos:
+ *   get:
+ *     summary: Obtiene los médicos asociados a una obra social
+ *     tags: [Obras Sociales]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID de la obra social
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         required: false
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         required: false
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [id_medico_obra_social, id_medico, id_obra_social]
+ *         required: false
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         required: false
+ *     responses:
+ *       200:
+ *         description: Lista paginada de médicos de la obra social
+ *       404:
+ *         description: Obra social no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get(
+  "/:id/medicos",
+  getMedicosObraSocialValidator,
+  handleValidationErrors,
+  obrasSocialesController.findMedicos.bind(obrasSocialesController),
+);
+
 router.get(
   "/:id",
   getByIdObraSocialValidator,
