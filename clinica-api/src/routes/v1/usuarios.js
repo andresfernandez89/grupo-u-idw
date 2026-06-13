@@ -111,8 +111,6 @@ router.get(
  */
 router.post(
   "/",
-  authenticate,
-  authorize(3),
   createUsuarioValidator,
   handleValidationErrors,
   usuarioController.create.bind(usuarioController),
