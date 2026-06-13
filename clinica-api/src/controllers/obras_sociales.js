@@ -39,7 +39,7 @@ export class ObrasSocialesController {
 
       return res.status(204).send();
     } catch (err) {
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -62,7 +62,7 @@ export class ObrasSocialesController {
       if (err.message.includes("ya está registrado")) {
         return res.status(409).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -79,7 +79,7 @@ export class ObrasSocialesController {
       if (err.message.includes("ya está registrado")) {
         return res.status(409).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
