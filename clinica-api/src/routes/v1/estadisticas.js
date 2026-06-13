@@ -228,4 +228,120 @@ router.get(
   estadisticasController.resumenGeneral.bind(estadisticasController),
 );
 
+/**
+ * @openapi
+ * /estadisticas/por-obra-social/pdf:
+ *   get:
+ *     summary: Descarga PDF con estadísticas por obra social
+ *     tags: [Estadísticas]
+ *     parameters:
+ *       - in: query
+ *         name: fecha_desde
+ *         schema: { type: string, format: date-time }
+ *       - in: query
+ *         name: fecha_hasta
+ *         schema: { type: string, format: date-time }
+ *     responses:
+ *       200:
+ *         description: Archivo PDF
+ *         content:
+ *           application/pdf:
+ *             schema: { type: string, format: binary }
+ *       400:
+ *         description: Parámetros de fecha inválidos
+ */
+router.get(
+  "/por-obra-social/pdf",
+  porObraSocialValidator,
+  handleValidationErrors,
+  estadisticasController.porObraSocialPdf.bind(estadisticasController),
+);
+
+/**
+ * @openapi
+ * /estadisticas/por-medico/pdf:
+ *   get:
+ *     summary: Descarga PDF con estadísticas por médico
+ *     tags: [Estadísticas]
+ *     parameters:
+ *       - in: query
+ *         name: fecha_desde
+ *         schema: { type: string, format: date-time }
+ *       - in: query
+ *         name: fecha_hasta
+ *         schema: { type: string, format: date-time }
+ *     responses:
+ *       200:
+ *         description: Archivo PDF
+ *         content:
+ *           application/pdf:
+ *             schema: { type: string, format: binary }
+ *       400:
+ *         description: Parámetros de fecha inválidos
+ */
+router.get(
+  "/por-medico/pdf",
+  porMedicoValidator,
+  handleValidationErrors,
+  estadisticasController.porMedicoPdf.bind(estadisticasController),
+);
+
+/**
+ * @openapi
+ * /estadisticas/por-especialidad/pdf:
+ *   get:
+ *     summary: Descarga PDF con estadísticas por especialidad
+ *     tags: [Estadísticas]
+ *     parameters:
+ *       - in: query
+ *         name: fecha_desde
+ *         schema: { type: string, format: date-time }
+ *       - in: query
+ *         name: fecha_hasta
+ *         schema: { type: string, format: date-time }
+ *     responses:
+ *       200:
+ *         description: Archivo PDF
+ *         content:
+ *           application/pdf:
+ *             schema: { type: string, format: binary }
+ *       400:
+ *         description: Parámetros de fecha inválidos
+ */
+router.get(
+  "/por-especialidad/pdf",
+  porEspecialidadValidator,
+  handleValidationErrors,
+  estadisticasController.porEspecialidadPdf.bind(estadisticasController),
+);
+
+/**
+ * @openapi
+ * /estadisticas/resumen-general/pdf:
+ *   get:
+ *     summary: Descarga PDF con el resumen general de turnos
+ *     tags: [Estadísticas]
+ *     parameters:
+ *       - in: query
+ *         name: fecha_desde
+ *         schema: { type: string, format: date-time }
+ *       - in: query
+ *         name: fecha_hasta
+ *         schema: { type: string, format: date-time }
+ *     responses:
+ *       200:
+ *         description: Archivo PDF
+ *         content:
+ *           application/pdf:
+ *             schema: { type: string, format: binary }
+ *       400:
+ *         description: Parámetros de fecha inválidos
+ */
+router.get(
+  "/resumen-general/pdf",
+  resumenGeneralValidator,
+  handleValidationErrors,
+  estadisticasController.resumenGeneralPdf.bind(estadisticasController),
+);
+
 export default router;
