@@ -1,6 +1,6 @@
 import { query } from "express-validator";
 
-export const porObraSocialValidator = [
+const fechaRangoValidator = [
   query("fecha_desde")
     .optional()
     .trim()
@@ -12,3 +12,8 @@ export const porObraSocialValidator = [
     .isISO8601()
     .withMessage("fecha_hasta debe tener un formato de fecha válido (ISO 8601)"),
 ];
+
+export const porObraSocialValidator = fechaRangoValidator;
+export const porMedicoValidator = fechaRangoValidator;
+export const porEspecialidadValidator = fechaRangoValidator;
+export const resumenGeneralValidator = fechaRangoValidator;
