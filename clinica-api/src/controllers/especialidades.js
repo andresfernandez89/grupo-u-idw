@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import {
   especialidadesCreate,
   especialidadesResponse,
@@ -61,7 +62,7 @@ export class EspecialidadesController {
         data: especialidadesResponse(nuevaEspecialidad),
       });
     } catch (error) {
-      if (error.message.includes("ya está registrado")) {
+      if (error instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: error.message });
       }
 
@@ -91,7 +92,7 @@ export class EspecialidadesController {
         data: especialidadesResponse(actualizada),
       });
     } catch (err) {
-      if (err.message.includes("ya está registrado")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
 

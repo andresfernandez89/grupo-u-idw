@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import { obraSocialCreate, obraSocialResponse } from "../dtos/obras_sociales.dto.js";
 import obrasSocialesService from "../services/obras_sociales.js";
 
@@ -59,7 +60,7 @@ export class ObrasSocialesController {
         data: obraSocialResponse(actualizada),
       });
     } catch (err) {
-      if (err.message.includes("ya está registrado")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
       return res.status(500).json({ success: false, error: err.message });
@@ -76,7 +77,7 @@ export class ObrasSocialesController {
         data: obraSocialResponse(nueva),
       });
     } catch (err) {
-      if (err.message.includes("ya está registrado")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
       return res.status(500).json({ success: false, error: err.message });

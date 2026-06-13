@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
 import { turnoCreate, turnoResponse } from "../dtos/turnos.dto.js";
 import turnoService from "../services/turnos.js";
 
@@ -64,10 +65,10 @@ export class TurnosController {
         data: turnoResponse(nuevo),
       });
     } catch (err) {
-      if (err.message.includes("no existe o no está activo")) {
+      if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
-      if (err.message.includes("ya tiene un turno asignado")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
       return res.status(500).json({ success: false, error: err.message });
@@ -92,10 +93,10 @@ export class TurnosController {
         data: turnoResponse(actualizado),
       });
     } catch (err) {
-      if (err.message.includes("no existe o no está activo")) {
+      if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
-      if (err.message.includes("ya tiene un turno asignado")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
       return res.status(500).json({ success: false, error: err.message });

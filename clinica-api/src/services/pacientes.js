@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
 import PacienteModel from "../models/paciente.js";
 import ObraSocialModel from "../models/obra_social.js";
 import { withTransaction } from "../config/db.js";
@@ -59,7 +60,7 @@ export class PacientesService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("El usuario ya tiene un paciente asociado");
+      throw new DuplicateError("El usuario ya tiene un paciente asociado");
     }
 
     // existing.activo === 0 → reactivar usuario + sobrescribir obra social
@@ -97,7 +98,7 @@ export class PacientesService {
     }
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new Error("La obra social indicada no existe o no está activa");
+      throw new ForeignKeyError("La obra social indicada no existe o no está activa");
     }
   }
 

@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
 import { medicosCreate, medicosResponse } from "../dtos/medicos.dto.js";
 import medicoService from "../services/medicos.js";
 
@@ -95,10 +96,10 @@ export class MedicosController {
         data: medicosResponse(nuevoMedico),
       });
     } catch (error) {
-      if (error.message.includes("ya está registrada")) {
+      if (error instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: error.message });
       }
-      if (error.message.includes("no está activa")) {
+      if (error instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: error.message });
       }
 
@@ -129,10 +130,10 @@ export class MedicosController {
         data: medicosResponse(actualizado),
       });
     } catch (err) {
-      if (err.message.includes("ya está registrada")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
-      if (err.message.includes("no está activa")) {
+      if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
 

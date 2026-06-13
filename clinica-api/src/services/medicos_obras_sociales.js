@@ -1,6 +1,5 @@
+import { DuplicateError } from "../utils/errors.js";
 import MedicoObraSocialModel from "../models/medico_obra_social.js";
-import MedicoModel from "../models/medico.js";
-import ObraSocialModel from "../models/obra_social.js";
 
 export class MedicosObrasSocialesService {
   async browse({
@@ -54,7 +53,7 @@ export class MedicosObrasSocialesService {
     );
 
     if (existing) {
-      throw new Error("El médico ya tiene asignada esa obra social");
+      throw new DuplicateError("El médico ya tiene asignada esa obra social");
     }
 
     return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
@@ -67,7 +66,7 @@ export class MedicosObrasSocialesService {
     );
 
     if (existing && existing.id_medico_obra_social !== id) {
-      throw new Error("El médico ya tiene asignada esa obra social");
+      throw new DuplicateError("El médico ya tiene asignada esa obra social");
     }
 
     const affectedRows = await MedicoObraSocialModel.update(id, {

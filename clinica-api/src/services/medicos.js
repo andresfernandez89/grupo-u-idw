@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
 import MedicoModel from "../models/medico.js";
 import EspecialidadModel from "../models/especialidad.js";
 import { withTransaction } from "../config/db.js";
@@ -105,7 +106,7 @@ export class MedicosService {
   }) {
     const especialidad = await EspecialidadModel.findById(id_especialidad);
     if (!especialidad) {
-      throw new Error("La especialidad indicada no existe o no está activa");
+      throw new ForeignKeyError("La especialidad indicada no existe o no está activa");
     }
 
     const existing = await MedicoModel.findByMatricula(matricula);
@@ -121,7 +122,7 @@ export class MedicosService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("La matrícula ya está registrada");
+      throw new DuplicateError("La matrícula ya está registrada");
     }
 
     // existing.activo === 0 → reactivar usuario asociado + sobrescribir médico
@@ -145,12 +146,12 @@ export class MedicosService {
   ) {
     const especialidad = await EspecialidadModel.findById(id_especialidad);
     if (!especialidad) {
-      throw new Error("La especialidad indicada no existe o no está activa");
+      throw new ForeignKeyError("La especialidad indicada no existe o no está activa");
     }
 
     const isMatriculaExist = await MedicoModel.findByMatricula(matricula);
     if (isMatriculaExist && isMatriculaExist.id_medico !== id) {
-      throw new Error("La matrícula ya está registrada por otro médico");
+      throw new DuplicateError("La matrícula ya está registrada por otro médico");
     }
 
     const affectedRows = await MedicoModel.update(id, {

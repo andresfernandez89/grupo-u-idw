@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import { medicoObraSocialCreate, medicoObraSocialResponse } from "../dtos/medicos_obras_sociales.dto.js";
 import medicosObrasSocialesService from "../services/medicos_obras_sociales.js";
 
@@ -54,7 +55,7 @@ export class MedicosObrasSocialesController {
         data: medicoObraSocialResponse(creado),
       });
     } catch (err) {
-      if (err.message.includes("ya tiene asignada")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
 
@@ -81,7 +82,7 @@ export class MedicosObrasSocialesController {
         data: medicoObraSocialResponse(actualizado),
       });
     } catch (err) {
-      if (err.message.includes("ya tiene asignada")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
 

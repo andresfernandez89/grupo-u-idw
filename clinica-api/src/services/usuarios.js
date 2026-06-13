@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import UsuarioModel from "../models/usuario.js";
 
 export class UsuariosService {
@@ -51,12 +52,12 @@ export class UsuariosService {
   async create({ documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
     const emailExistente = await UsuarioModel.findByEmail(email);
     if (emailExistente) {
-      throw new Error("El email ya está registrado");
+      throw new DuplicateError("El email ya está registrado");
     }
 
     const docExistente = await UsuarioModel.findByDocumento(documento);
     if (docExistente) {
-      throw new Error("El documento ya está registrado");
+      throw new DuplicateError("El documento ya está registrado");
     }
 
     return await UsuarioModel.create({
@@ -73,12 +74,12 @@ export class UsuariosService {
   async update(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
     const emailExistente = await UsuarioModel.findByEmail(email);
     if (emailExistente && emailExistente.id_usuario !== id) {
-      throw new Error("El email ya está registrado por otro usuario");
+      throw new DuplicateError("El email ya está registrado por otro usuario");
     }
 
     const docExistente = await UsuarioModel.findByDocumento(documento);
     if (docExistente && docExistente.id_usuario !== id) {
-      throw new Error("El documento ya está registrado por otro usuario");
+      throw new DuplicateError("El documento ya está registrado por otro usuario");
     }
 
     const affectedRows = await UsuarioModel.update(id, {

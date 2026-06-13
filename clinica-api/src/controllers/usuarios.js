@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import { usuariosCreate, usuariosResponse } from "../dtos/usuarios.dto.js";
 import usuarioService from "../services/usuarios.js";
 
@@ -61,9 +62,7 @@ export class UsuariosController {
         data: usuariosResponse(nuevoUsuario),
       });
     } catch (error) {
-      if (
-        error.message.includes("ya está registrado")
-      ) {
+      if (error instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: error.message });
       }
 
@@ -93,9 +92,7 @@ export class UsuariosController {
         data: usuariosResponse(actualizado),
       });
     } catch (err) {
-      if (
-        err.message.includes("ya está registrado")
-      ) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
 

@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import ObraSocialModel from "../models/obra_social.js";
 
 export class ObrasSocialesService {
@@ -59,7 +60,7 @@ export class ObrasSocialesService {
   ) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing && existing.id_obra_social !== id) {
-      throw new Error("El nombre de la obra social ya está registrado");
+      throw new DuplicateError("El nombre de la obra social ya está registrado");
     }
 
     const affectedRows = await ObraSocialModel.update(id, {
@@ -87,7 +88,7 @@ export class ObrasSocialesService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("El nombre de la obra social ya está registrado");
+      throw new DuplicateError("El nombre de la obra social ya está registrado");
     }
 
     // existing.activo === 0 → reactivar (ADR-001 Opción C)
