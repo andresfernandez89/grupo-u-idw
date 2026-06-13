@@ -19,6 +19,14 @@ const options = {
       },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "Ingresá el token JWT obtenido en /auth/login",
+        },
+      },
       schemas: {
         Especialidad: {
           type: "object",
@@ -274,7 +282,12 @@ const options = {
         },
         TurnoCreate: {
           type: "object",
-          required: ["id_medico", "id_paciente", "id_obra_social", "fecha_hora"],
+          required: [
+            "id_medico",
+            "id_paciente",
+            "id_obra_social",
+            "fecha_hora",
+          ],
           properties: {
             id_medico: {
               type: "integer",
