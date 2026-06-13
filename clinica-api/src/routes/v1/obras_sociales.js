@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import obrasSocialesController from "../../controllers/obras_sociales.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -17,6 +19,8 @@ const router = Router();
  *   get:
  *     summary: Obtiene la lista de obras sociales con paginación y filtros
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: nombre
@@ -94,6 +98,8 @@ const router = Router();
  */
 router.get(
   "/",
+  authenticate,
+  authorize(3),
   browseObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.browse.bind(obrasSocialesController),
@@ -105,6 +111,8 @@ router.get(
  *   post:
  *     summary: Crea una nueva obra social
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -146,6 +154,8 @@ router.get(
  */
 router.post(
   "/",
+  authenticate,
+  authorize(3),
   createObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.create.bind(obrasSocialesController),
@@ -157,6 +167,8 @@ router.post(
  *   delete:
  *     summary: Elimina (desactiva) una obra social
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -189,6 +201,8 @@ router.post(
  */
 router.delete(
   "/:id",
+  authenticate,
+  authorize(3),
   deleteObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.delete.bind(obrasSocialesController),
@@ -200,6 +214,8 @@ router.delete(
  *   put:
  *     summary: Actualiza una obra social existente
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -255,6 +271,8 @@ router.delete(
  */
 router.put(
   "/:id",
+  authenticate,
+  authorize(3),
   updateObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.update.bind(obrasSocialesController),
@@ -266,6 +284,8 @@ router.put(
  *   get:
  *     summary: Obtiene una obra social por su ID
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -307,6 +327,8 @@ router.put(
  */
 router.get(
   "/:id",
+  authenticate,
+  authorize(3),
   getByIdObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.findById.bind(obrasSocialesController),

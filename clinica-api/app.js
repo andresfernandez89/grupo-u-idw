@@ -3,9 +3,11 @@ import express from "express";
 import fs from "fs";
 import helmet from "helmet";
 import morgan from "morgan";
+import passport from "passport";
 import path from "path";
 import { createStream } from "rotating-file-stream";
 import swaggerUi from "swagger-ui-express";
+import { jwtStrategy, localStrategy } from "./src/config/passport.js";
 import swaggerSpecs from "./src/config/swagger.js";
 import v1Router from "./src/routes/v1/index.js";
 
@@ -39,6 +41,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Passport: registrar estrategias de autenticación
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 // Routes
 app.use("/api", v1Router);
