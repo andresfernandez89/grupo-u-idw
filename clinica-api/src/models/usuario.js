@@ -164,6 +164,16 @@ const UsuarioModel = {
     return result.affectedRows;
   },
 
+  async reactivate(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
+    const [result] = await pool.query(
+      `UPDATE usuarios
+       SET activo = 1, documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
+       WHERE id_usuario = ?`,
+      [documento, apellido, nombres, email, contrasenia, foto_path || "", rol, id],
+    );
+    return result.affectedRows;
+  },
+
   async delete(id) {
     const [result] = await pool.query(
       "UPDATE usuarios SET activo = 0 WHERE id_usuario = ? AND activo = 1",
