@@ -1,4 +1,6 @@
+import MedicoModel from "../models/medico.js";
 import MedicoObraSocialModel from "../models/medico_obra_social.js";
+import ObraSocialModel from "../models/obra_social.js";
 
 export class MedicosObrasSocialesService {
   async browse({
@@ -46,6 +48,16 @@ export class MedicosObrasSocialesService {
   }
 
   async create({ id_medico, id_obra_social }) {
+    const medico = await MedicoModel.findById(id_medico);
+    if (!medico) {
+      throw new Error("El médico indicado no existe o no está activo");
+    }
+
+    const obraSocial = await ObraSocialModel.findById(id_obra_social);
+    if (!obraSocial) {
+      throw new Error("La obra social indicada no existe o no está activa");
+    }
+
     const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,
       id_obra_social,
