@@ -1,5 +1,7 @@
 import { Router } from "express";
 import estadisticasController from "../../controllers/estadisticas.js";
+import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
   porObraSocialValidator,
@@ -60,6 +62,8 @@ const router = Router();
  */
 router.get(
   "/por-obra-social",
+  authenticate,
+  authorize(3),
   porObraSocialValidator,
   handleValidationErrors,
   estadisticasController.porObraSocial.bind(estadisticasController),
@@ -115,6 +119,8 @@ router.get(
  */
 router.get(
   "/por-medico",
+  authenticate,
+  authorize(3),
   porMedicoValidator,
   handleValidationErrors,
   estadisticasController.porMedico.bind(estadisticasController),
@@ -170,6 +176,8 @@ router.get(
  */
 router.get(
   "/por-especialidad",
+  authenticate,
+  authorize(3),
   porEspecialidadValidator,
   handleValidationErrors,
   estadisticasController.porEspecialidad.bind(estadisticasController),
@@ -223,6 +231,8 @@ router.get(
  */
 router.get(
   "/resumen-general",
+  authenticate,
+  authorize(3),
   resumenGeneralValidator,
   handleValidationErrors,
   estadisticasController.resumenGeneral.bind(estadisticasController),
@@ -252,6 +262,8 @@ router.get(
  */
 router.get(
   "/por-obra-social/pdf",
+  authenticate,
+  authorize(3),
   porObraSocialValidator,
   handleValidationErrors,
   estadisticasController.porObraSocialPdf.bind(estadisticasController),
@@ -281,6 +293,8 @@ router.get(
  */
 router.get(
   "/por-medico/pdf",
+  authenticate,
+  authorize(3),
   porMedicoValidator,
   handleValidationErrors,
   estadisticasController.porMedicoPdf.bind(estadisticasController),
@@ -310,6 +324,8 @@ router.get(
  */
 router.get(
   "/por-especialidad/pdf",
+  authenticate,
+  authorize(3),
   porEspecialidadValidator,
   handleValidationErrors,
   estadisticasController.porEspecialidadPdf.bind(estadisticasController),
@@ -339,6 +355,8 @@ router.get(
  */
 router.get(
   "/resumen-general/pdf",
+  authenticate,
+  authorize(3),
   resumenGeneralValidator,
   handleValidationErrors,
   estadisticasController.resumenGeneralPdf.bind(estadisticasController),
