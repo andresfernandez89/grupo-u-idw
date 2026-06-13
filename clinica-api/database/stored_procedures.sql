@@ -103,7 +103,7 @@ BEGIN
         COUNT(tr.id_turno_reserva)                                                AS total_turnos,
         COALESCE(SUM(tr.atentido), 0)                                             AS turnos_atendidos,
         COUNT(tr.id_turno_reserva) - COALESCE(SUM(tr.atentido), 0)               AS turnos_pendientes,
-        ROUND(SUM(CASE WHEN tr.atentido = 1 THEN tr.valor_total ELSE 0 END), 2)  AS ingresos_realizados,
+        ROUND(COALESCE(SUM(CASE WHEN tr.atentido = 1 THEN tr.valor_total ELSE 0 END), 0), 2) AS ingresos_realizados,
         ROUND(
             IF(COUNT(tr.id_turno_reserva) > 0,
                (COALESCE(SUM(tr.atentido), 0) / COUNT(tr.id_turno_reserva)) * 100,
