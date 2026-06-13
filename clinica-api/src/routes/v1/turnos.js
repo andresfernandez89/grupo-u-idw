@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import turnosController from "../../controllers/turnos.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -121,6 +122,7 @@ const router = Router();
 router.get(
   "/",
   authenticate,
+  authorize(1, 2, 3),
   browseTurnoValidator,
   handleValidationErrors,
   turnosController.browse.bind(turnosController),
@@ -165,6 +167,7 @@ router.get(
 router.get(
   "/:id",
   authenticate,
+  authorize(1, 2, 3),
   getByIdTurnoValidator,
   handleValidationErrors,
   turnosController.findById.bind(turnosController),
@@ -220,6 +223,7 @@ router.get(
 router.post(
   "/",
   authenticate,
+  authorize(2, 3),
   createTurnoValidator,
   handleValidationErrors,
   turnosController.create.bind(turnosController),
@@ -289,6 +293,7 @@ router.post(
 router.put(
   "/:id",
   authenticate,
+  authorize(3),
   updateTurnoValidator,
   handleValidationErrors,
   turnosController.update.bind(turnosController),
@@ -340,6 +345,7 @@ router.put(
 router.patch(
   "/:id/atendido",
   authenticate,
+  authorize(1, 3),
   marcarAtendidoValidator,
   handleValidationErrors,
   turnosController.marcarAtendido.bind(turnosController),
@@ -380,6 +386,7 @@ router.patch(
 router.delete(
   "/:id",
   authenticate,
+  authorize(3),
   deleteTurnoValidator,
   handleValidationErrors,
   turnosController.delete.bind(turnosController),

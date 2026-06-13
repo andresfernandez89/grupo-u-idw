@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import obrasSocialesController from "../../controllers/obras_sociales.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -98,6 +99,7 @@ const router = Router();
 router.get(
   "/",
   authenticate,
+  authorize(3),
   browseObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.browse.bind(obrasSocialesController),
@@ -153,6 +155,7 @@ router.get(
 router.post(
   "/",
   authenticate,
+  authorize(3),
   createObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.create.bind(obrasSocialesController),
@@ -199,6 +202,7 @@ router.post(
 router.delete(
   "/:id",
   authenticate,
+  authorize(3),
   deleteObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.delete.bind(obrasSocialesController),
@@ -268,6 +272,7 @@ router.delete(
 router.put(
   "/:id",
   authenticate,
+  authorize(3),
   updateObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.update.bind(obrasSocialesController),
@@ -323,6 +328,7 @@ router.put(
 router.get(
   "/:id",
   authenticate,
+  authorize(3),
   getByIdObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.findById.bind(obrasSocialesController),

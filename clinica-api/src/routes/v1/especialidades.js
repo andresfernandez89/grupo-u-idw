@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { cache } from "../../config/cache.js";
 import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import especialidadController from "../../controllers/especialidades.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -86,6 +87,7 @@ const router = Router();
 router.get(
   "/",
   authenticate,
+  authorize(2, 3),
   cache("5 minutes"),
   browseEspecialidadValidator,
   handleValidationErrors,
@@ -131,6 +133,7 @@ router.get(
 router.get(
   "/:id",
   authenticate,
+  authorize(2, 3),
   cache("5 minutes"),
   getByIdEspecialidadValidator,
   handleValidationErrors,
@@ -181,6 +184,7 @@ router.get(
 router.post(
   "/",
   authenticate,
+  authorize(3),
   createEspecialidadValidator,
   handleValidationErrors,
   especialidadController.create.bind(especialidadController),
@@ -244,6 +248,7 @@ router.post(
 router.put(
   "/:id",
   authenticate,
+  authorize(3),
   updateEspecialidadValidator,
   handleValidationErrors,
   especialidadController.update.bind(especialidadController),
@@ -284,6 +289,7 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
+  authorize(3),
   deleteEspecialidadValidator,
   handleValidationErrors,
   especialidadController.delete.bind(especialidadController),

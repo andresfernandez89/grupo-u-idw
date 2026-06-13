@@ -48,6 +48,10 @@ export class PacientesService {
     return await PacienteModel.findById(id);
   }
 
+  async findByIdUsuario(id_usuario) {
+    return await PacienteModel.findByIdUsuario(id_usuario);
+  }
+
   async create({ id_usuario, id_obra_social }) {
     await this.#validarObraSocialActiva(id_obra_social);
 

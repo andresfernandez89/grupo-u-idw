@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import medicoController from "../../controllers/medicos.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -107,6 +108,7 @@ const router = Router();
 router.get(
   "/",
   authenticate,
+  authorize(2, 3),
   browseMedicoValidator,
   handleValidationErrors,
   medicoController.browse.bind(medicoController),
@@ -212,6 +214,7 @@ router.get(
 router.get(
   "/especialidad/:id_especialidad",
   authenticate,
+  authorize(2, 3),
   getByEspecialidadMedicoValidator,
   handleValidationErrors,
   medicoController.findByEspecialidad.bind(medicoController),
@@ -256,6 +259,7 @@ router.get(
 router.get(
   "/:id",
   authenticate,
+  authorize(2, 3),
   getByIdMedicoValidator,
   handleValidationErrors,
   medicoController.findById.bind(medicoController),
@@ -311,6 +315,7 @@ router.get(
 router.post(
   "/",
   authenticate,
+  authorize(3),
   createMedicoValidator,
   handleValidationErrors,
   medicoController.create.bind(medicoController),
@@ -380,6 +385,7 @@ router.post(
 router.put(
   "/:id",
   authenticate,
+  authorize(3),
   updateMedicoValidator,
   handleValidationErrors,
   medicoController.update.bind(medicoController),
@@ -420,6 +426,7 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
+  authorize(3),
   deleteMedicoValidator,
   handleValidationErrors,
   medicoController.delete.bind(medicoController),
