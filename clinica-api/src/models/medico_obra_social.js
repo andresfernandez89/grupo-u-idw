@@ -98,7 +98,11 @@ const MedicoObraSocialModel = {
        VALUES (?, ?, 1)`,
       [id_medico, id_obra_social],
     );
-    return { id_medico_obra_social: result.insertId, id_medico, id_obra_social };
+    return {
+      id_medico_obra_social: result.insertId,
+      id_medico,
+      id_obra_social,
+    };
   },
 
   async deleteByMedicoObraSocial(id_medico, id_obra_social) {

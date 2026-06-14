@@ -67,6 +67,7 @@ POST /usuarios { documento, apellido, nombres, email, contrasenia, [foto_path] }
 ```
 
 Notas:
+
 - El campo `rol` en el body es ignorado en todos los casos.
 - En la reactivación, el `documento` tiene prioridad sobre el `email` para determinar qué
   registro inactivo se reactiva (consistente con el orden de pre-chequeo de ADR-001).

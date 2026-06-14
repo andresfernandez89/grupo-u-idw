@@ -16,7 +16,9 @@ const paginationValidators = [
   query("sort")
     .optional()
     .isIn(["id_medico_obra_social", "id_medico", "id_obra_social"])
-    .withMessage("sort debe ser id_medico_obra_social, id_medico o id_obra_social"),
+    .withMessage(
+      "sort debe ser id_medico_obra_social, id_medico o id_obra_social",
+    ),
 
   query("order")
     .optional()
@@ -74,5 +76,3 @@ export const deleteMedicoObraSocialValidator = [
     .withMessage("El id_obra_social debe ser un entero positivo")
     .toInt(),
 ];
-
-
