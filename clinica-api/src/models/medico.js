@@ -257,6 +257,15 @@ const MedicoModel = {
       "UPDATE usuarios SET activo = 0 WHERE id_usuario = ? AND activo = 1",
       [id_usuario],
     );
+
+    await pool.query(
+      `UPDATE medicos_obras_sociales mos
+       JOIN medicos m ON mos.id_medico = m.id_medico
+       SET mos.activo = 0
+       WHERE m.id_usuario = ? AND mos.activo = 1`,
+      [id_usuario],
+    );
+
     return result.affectedRows;
   },
 };

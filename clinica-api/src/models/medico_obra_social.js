@@ -7,8 +7,8 @@ const MedicoObraSocialModel = {
                       os.nombre AS obra_social_nombre
                FROM medicos_obras_sociales mos
                JOIN v_medicos v ON mos.id_medico = v.id_medico
-               JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
-               WHERE mos.activo = 1`;
+                JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+                WHERE mos.activo = 1 AND os.activo = 1`;
     const params = [];
 
     if (filters.id_medico) {
@@ -31,8 +31,9 @@ const MedicoObraSocialModel = {
 
   async countAll({ filters }) {
     let sql = `SELECT COUNT(*) AS total
-               FROM medicos_obras_sociales mos
-               WHERE mos.activo = 1`;
+                FROM medicos_obras_sociales mos
+                JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+                WHERE mos.activo = 1 AND os.activo = 1`;
     const params = [];
 
     if (filters.id_medico) {
@@ -57,7 +58,7 @@ const MedicoObraSocialModel = {
        FROM medicos_obras_sociales mos
        JOIN v_medicos v ON mos.id_medico = v.id_medico
        JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
-       WHERE mos.id_medico_obra_social = ? AND mos.activo = 1`,
+        WHERE mos.id_medico_obra_social = ? AND mos.activo = 1 AND os.activo = 1`,
       [id],
     );
     return rows[0] ?? null;

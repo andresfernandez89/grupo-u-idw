@@ -77,6 +77,12 @@ const ObraSocialModel = {
       "UPDATE obras_sociales SET activo = 0 WHERE id_obra_social = ? AND activo = 1",
       [id],
     );
+
+    await pool.query(
+      "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_obra_social = ? AND activo = 1",
+      [id],
+    );
+
     return result.affectedRows;
   },
 
