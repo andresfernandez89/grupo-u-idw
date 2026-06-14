@@ -1,4 +1,4 @@
-import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
+import { DuplicateError, NotFoundError } from "../utils/errors.js";
 import MedicoModel from "../models/medico.js";
 import MedicoObraSocialModel from "../models/medico_obra_social.js";
 import ObraSocialModel from "../models/obra_social.js";
@@ -52,12 +52,12 @@ export class MedicosObrasSocialesService {
   async create({ id_medico, id_obra_social }) {
     const medico = await MedicoModel.findById(id_medico);
     if (!medico) {
-      throw new ForeignKeyError("El médico indicado no existe o no está activo");
+      throw new NotFoundError("El médico indicado no existe o no está activo");
     }
 
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new ForeignKeyError("La obra social indicada no existe o no está activa");
+      throw new NotFoundError("La obra social indicada no existe o no está activa");
     }
 
     const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(

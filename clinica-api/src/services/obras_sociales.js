@@ -1,4 +1,4 @@
-import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
+import { DuplicateError, NotFoundError } from "../utils/errors.js";
 import ObraSocialModel from "../models/obra_social.js";
 
 export class ObrasSocialesService {
@@ -119,7 +119,7 @@ export class ObrasSocialesService {
 
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new ForeignKeyError("La obra social indicada no existe o no está activa");
+      throw new NotFoundError("La obra social indicada no existe o no está activa");
     }
 
     const rows = await ObraSocialModel.findMedicos(id_obra_social, {

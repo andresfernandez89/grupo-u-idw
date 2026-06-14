@@ -1,4 +1,4 @@
-import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
+import { DuplicateError, ForeignKeyError, NotFoundError } from "../utils/errors.js";
 import MedicoModel from "../models/medico.js";
 import EspecialidadModel from "../models/especialidad.js";
 import { withTransaction } from "../config/db.js";
@@ -200,7 +200,7 @@ export class MedicosService {
 
     const medico = await MedicoModel.findById(id_medico);
     if (!medico) {
-      throw new ForeignKeyError("El médico indicado no existe o no está activo");
+      throw new NotFoundError("El médico indicado no existe o no está activo");
     }
 
     const rows = await MedicoModel.findObrasSociales(id_medico, {

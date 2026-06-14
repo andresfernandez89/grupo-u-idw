@@ -1,4 +1,4 @@
-import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
+import { DuplicateError, NotFoundError } from "../utils/errors.js";
 import { obraSocialCreate, obraSocialResponse } from "../dtos/obras_sociales.dto.js";
 import { medicoObraSocialResponse } from "../dtos/medicos_obras_sociales.dto.js";
 import obrasSocialesService from "../services/obras_sociales.js";
@@ -112,7 +112,7 @@ export class ObrasSocialesController {
         pagination: resultado.pagination,
       });
     } catch (error) {
-      if (error instanceof ForeignKeyError) {
+      if (error instanceof NotFoundError) {
         return res.status(404).json({ success: false, message: error.message });
       }
       res.status(500).json({ success: false, message: error.message });
