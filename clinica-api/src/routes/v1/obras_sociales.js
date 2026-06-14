@@ -377,6 +377,8 @@ router.put(
  */
 router.get(
   "/:id/medicos",
+  authenticate,
+  authorize(2, 3),
   getMedicosObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.findMedicos.bind(obrasSocialesController),

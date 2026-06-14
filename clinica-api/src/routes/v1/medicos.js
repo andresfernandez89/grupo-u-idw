@@ -308,6 +308,8 @@ router.get(
  */
 router.get(
   "/:id_medico/obras-sociales",
+  authenticate,
+  authorize(2, 3),
   getObrasSocialesMedicoValidator,
   handleValidationErrors,
   medicoController.findObrasSociales.bind(medicoController),
