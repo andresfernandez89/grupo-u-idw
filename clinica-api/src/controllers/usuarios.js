@@ -53,7 +53,7 @@ export class UsuariosController {
 
   async create(req, res) {
     try {
-      const datos = usuariosCreate(req.body);
+      const datos = usuariosCreate(req.body, req.file);
       const nuevoUsuario = await usuarioService.create(datos);
 
       return res.status(201).json({
@@ -78,7 +78,7 @@ export class UsuariosController {
   async update(req, res) {
     try {
       const { id } = req.params;
-      const datos = usuariosCreate(req.body);
+      const datos = usuariosCreate(req.body, req.file);
       const actualizado = await usuarioService.update(id, datos);
 
       if (!actualizado) {

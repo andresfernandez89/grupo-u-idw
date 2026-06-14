@@ -95,9 +95,7 @@ export const updatePacienteValidator = [
     .toInt(),
 
   body("id_obra_social")
-    .notEmpty()
-    .withMessage("id_obra_social es obligatorio")
-    .bail()
+    .optional({ nullable: true })
     .isInt({ min: 1 })
     .withMessage("id_obra_social debe ser un entero positivo")
     .toInt(),

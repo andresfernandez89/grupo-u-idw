@@ -1,4 +1,9 @@
+import crypto from "crypto";
 import { pool } from "../config/db.js";
+
+function hashContrasenia(contrasenia) {
+  return crypto.createHash("sha256").update(contrasenia).digest("hex");
+}
 
 const UsuarioModel = {
   async findUsuarios({ filters, limit, offset, sort, order }) {
@@ -124,7 +129,7 @@ const UsuarioModel = {
         apellido,
         nombres,
         email,
-        contrasenia,
+        hashContrasenia(contrasenia),
         foto_path || "",
         rol,
         1,
@@ -155,7 +160,7 @@ const UsuarioModel = {
         apellido,
         nombres,
         email,
-        contrasenia,
+        hashContrasenia(contrasenia),
         foto_path || "",
         rol,
         id,
@@ -164,12 +169,24 @@ const UsuarioModel = {
     return result.affectedRows;
   },
 
-  async reactivate(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
+  async reactivate(
+    id,
+    { documento, apellido, nombres, email, contrasenia, foto_path, rol },
+  ) {
     const [result] = await pool.query(
       `UPDATE usuarios
        SET activo = 1, documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
        WHERE id_usuario = ?`,
-      [documento, apellido, nombres, email, contrasenia, foto_path || "", rol, id],
+      [
+        documento,
+        apellido,
+        nombres,
+        email,
+        hashContrasenia(contrasenia),
+        foto_path || "",
+        rol,
+        id,
+      ],
     );
     return result.affectedRows;
   },

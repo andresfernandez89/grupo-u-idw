@@ -8,3 +8,6 @@ package-lock.json
 
 # Logs
 logs/
+
+# Uploads
+public/uploads/

@@ -3,6 +3,7 @@ import { authenticate } from "../../middlewares/auth.js";
 import { authorize } from "../../middlewares/role.js";
 import usuarioController from "../../controllers/usuarios.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
+import { uploadSingle } from "../../config/multer.js";
 import {
   browseUsuariosValidator,
   createUsuarioValidator,
@@ -83,22 +84,27 @@ router.get(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
- *             required: [email, contrasenia, id_rol, apellido, nombres]
+ *             required: [email, contrasenia, rol, apellido, nombres]
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
  *               contrasenia:
  *                 type: string
- *               id_rol:
+ *               rol:
  *                 type: integer
+ *                 enum: [1, 2, 3]
  *               apellido:
  *                 type: string
  *               nombres:
  *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
+ *                 description: Foto de perfil (opcional)
  *     responses:
  *       201:
  *         description: Usuario creado
@@ -111,6 +117,7 @@ router.get(
  */
 router.post(
   "/",
+  uploadSingle("foto"),
   createUsuarioValidator,
   handleValidationErrors,
   usuarioController.create.bind(usuarioController),
@@ -134,19 +141,24 @@ router.post(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
- *               id_rol:
+ *               rol:
  *                 type: integer
+ *                 enum: [1, 2, 3]
  *               apellido:
  *                 type: string
  *               nombres:
  *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
+ *                 description: Foto de perfil (opcional)
  *     responses:
  *       200:
  *         description: Usuario actualizado
@@ -163,6 +175,7 @@ router.put(
   "/:id",
   authenticate,
   authorize(3),
+  uploadSingle("foto"),
   updateUsuarioValidator,
   handleValidationErrors,
   usuarioController.update.bind(usuarioController),

@@ -13,14 +13,14 @@ export function usuariosResponse(usuario) {
   };
 }
 
-export function usuariosCreate(body) {
+export function usuariosCreate(body, file) {
   return {
     documento: body?.documento?.trim(),
     apellido: body?.apellido?.trim(),
     nombres: body?.nombres?.trim(),
     email: body?.email?.trim(),
     contrasenia: body?.contrasenia,
-    foto_path: body?.foto_path?.trim() || '',
+    foto_path: file?.path || body?.foto_path?.trim() || "",
     rol: body?.rol,
   };
 }

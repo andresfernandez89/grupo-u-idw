@@ -176,6 +176,17 @@ const options = {
             },
           },
         },
+        PacienteUpdate: {
+          type: "object",
+          properties: {
+            id_obra_social: {
+              type: "integer",
+              nullable: true,
+              description: "ID de la obra social. Enviar null para paciente particular",
+              minimum: 1,
+            },
+          },
+        },
         ObraSocial: {
           type: "object",
           properties: {
