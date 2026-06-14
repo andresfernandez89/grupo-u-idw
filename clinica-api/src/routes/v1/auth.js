@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import authController from "../../controllers/auth.js";
+import { handleValidationErrors } from "../../middlewares/validacion.js";
+import { loginValidator } from "../../validators/auth.js";
 
 const router = Router();
 
@@ -33,6 +35,8 @@ const router = Router();
  */
 router.post(
   "/login",
+  loginValidator,
+  handleValidationErrors,
   (req, res, next) => {
     passport.authenticate("local", { session: false }, (err, user, info) => {
       if (err) {
