@@ -47,7 +47,6 @@ passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 // Routes
-app.use("/api", v1Router);
 app.use("/api/v1", v1Router);
 
 // Swagger documentation UI
