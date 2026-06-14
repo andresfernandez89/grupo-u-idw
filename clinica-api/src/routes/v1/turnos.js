@@ -45,12 +45,12 @@ const router = Router();
  *         required: false
  *         description: Filtrar por ID de obra social
  *       - in: query
-  *         name: atendido
-  *         schema:
-  *           type: integer
-  *           enum: [0, 1]
-  *         required: false
-  *         description: Filtrar por estado de atención (0 = no atendido, 1 = atendido)
+ *         name: atendido
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *         required: false
+ *         description: Filtrar por estado de atención (0 = no atendido, 1 = atendido)
  *       - in: query
  *         name: fecha_desde
  *         schema:
@@ -86,7 +86,7 @@ const router = Router();
  *         name: sort
  *         schema:
  *           type: string
-  *           enum: [id_turno_reserva, fecha_hora, valor_total, atendido, id_medico, id_paciente]
+ *           enum: [id_turno_reserva, fecha_hora, valor_total, atendido, id_medico, id_paciente]
  *         required: false
  *         description: Campo por el cual ordenar
  *       - in: query
@@ -301,7 +301,7 @@ router.put(
 
 /**
  * @openapi
-  * /turnos/{id}/atendido:
+ * /turnos/{id}/atendido:
  *   patch:
  *     summary: Marca un turno como atendido
  *     tags: [Turnos]
@@ -317,7 +317,7 @@ router.put(
  *         description: ID del turno
  *     responses:
  *       200:
-  *         description: Turno marcado como atendido
+ *         description: Turno marcado como atendido
  *         content:
  *           application/json:
  *             schema:

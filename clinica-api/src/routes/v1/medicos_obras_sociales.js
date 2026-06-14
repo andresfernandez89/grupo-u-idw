@@ -20,7 +20,6 @@ router.get(
   medicosObrasSocialesController.browse.bind(medicosObrasSocialesController),
 );
 
-
 router.post(
   "/",
   authenticate,

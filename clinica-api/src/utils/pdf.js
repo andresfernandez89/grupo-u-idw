@@ -29,13 +29,11 @@ function drawPageHeader(doc, titulo, rangeText) {
 
   doc.font("Helvetica").fontSize(10).text(titulo, 50, 40, { lineBreak: false });
 
-  doc
-    .fontSize(8)
-    .text(rangeText, doc.page.width - 230, 40, {
-      width: 190,
-      align: "right",
-      lineBreak: false,
-    });
+  doc.fontSize(8).text(rangeText, doc.page.width - 230, 40, {
+    width: 190,
+    align: "right",
+    lineBreak: false,
+  });
 
   doc.fillColor(C.text);
 }

@@ -65,7 +65,9 @@ export const browseUsuariosValidator = [
   query("sort")
     .optional()
     .isIn(["id_usuario", "apellido", "nombres", "email", "documento", "rol"])
-    .withMessage("sort debe ser id_usuario, apellido, nombres, email, documento o rol"),
+    .withMessage(
+      "sort debe ser id_usuario, apellido, nombres, email, documento o rol",
+    ),
 
   query("order")
     .optional()

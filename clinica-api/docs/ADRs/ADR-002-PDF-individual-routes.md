@@ -133,12 +133,12 @@ ampliamente reconocida y no genera ambigüedad para ningún consumidor de la API
 
 ## Rutas resultantes con soporte PDF
 
-| Recurso JSON                               | Ruta PDF                                    | Rol requerido |
-| ------------------------------------------ | ------------------------------------------- | ------------- |
-| `GET /estadisticas/por-obra-social`        | `GET /estadisticas/por-obra-social/pdf`     | Admin (3)     |
-| `GET /estadisticas/por-medico`             | `GET /estadisticas/por-medico/pdf`          | Admin (3)     |
-| `GET /estadisticas/por-especialidad`       | `GET /estadisticas/por-especialidad/pdf`    | Admin (3)     |
-| `GET /estadisticas/resumen-general`        | `GET /estadisticas/resumen-general/pdf`     | Admin (3)     |
+| Recurso JSON                         | Ruta PDF                                 | Rol requerido |
+| ------------------------------------ | ---------------------------------------- | ------------- |
+| `GET /estadisticas/por-obra-social`  | `GET /estadisticas/por-obra-social/pdf`  | Admin (3)     |
+| `GET /estadisticas/por-medico`       | `GET /estadisticas/por-medico/pdf`       | Admin (3)     |
+| `GET /estadisticas/por-especialidad` | `GET /estadisticas/por-especialidad/pdf` | Admin (3)     |
+| `GET /estadisticas/resumen-general`  | `GET /estadisticas/resumen-general/pdf`  | Admin (3)     |
 
 Todos los endpoints PDF aplican los mismos middlewares de autenticación (`authenticate`),
 autorización (`authorize`) y validación de parámetros que su equivalente JSON.

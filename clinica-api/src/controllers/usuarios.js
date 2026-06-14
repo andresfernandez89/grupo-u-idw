@@ -62,9 +62,7 @@ export class UsuariosController {
         data: usuariosResponse(nuevoUsuario),
       });
     } catch (error) {
-      if (
-        error.message.includes("ya está registrado")
-      ) {
+      if (error.message.includes("ya está registrado")) {
         return res.status(409).json({ success: false, message: error.message });
       }
 
@@ -94,9 +92,7 @@ export class UsuariosController {
         data: usuariosResponse(actualizado),
       });
     } catch (err) {
-      if (
-        err.message.includes("ya está registrado")
-      ) {
+      if (err.message.includes("ya está registrado")) {
         return res.status(409).json({ success: false, message: err.message });
       }
 

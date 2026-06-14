@@ -67,9 +67,14 @@ export class TurnosService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    const existeTurno = await TurnoModel.existsByMedicoYFecha(id_medico, fecha_hora);
+    const existeTurno = await TurnoModel.existsByMedicoYFecha(
+      id_medico,
+      fecha_hora,
+    );
     if (existeTurno) {
-      throw new Error("El médico ya tiene un turno asignado en esa fecha y hora");
+      throw new Error(
+        "El médico ya tiene un turno asignado en esa fecha y hora",
+      );
     }
 
     // ─── Cálculo de valor_total (regla de negocio) ───
@@ -114,10 +119,18 @@ export class TurnosService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    if (id_medico !== existing.id_medico || fecha_hora !== existing.fecha_hora) {
-      const existeTurno = await TurnoModel.existsByMedicoYFecha(id_medico, fecha_hora);
+    if (
+      id_medico !== existing.id_medico ||
+      fecha_hora !== existing.fecha_hora
+    ) {
+      const existeTurno = await TurnoModel.existsByMedicoYFecha(
+        id_medico,
+        fecha_hora,
+      );
       if (existeTurno) {
-        throw new Error("El médico ya tiene un turno asignado en esa fecha y hora");
+        throw new Error(
+          "El médico ya tiene un turno asignado en esa fecha y hora",
+        );
       }
     }
 

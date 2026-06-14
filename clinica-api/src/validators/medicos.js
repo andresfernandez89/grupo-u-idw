@@ -16,7 +16,9 @@ const paginationValidators = [
   query("sort")
     .optional()
     .isIn(["id_medico", "matricula", "valor_consulta", "apellido", "nombres"])
-    .withMessage("sort debe ser id_medico, matricula, valor_consulta, apellido o nombres"),
+    .withMessage(
+      "sort debe ser id_medico, matricula, valor_consulta, apellido o nombres",
+    ),
 
   query("order")
     .optional()

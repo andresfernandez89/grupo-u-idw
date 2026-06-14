@@ -12,8 +12,10 @@ export class TurnosController {
       const order = req.query.order;
 
       const filters = {};
-      if (req.query.id_obra_social) filters.id_obra_social = req.query.id_obra_social;
-      if (req.query.atendido !== undefined) filters.atendido = req.query.atendido;
+      if (req.query.id_obra_social)
+        filters.id_obra_social = req.query.id_obra_social;
+      if (req.query.atendido !== undefined)
+        filters.atendido = req.query.atendido;
       if (req.query.fecha_desde) filters.fecha_desde = req.query.fecha_desde;
       if (req.query.fecha_hasta) filters.fecha_hasta = req.query.fecha_hasta;
 
@@ -28,7 +30,9 @@ export class TurnosController {
         }
         filters.id_medico = medico.id_medico;
       } else if (rol === 2) {
-        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
+        const paciente = await pacienteService.findByIdUsuario(
+          req.user.id_usuario,
+        );
         if (!paciente) {
           return res.status(403).json({
             success: false,
@@ -81,7 +85,9 @@ export class TurnosController {
           });
         }
       } else if (rol === 2) {
-        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
+        const paciente = await pacienteService.findByIdUsuario(
+          req.user.id_usuario,
+        );
         if (!paciente || turno.id_paciente !== paciente.id_paciente) {
           return res.status(403).json({
             success: false,
@@ -102,7 +108,9 @@ export class TurnosController {
 
       const rol = req.user?.rol;
       if (rol === 2) {
-        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
+        const paciente = await pacienteService.findByIdUsuario(
+          req.user.id_usuario,
+        );
         if (!paciente) {
           return res.status(403).json({
             success: false,

@@ -113,7 +113,9 @@ export const createTurnoValidator = [
     .bail()
     .trim()
     .isISO8601()
-    .withMessage("fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)"),
+    .withMessage(
+      "fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)",
+    ),
 ];
 
 export const updateTurnoValidator = [
@@ -153,7 +155,9 @@ export const updateTurnoValidator = [
     .bail()
     .trim()
     .isISO8601()
-    .withMessage("fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)"),
+    .withMessage(
+      "fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)",
+    ),
 ];
 
 export const deleteTurnoValidator = [
