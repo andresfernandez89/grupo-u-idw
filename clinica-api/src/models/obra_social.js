@@ -59,10 +59,19 @@ const ObraSocialModel = {
        VALUES (?, ?, ?, ?, 1)`,
       [nombre, descripcion, porcentaje_descuento, es_particular],
     );
-    return { id_obra_social: result.insertId, nombre, descripcion, porcentaje_descuento, es_particular };
+    return {
+      id_obra_social: result.insertId,
+      nombre,
+      descripcion,
+      porcentaje_descuento,
+      es_particular,
+    };
   },
 
-  async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
+  async update(
+    id,
+    { nombre, descripcion, porcentaje_descuento, es_particular },
+  ) {
     const [result] = await pool.query(
       `UPDATE obras_sociales
        SET nombre = ?, descripcion = ?, porcentaje_descuento = ?, es_particular = ?
@@ -86,7 +95,10 @@ const ObraSocialModel = {
     return result.affectedRows;
   },
 
-  async reactivate(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
+  async reactivate(
+    id,
+    { nombre, descripcion, porcentaje_descuento, es_particular },
+  ) {
     const [result] = await pool.query(
       `UPDATE obras_sociales
        SET nombre = ?, descripcion = ?, porcentaje_descuento = ?, es_particular = ?, activo = 1

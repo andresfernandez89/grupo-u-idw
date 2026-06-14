@@ -60,10 +60,11 @@ export class MedicosObrasSocialesService {
       throw new NotFoundError("La obra social indicada no existe o no está activa");
     }
 
-    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
-      id_medico,
-      id_obra_social,
-    );
+    const existing =
+      await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
+        id_medico,
+        id_obra_social,
+      );
 
     if (!existing) {
       return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
@@ -77,7 +78,11 @@ export class MedicosObrasSocialesService {
       MedicoObraSocialModel.reactivate(conn, { id_medico, id_obra_social }),
     );
 
-    return { id_medico_obra_social: existing.id_medico_obra_social, id_medico, id_obra_social };
+    return {
+      id_medico_obra_social: existing.id_medico_obra_social,
+      id_medico,
+      id_obra_social,
+    };
   }
 
   async delete(id_medico, id_obra_social) {

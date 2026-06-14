@@ -228,7 +228,7 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/PacienteCreate'
+ *             $ref: '#/components/schemas/PacienteUpdate'
  *     responses:
  *       200:
  *         description: Paciente modificado exitosamente

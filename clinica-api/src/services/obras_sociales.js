@@ -103,7 +103,12 @@ export class ObrasSocialesService {
 
   async getMedicos(
     id_obra_social,
-    { page = 1, limit = 10, sort = "id_medico_obra_social", order = "asc" } = {},
+    {
+      page = 1,
+      limit = 10,
+      sort = "id_medico_obra_social",
+      order = "asc",
+    } = {},
   ) {
     const offset = (page - 1) * limit;
     const allowedSort = [

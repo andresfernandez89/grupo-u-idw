@@ -1,5 +1,8 @@
 import { DuplicateError, NotFoundError } from "../utils/errors.js";
-import { obraSocialCreate, obraSocialResponse } from "../dtos/obras_sociales.dto.js";
+import {
+  obraSocialCreate,
+  obraSocialResponse,
+} from "../dtos/obras_sociales.dto.js";
 import { medicoObraSocialResponse } from "../dtos/medicos_obras_sociales.dto.js";
 import obrasSocialesService from "../services/obras_sociales.js";
 
@@ -13,9 +16,16 @@ export class ObrasSocialesController {
 
       const filters = {};
       if (req.query.nombre) filters.nombre = req.query.nombre;
-      if (req.query.es_particular !== undefined) filters.es_particular = req.query.es_particular;
+      if (req.query.es_particular !== undefined)
+        filters.es_particular = req.query.es_particular;
 
-      const resultado = await obrasSocialesService.browse({ filters, sort, order, page, limit });
+      const resultado = await obrasSocialesService.browse({
+        filters,
+        sort,
+        order,
+        page,
+        limit,
+      });
 
       res.json({
         success: true,
@@ -33,10 +43,15 @@ export class ObrasSocialesController {
       const deleted = await obrasSocialesService.delete(id);
 
       if (deleted === null) {
-        return res.status(404).json({ success: false, message: "Obra social no encontrada" });
+        return res
+          .status(404)
+          .json({ success: false, message: "Obra social no encontrada" });
       }
       if (!deleted) {
-        return res.status(500).json({ success: false, message: "Error al eliminar la obra social" });
+        return res.status(500).json({
+          success: false,
+          message: "Error al eliminar la obra social",
+        });
       }
 
       return res.status(204).send();
@@ -52,7 +67,9 @@ export class ObrasSocialesController {
       const actualizada = await obrasSocialesService.update(id, datos);
 
       if (!actualizada) {
-        return res.status(404).json({ success: false, message: "Obra social no encontrada" });
+        return res
+          .status(404)
+          .json({ success: false, message: "Obra social no encontrada" });
       }
 
       return res.status(200).json({

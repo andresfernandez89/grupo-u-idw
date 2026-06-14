@@ -34,7 +34,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 // Middlewares
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
