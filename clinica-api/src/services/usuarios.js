@@ -49,15 +49,33 @@ export class UsuariosService {
     return await UsuarioModel.findById(id);
   }
 
-  async create({ documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
+  async create({ documento, apellido, nombres, email, contrasenia, foto_path }) {
+    const ROL_PACIENTE = 2;
+
     const emailExistente = await UsuarioModel.findByEmail(email);
-    if (emailExistente) {
+    if (emailExistente?.activo === 1) {
       throw new DuplicateError("El email ya está registrado");
     }
 
     const docExistente = await UsuarioModel.findByDocumento(documento);
-    if (docExistente) {
+    if (docExistente?.activo === 1) {
       throw new DuplicateError("El documento ya está registrado");
+    }
+
+    // ADR-001 Opción C: reactivar registro soft-deleted (documento tiene prioridad).
+    // El rol siempre se fuerza a paciente (2), independientemente del rol anterior.
+    const registroInactivo = docExistente ?? emailExistente;
+    if (registroInactivo) {
+      await UsuarioModel.reactivate(registroInactivo.id_usuario, {
+        documento,
+        apellido,
+        nombres,
+        email,
+        contrasenia,
+        foto_path,
+        rol: ROL_PACIENTE,
+      });
+      return await UsuarioModel.findById(registroInactivo.id_usuario);
     }
 
     return await UsuarioModel.create({
@@ -67,7 +85,7 @@ export class UsuariosService {
       email,
       contrasenia,
       foto_path,
-      rol,
+      rol: ROL_PACIENTE,
     });
   }
 

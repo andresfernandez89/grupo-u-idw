@@ -138,6 +138,16 @@ export const deleteObraSocialValidator = [
     .toInt(),
 ];
 
+export const getMedicosObraSocialValidator = [
+  param("id")
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un entero positivo")
+    .toInt(),
+
+  ...paginationValidators,
+];
+
 export const getByIdObraSocialValidator = [
   param("id")
     .trim()

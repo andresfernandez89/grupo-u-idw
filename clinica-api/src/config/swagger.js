@@ -19,6 +19,14 @@ const options = {
       },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "Ingresá el token JWT obtenido en /auth/login",
+        },
+      },
       schemas: {
         Especialidad: {
           type: "object",
@@ -272,9 +280,27 @@ const options = {
             },
           },
         },
+        EstadisticaPorObraSocial: {
+          type: "object",
+          properties: {
+            id_obra_social: { type: "integer", description: "ID de la obra social" },
+            obra_social: { type: "string", description: "Nombre de la obra social" },
+            es_particular: { type: "boolean", description: "Indica si corresponde a atención particular" },
+            total_turnos: { type: "integer", description: "Total de turnos registrados" },
+            turnos_atendidos: { type: "integer", description: "Turnos efectivamente atendidos" },
+            turnos_pendientes: { type: "integer", description: "Turnos aún no atendidos" },
+            ingresos_realizados: { type: "number", format: "float", description: "Suma de valor_total de turnos atendidos" },
+            porcentaje_atencion: { type: "number", format: "float", description: "Porcentaje de turnos atendidos sobre el total" },
+          },
+        },
         TurnoCreate: {
           type: "object",
-          required: ["id_medico", "id_paciente", "id_obra_social", "fecha_hora"],
+          required: [
+            "id_medico",
+            "id_paciente",
+            "id_obra_social",
+            "fecha_hora",
+          ],
           properties: {
             id_medico: {
               type: "integer",

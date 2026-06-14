@@ -30,7 +30,7 @@ export class PacientesController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -48,7 +48,7 @@ export class PacientesController {
 
       res.json(pacienteResponse(paciente));
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -69,7 +69,7 @@ export class PacientesController {
       if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -94,7 +94,7 @@ export class PacientesController {
       if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -116,7 +116,7 @@ export class PacientesController {
 
       return res.status(204).send();
     } catch (err) {
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 }

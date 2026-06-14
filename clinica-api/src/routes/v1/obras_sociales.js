@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { authenticate } from "../../middlewares/auth.js";
+import { authorize } from "../../middlewares/role.js";
 import obrasSocialesController from "../../controllers/obras_sociales.js";
 import { handleValidationErrors } from "../../middlewares/validacion.js";
 import {
@@ -6,6 +8,7 @@ import {
   createObraSocialValidator,
   deleteObraSocialValidator,
   getByIdObraSocialValidator,
+  getMedicosObraSocialValidator,
   updateObraSocialValidator,
 } from "../../validators/obras_sociales.js";
 
@@ -17,6 +20,8 @@ const router = Router();
  *   get:
  *     summary: Obtiene la lista de obras sociales con paginación y filtros
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: nombre
@@ -94,6 +99,8 @@ const router = Router();
  */
 router.get(
   "/",
+  authenticate,
+  authorize(3),
   browseObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.browse.bind(obrasSocialesController),
@@ -105,6 +112,8 @@ router.get(
  *   post:
  *     summary: Crea una nueva obra social
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -146,6 +155,8 @@ router.get(
  */
 router.post(
   "/",
+  authenticate,
+  authorize(3),
   createObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.create.bind(obrasSocialesController),
@@ -157,6 +168,8 @@ router.post(
  *   delete:
  *     summary: Elimina (desactiva) una obra social
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -189,6 +202,8 @@ router.post(
  */
 router.delete(
   "/:id",
+  authenticate,
+  authorize(3),
   deleteObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.delete.bind(obrasSocialesController),
@@ -200,6 +215,8 @@ router.delete(
  *   put:
  *     summary: Actualiza una obra social existente
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -255,6 +272,8 @@ router.delete(
  */
 router.put(
   "/:id",
+  authenticate,
+  authorize(3),
   updateObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.update.bind(obrasSocialesController),
@@ -266,6 +285,8 @@ router.put(
  *   get:
  *     summary: Obtiene una obra social por su ID
  *     tags: [Obras Sociales]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -305,8 +326,68 @@ router.put(
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
+/**
+ * @openapi
+ * /obras-sociales/{id}/medicos:
+ *   get:
+ *     summary: Obtiene los médicos asociados a una obra social
+ *     tags: [Obras Sociales]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: ID de la obra social
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         required: false
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         required: false
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [id_medico_obra_social, id_medico, id_obra_social]
+ *         required: false
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         required: false
+ *     responses:
+ *       200:
+ *         description: Lista paginada de médicos de la obra social
+ *       404:
+ *         description: Obra social no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get(
+  "/:id/medicos",
+  authenticate,
+  authorize(2, 3),
+  getMedicosObraSocialValidator,
+  handleValidationErrors,
+  obrasSocialesController.findMedicos.bind(obrasSocialesController),
+);
+
 router.get(
   "/:id",
+  authenticate,
+  authorize(3),
   getByIdObraSocialValidator,
   handleValidationErrors,
   obrasSocialesController.findById.bind(obrasSocialesController),

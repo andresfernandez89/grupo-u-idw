@@ -31,7 +31,7 @@ export class UsuariosController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -42,12 +42,13 @@ export class UsuariosController {
 
       if (!usuarioEncontrado) {
         return res.status(404).json({
+          success: false,
           message: "No se encontró usuario con el id solicitado",
         });
       }
       res.json(usuariosResponse(usuarioEncontrado));
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
@@ -68,7 +69,7 @@ export class UsuariosController {
 
       return res.status(500).json({
         success: false,
-        error: error.message,
+        message: error.message,
       });
     }
   }
@@ -98,7 +99,7 @@ export class UsuariosController {
 
       return res.status(500).json({
         success: false,
-        error: err.message,
+        message: err.message,
       });
     }
   }
@@ -125,7 +126,7 @@ export class UsuariosController {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        error: error.message,
+        message: error.message,
       });
     }
   }

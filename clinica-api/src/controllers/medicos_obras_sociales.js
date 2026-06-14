@@ -22,7 +22,7 @@ export class MedicosObrasSocialesController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -33,13 +33,14 @@ export class MedicosObrasSocialesController {
 
       if (!mos) {
         return res.status(404).json({
+          success: false,
           message: "No se encontró la relación médico-obra social con el id solicitado",
         });
       }
 
       res.json(medicoObraSocialResponse(mos));
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -59,7 +60,7 @@ export class MedicosObrasSocialesController {
         return res.status(409).json({ success: false, message: err.message });
       }
 
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -86,14 +87,14 @@ export class MedicosObrasSocialesController {
         return res.status(409).json({ success: false, message: err.message });
       }
 
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      const deleted = await medicosObrasSocialesService.delete(id);
+      const { id_medico, id_obra_social } = req.params;
+      const deleted = await medicosObrasSocialesService.delete(id_medico, id_obra_social);
 
       if (deleted === null) {
         return res.status(404).json({ success: false, message: "Relación médico-obra social no encontrada" });
@@ -105,7 +106,7 @@ export class MedicosObrasSocialesController {
 
       return res.status(204).send();
     } catch (err) {
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 }

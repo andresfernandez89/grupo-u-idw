@@ -31,7 +31,7 @@ export class EspecialidadesController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -42,12 +42,13 @@ export class EspecialidadesController {
 
       if (!especialidadEncontrada) {
         return res.status(404).json({
+          success: false,
           message: "No se encontro especialidad con el id solicitado",
         });
       }
       res.json(especialidadesResponse(especialidadEncontrada));
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
@@ -68,7 +69,7 @@ export class EspecialidadesController {
 
       return res.status(500).json({
         success: false,
-        error: error.message,
+        message: error.message,
       });
     }
   }
@@ -98,7 +99,7 @@ export class EspecialidadesController {
 
       return res.status(500).json({
         success: false,
-        error: err.message,
+        message: err.message,
       });
     }
   }
@@ -125,7 +126,7 @@ export class EspecialidadesController {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        error: error.message,
+        message: error.message,
       });
     }
   }

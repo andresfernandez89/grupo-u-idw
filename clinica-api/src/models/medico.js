@@ -149,6 +149,18 @@ const MedicoModel = {
     return rows[0].total;
   },
 
+  async findByIdUsuario(id_usuario) {
+    const [rows] = await pool.query(
+      `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
+              m.descripcion, m.valor_consulta, u.activo
+       FROM medicos m
+       JOIN usuarios u ON m.id_usuario = u.id_usuario
+       WHERE m.id_usuario = ?`,
+      [id_usuario],
+    );
+    return rows[0] ?? null;
+  },
+
   async findByMatricula(matricula) {
     // Unimos (JOIN) medicos con usuarios para leer el campo "activo". La matrícula no se repite y vive en "medicos", pero la marca de borrado (activo) está en "usuarios". Necesitamos saber si una matrícula repetida es de un médico activo (es duplicado) o de uno borrado (se puede revivir). Usamos las tablas reales y NO la vista v_medicos, porque la vista esconde los borrados.
     const [rows] = await pool.query(
@@ -223,11 +235,49 @@ const MedicoModel = {
     );
   },
 
+  async findObrasSociales(id_medico, { limit, offset, sort, order }) {
+    let sql = `SELECT mos.id_medico_obra_social, mos.id_medico, mos.id_obra_social, mos.activo,
+                      v.apellido AS medico_apellido, v.nombres AS medico_nombres,
+                      os.nombre AS obra_social_nombre
+               FROM medicos_obras_sociales mos
+               JOIN v_medicos v ON mos.id_medico = v.id_medico
+               JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+               WHERE mos.id_medico = ? AND mos.activo = 1 AND os.activo = 1`;
+    const params = [id_medico];
+
+    sql += ` ORDER BY ${sort} ${order}`;
+    sql += " LIMIT ? OFFSET ?";
+    params.push(limit, offset);
+
+    const [rows] = await pool.query(sql, params);
+    return rows;
+  },
+
+  async countObrasSociales(id_medico) {
+    const [rows] = await pool.query(
+      `SELECT COUNT(*) AS total
+       FROM medicos_obras_sociales mos
+       JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+       WHERE mos.id_medico = ? AND mos.activo = 1 AND os.activo = 1`,
+      [id_medico],
+    );
+    return rows[0].total;
+  },
+
   async delete(id_usuario) {
     const [result] = await pool.query(
       "UPDATE usuarios SET activo = 0 WHERE id_usuario = ? AND activo = 1",
       [id_usuario],
     );
+
+    await pool.query(
+      `UPDATE medicos_obras_sociales mos
+       JOIN medicos m ON mos.id_medico = m.id_medico
+       SET mos.activo = 0
+       WHERE m.id_usuario = ? AND mos.activo = 1`,
+      [id_usuario],
+    );
+
     return result.affectedRows;
   },
 };

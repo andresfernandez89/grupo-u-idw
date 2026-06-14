@@ -7,8 +7,8 @@ const MedicoObraSocialModel = {
                       os.nombre AS obra_social_nombre
                FROM medicos_obras_sociales mos
                JOIN v_medicos v ON mos.id_medico = v.id_medico
-               JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
-               WHERE mos.activo = 1`;
+                JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+                WHERE mos.activo = 1 AND os.activo = 1`;
     const params = [];
 
     if (filters.id_medico) {
@@ -31,8 +31,9 @@ const MedicoObraSocialModel = {
 
   async countAll({ filters }) {
     let sql = `SELECT COUNT(*) AS total
-               FROM medicos_obras_sociales mos
-               WHERE mos.activo = 1`;
+                FROM medicos_obras_sociales mos
+                JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+                WHERE mos.activo = 1 AND os.activo = 1`;
     const params = [];
 
     if (filters.id_medico) {
@@ -57,13 +58,13 @@ const MedicoObraSocialModel = {
        FROM medicos_obras_sociales mos
        JOIN v_medicos v ON mos.id_medico = v.id_medico
        JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
-       WHERE mos.id_medico_obra_social = ? AND mos.activo = 1`,
+        WHERE mos.id_medico_obra_social = ? AND mos.activo = 1 AND os.activo = 1`,
       [id],
     );
     return rows[0] ?? null;
   },
 
-  async findByMedicoAndObraSocial(id_medico, id_obra_social) {
+  async findByMedicoObraSocial(id_medico, id_obra_social) {
     const [rows] = await pool.query(
       `SELECT id_medico_obra_social, id_medico, id_obra_social, activo
        FROM medicos_obras_sociales
@@ -71,6 +72,24 @@ const MedicoObraSocialModel = {
       [id_medico, id_obra_social],
     );
     return rows[0] ?? null;
+  },
+
+  async findByMedicoObraSocialSinActivo(id_medico, id_obra_social) {
+    const [rows] = await pool.query(
+      `SELECT id_medico_obra_social, id_medico, id_obra_social, activo
+       FROM medicos_obras_sociales
+       WHERE id_medico = ? AND id_obra_social = ?`,
+      [id_medico, id_obra_social],
+    );
+    return rows[0] ?? null;
+  },
+
+  async reactivate(conn, { id_medico, id_obra_social }) {
+    await conn.query(
+      `UPDATE medicos_obras_sociales SET activo = 1
+       WHERE id_medico = ? AND id_obra_social = ?`,
+      [id_medico, id_obra_social],
+    );
   },
 
   async create({ id_medico, id_obra_social }) {
@@ -82,20 +101,10 @@ const MedicoObraSocialModel = {
     return { id_medico_obra_social: result.insertId, id_medico, id_obra_social };
   },
 
-  async update(id, { id_medico, id_obra_social }) {
+  async deleteByMedicoObraSocial(id_medico, id_obra_social) {
     const [result] = await pool.query(
-      `UPDATE medicos_obras_sociales
-       SET id_medico = ?, id_obra_social = ?
-       WHERE id_medico_obra_social = ? AND activo = 1`,
-      [id_medico, id_obra_social, id],
-    );
-    return result.affectedRows;
-  },
-
-  async delete(id) {
-    const [result] = await pool.query(
-      "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico_obra_social = ? AND activo = 1",
-      [id],
+      "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico = ? AND id_obra_social = ? AND activo = 1",
+      [id_medico, id_obra_social],
     );
     return result.affectedRows;
   },

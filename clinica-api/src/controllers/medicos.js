@@ -1,5 +1,6 @@
 import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
 import { medicosCreate, medicosResponse } from "../dtos/medicos.dto.js";
+import { medicoObraSocialResponse } from "../dtos/medicos_obras_sociales.dto.js";
 import medicoService from "../services/medicos.js";
 
 export class MedicosController {
@@ -31,7 +32,7 @@ export class MedicosController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -42,12 +43,13 @@ export class MedicosController {
 
       if (!medicoEncontrado) {
         return res.status(404).json({
+          success: false,
           message: "No se encontró médico con el id solicitado",
         });
       }
       res.json(medicosResponse(medicoEncontrado));
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
@@ -71,6 +73,7 @@ export class MedicosController {
 
       if (!resultado.data || resultado.data.length === 0) {
         return res.status(404).json({
+          success: false,
           message: "No se encontraron médicos para la especialidad solicitada",
         });
       }
@@ -81,7 +84,7 @@ export class MedicosController {
         pagination: resultado.pagination,
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
@@ -105,7 +108,7 @@ export class MedicosController {
 
       return res.status(500).json({
         success: false,
-        error: error.message,
+        message: error.message,
       });
     }
   }
@@ -139,8 +142,42 @@ export class MedicosController {
 
       return res.status(500).json({
         success: false,
-        error: err.message,
+        message: err.message,
       });
+    }
+  }
+
+  async findObrasSociales(req, res) {
+    try {
+      const { id_medico } = req.params;
+      const page = parseInt(req.query.page) || 1;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+      const sort = req.query.sort;
+      const order = req.query.order;
+
+      const resultado = await medicoService.getObrasSociales(id_medico, {
+        page,
+        limit,
+        sort,
+        order,
+      });
+
+      const data = resultado.data.map(medicoObraSocialResponse);
+
+      res.json({
+        success: true,
+        message:
+          data.length === 0
+            ? "El médico solicitado no tiene obras sociales asignadas"
+            : undefined,
+        data,
+        pagination: resultado.pagination,
+      });
+    } catch (error) {
+      if (error instanceof ForeignKeyError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 
@@ -166,7 +203,7 @@ export class MedicosController {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        error: error.message,
+        message: error.message,
       });
     }
   }
