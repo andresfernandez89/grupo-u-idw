@@ -74,6 +74,24 @@ const MedicoObraSocialModel = {
     return rows[0] ?? null;
   },
 
+  async findByMedicoObraSocialSinActivo(id_medico, id_obra_social) {
+    const [rows] = await pool.query(
+      `SELECT id_medico_obra_social, id_medico, id_obra_social, activo
+       FROM medicos_obras_sociales
+       WHERE id_medico = ? AND id_obra_social = ?`,
+      [id_medico, id_obra_social],
+    );
+    return rows[0] ?? null;
+  },
+
+  async reactivate(conn, { id_medico, id_obra_social }) {
+    await conn.query(
+      `UPDATE medicos_obras_sociales SET activo = 1
+       WHERE id_medico = ? AND id_obra_social = ?`,
+      [id_medico, id_obra_social],
+    );
+  },
+
   async create({ id_medico, id_obra_social }) {
     const [result] = await pool.query(
       `INSERT INTO medicos_obras_sociales (id_medico, id_obra_social, activo)
