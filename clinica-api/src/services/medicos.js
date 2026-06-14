@@ -180,6 +180,47 @@ export class MedicosService {
     const affectedRows = await MedicoModel.delete(existing.id_usuario);
     return affectedRows === 1;
   }
+
+  async getObrasSociales(
+    id_medico,
+    { page = 1, limit = 10, sort = "id_medico_obra_social", order = "asc" } = {},
+  ) {
+    const offset = (page - 1) * limit;
+    const allowedSort = [
+      "id_medico_obra_social",
+      "id_medico",
+      "id_obra_social",
+    ].includes(sort)
+      ? sort
+      : "id_medico_obra_social";
+    const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
+      ? order.toLowerCase()
+      : "asc";
+
+    const medico = await MedicoModel.findById(id_medico);
+    if (!medico) {
+      throw new Error("El médico indicado no existe o no está activo");
+    }
+
+    const rows = await MedicoModel.findObrasSociales(id_medico, {
+      limit,
+      offset,
+      sort: allowedSort,
+      order: allowedOrder,
+    });
+
+    const total = await MedicoModel.countObrasSociales(id_medico);
+
+    return {
+      data: rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
 }
 
 export default new MedicosService();

@@ -61,44 +61,18 @@ export const createMedicoObraSocialValidator = [
     .toInt(),
 ];
 
-export const updateMedicoObraSocialValidator = [
-  param("id")
+export const deleteMedicoObraSocialValidator = [
+  param("id_medico")
     .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
-
-  body("id_medico")
-    .trim()
-    .notEmpty()
-    .withMessage("El id_medico es obligatorio")
-    .bail()
     .isInt({ min: 1 })
     .withMessage("El id_medico debe ser un entero positivo")
     .toInt(),
 
-  body("id_obra_social")
+  param("id_obra_social")
     .trim()
-    .notEmpty()
-    .withMessage("El id_obra_social es obligatorio")
-    .bail()
     .isInt({ min: 1 })
     .withMessage("El id_obra_social debe ser un entero positivo")
     .toInt(),
 ];
 
-export const deleteMedicoObraSocialValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
-];
 
-export const getByIdMedicoObraSocialValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
-];

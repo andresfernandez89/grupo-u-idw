@@ -1,5 +1,5 @@
-import MedicoObraSocialModel from "../models/medico_obra_social.js";
 import MedicoModel from "../models/medico.js";
+import MedicoObraSocialModel from "../models/medico_obra_social.js";
 import ObraSocialModel from "../models/obra_social.js";
 
 export class MedicosObrasSocialesService {
@@ -48,7 +48,17 @@ export class MedicosObrasSocialesService {
   }
 
   async create({ id_medico, id_obra_social }) {
-    const existing = await MedicoObraSocialModel.findByMedicoAndObraSocial(
+    const medico = await MedicoModel.findById(id_medico);
+    if (!medico) {
+      throw new Error("El médico indicado no existe o no está activo");
+    }
+
+    const obraSocial = await ObraSocialModel.findById(id_obra_social);
+    if (!obraSocial) {
+      throw new Error("La obra social indicada no existe o no está activa");
+    }
+
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,
       id_obra_social,
     );
@@ -60,31 +70,17 @@ export class MedicosObrasSocialesService {
     return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
   }
 
-  async update(id, { id_medico, id_obra_social }) {
-    const existing = await MedicoObraSocialModel.findByMedicoAndObraSocial(
+  async delete(id_medico, id_obra_social) {
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,
       id_obra_social,
     );
-
-    if (existing && existing.id_medico_obra_social !== id) {
-      throw new Error("El médico ya tiene asignada esa obra social");
-    }
-
-    const affectedRows = await MedicoObraSocialModel.update(id, {
-      id_medico,
-      id_obra_social,
-    });
-
-    if (affectedRows === 0) return null;
-
-    return MedicoObraSocialModel.findById(id);
-  }
-
-  async delete(id) {
-    const existing = await MedicoObraSocialModel.findById(id);
     if (!existing) return null;
 
-    const affectedRows = await MedicoObraSocialModel.delete(id);
+    const affectedRows = await MedicoObraSocialModel.deleteByMedicoObraSocial(
+      id_medico,
+      id_obra_social,
+    );
     return affectedRows === 1;
   }
 }

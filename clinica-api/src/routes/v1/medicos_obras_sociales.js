@@ -7,8 +7,6 @@ import {
   browseMedicoObraSocialValidator,
   createMedicoObraSocialValidator,
   deleteMedicoObraSocialValidator,
-  getByIdMedicoObraSocialValidator,
-  updateMedicoObraSocialValidator,
 } from "../../validators/medicos_obras_sociales.js";
 
 const router = Router();
@@ -22,14 +20,6 @@ router.get(
   medicosObrasSocialesController.browse.bind(medicosObrasSocialesController),
 );
 
-router.get(
-  "/:id",
-  authenticate,
-  authorize(3),
-  getByIdMedicoObraSocialValidator,
-  handleValidationErrors,
-  medicosObrasSocialesController.findById.bind(medicosObrasSocialesController),
-);
 
 router.post(
   "/",
@@ -40,17 +30,8 @@ router.post(
   medicosObrasSocialesController.create.bind(medicosObrasSocialesController),
 );
 
-router.put(
-  "/:id",
-  authenticate,
-  authorize(3),
-  updateMedicoObraSocialValidator,
-  handleValidationErrors,
-  medicosObrasSocialesController.update.bind(medicosObrasSocialesController),
-);
-
 router.delete(
-  "/:id",
+  "/:id_medico/:id_obra_social",
   authenticate,
   authorize(3),
   deleteMedicoObraSocialValidator,

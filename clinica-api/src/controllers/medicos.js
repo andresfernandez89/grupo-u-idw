@@ -1,4 +1,5 @@
 import { medicosCreate, medicosResponse } from "../dtos/medicos.dto.js";
+import { medicoObraSocialResponse } from "../dtos/medicos_obras_sociales.dto.js";
 import medicoService from "../services/medicos.js";
 
 export class MedicosController {
@@ -142,6 +143,40 @@ export class MedicosController {
         success: false,
         message: err.message,
       });
+    }
+  }
+
+  async findObrasSociales(req, res) {
+    try {
+      const { id_medico } = req.params;
+      const page = parseInt(req.query.page) || 1;
+      const limit = Math.min(parseInt(req.query.limit) || 10, 100);
+      const sort = req.query.sort;
+      const order = req.query.order;
+
+      const resultado = await medicoService.getObrasSociales(id_medico, {
+        page,
+        limit,
+        sort,
+        order,
+      });
+
+      const data = resultado.data.map(medicoObraSocialResponse);
+
+      res.json({
+        success: true,
+        message:
+          data.length === 0
+            ? "El médico solicitado no tiene obras sociales asignadas"
+            : undefined,
+        data,
+        pagination: resultado.pagination,
+      });
+    } catch (error) {
+      if (error.message.includes("no existe o no está activo")) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 

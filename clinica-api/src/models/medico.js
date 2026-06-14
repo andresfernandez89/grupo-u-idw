@@ -235,11 +235,49 @@ const MedicoModel = {
     );
   },
 
+  async findObrasSociales(id_medico, { limit, offset, sort, order }) {
+    let sql = `SELECT mos.id_medico_obra_social, mos.id_medico, mos.id_obra_social, mos.activo,
+                      v.apellido AS medico_apellido, v.nombres AS medico_nombres,
+                      os.nombre AS obra_social_nombre
+               FROM medicos_obras_sociales mos
+               JOIN v_medicos v ON mos.id_medico = v.id_medico
+               JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+               WHERE mos.id_medico = ? AND mos.activo = 1 AND os.activo = 1`;
+    const params = [id_medico];
+
+    sql += ` ORDER BY ${sort} ${order}`;
+    sql += " LIMIT ? OFFSET ?";
+    params.push(limit, offset);
+
+    const [rows] = await pool.query(sql, params);
+    return rows;
+  },
+
+  async countObrasSociales(id_medico) {
+    const [rows] = await pool.query(
+      `SELECT COUNT(*) AS total
+       FROM medicos_obras_sociales mos
+       JOIN obras_sociales os ON mos.id_obra_social = os.id_obra_social
+       WHERE mos.id_medico = ? AND mos.activo = 1 AND os.activo = 1`,
+      [id_medico],
+    );
+    return rows[0].total;
+  },
+
   async delete(id_usuario) {
     const [result] = await pool.query(
       "UPDATE usuarios SET activo = 0 WHERE id_usuario = ? AND activo = 1",
       [id_usuario],
     );
+
+    await pool.query(
+      `UPDATE medicos_obras_sociales mos
+       JOIN medicos m ON mos.id_medico = m.id_medico
+       SET mos.activo = 0
+       WHERE m.id_usuario = ? AND mos.activo = 1`,
+      [id_usuario],
+    );
+
     return result.affectedRows;
   },
 };

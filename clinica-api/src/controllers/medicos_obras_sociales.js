@@ -63,37 +63,10 @@ export class MedicosObrasSocialesController {
     }
   }
 
-  async update(req, res) {
-    try {
-      const { id } = req.params;
-      const datos = medicoObraSocialCreate(req.body);
-      const actualizado = await medicosObrasSocialesService.update(id, datos);
-
-      if (!actualizado) {
-        return res.status(404).json({
-          success: false,
-          message: "Relación médico-obra social no encontrada",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Relación médico-obra social modificada exitosamente",
-        data: medicoObraSocialResponse(actualizado),
-      });
-    } catch (err) {
-      if (err.message.includes("ya tiene asignada")) {
-        return res.status(409).json({ success: false, message: err.message });
-      }
-
-      return res.status(500).json({ success: false, message: err.message });
-    }
-  }
-
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      const deleted = await medicosObrasSocialesService.delete(id);
+      const { id_medico, id_obra_social } = req.params;
+      const deleted = await medicosObrasSocialesService.delete(id_medico, id_obra_social);
 
       if (deleted === null) {
         return res.status(404).json({ success: false, message: "Relación médico-obra social no encontrada" });

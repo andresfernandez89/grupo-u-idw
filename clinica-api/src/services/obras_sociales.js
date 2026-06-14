@@ -99,6 +99,47 @@ export class ObrasSocialesService {
     });
     return await ObraSocialModel.findById(existing.id_obra_social);
   }
+
+  async getMedicos(
+    id_obra_social,
+    { page = 1, limit = 10, sort = "id_medico_obra_social", order = "asc" } = {},
+  ) {
+    const offset = (page - 1) * limit;
+    const allowedSort = [
+      "id_medico_obra_social",
+      "id_medico",
+      "id_obra_social",
+    ].includes(sort)
+      ? sort
+      : "id_medico_obra_social";
+    const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
+      ? order.toLowerCase()
+      : "asc";
+
+    const obraSocial = await ObraSocialModel.findById(id_obra_social);
+    if (!obraSocial) {
+      throw new Error("La obra social indicada no existe o no está activa");
+    }
+
+    const rows = await ObraSocialModel.findMedicos(id_obra_social, {
+      limit,
+      offset,
+      sort: allowedSort,
+      order: allowedOrder,
+    });
+
+    const total = await ObraSocialModel.countMedicos(id_obra_social);
+
+    return {
+      data: rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
 }
 
 export default new ObrasSocialesService();

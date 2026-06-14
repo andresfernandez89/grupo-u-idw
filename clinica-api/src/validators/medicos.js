@@ -207,6 +207,16 @@ export const updateMedicoValidator = [
     .withMessage("El valor de consulta debe ser mayor o igual a 0"),
 ];
 
+export const getObrasSocialesMedicoValidator = [
+  param("id_medico")
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("El id_medico debe ser un entero positivo")
+    .toInt(),
+
+  ...paginationValidators,
+];
+
 export const deleteMedicoValidator = [
   param("id")
     .trim()
