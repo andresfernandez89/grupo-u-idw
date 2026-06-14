@@ -1,6 +1,7 @@
 import MedicoModel from "../models/medico.js";
 import MedicoObraSocialModel from "../models/medico_obra_social.js";
 import ObraSocialModel from "../models/obra_social.js";
+import { withTransaction } from "../config/db.js";
 
 export class MedicosObrasSocialesService {
   async browse({
@@ -58,16 +59,24 @@ export class MedicosObrasSocialesService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
       id_medico,
       id_obra_social,
     );
 
-    if (existing) {
+    if (!existing) {
+      return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
+    }
+
+    if (existing.activo === 1) {
       throw new Error("El médico ya tiene asignada esa obra social");
     }
 
-    return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
+    await withTransaction((conn) =>
+      MedicoObraSocialModel.reactivate(conn, { id_medico, id_obra_social }),
+    );
+
+    return { id_medico_obra_social: existing.id_medico_obra_social, id_medico, id_obra_social };
   }
 
   async delete(id_medico, id_obra_social) {
