@@ -96,6 +96,10 @@ export class MedicosService {
     return await MedicoModel.findById(id);
   }
 
+  async findByIdUsuario(id_usuario) {
+    return await MedicoModel.findByIdUsuario(id_usuario);
+  }
+
   async create({
     id_usuario,
     id_especialidad,

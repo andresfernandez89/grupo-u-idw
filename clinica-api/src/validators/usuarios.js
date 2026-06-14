@@ -132,14 +132,6 @@ export const createUsuarioValidator = [
     .trim()
     .isString()
     .withMessage("La foto_path debe ser un texto"),
-
-  body("rol")
-    .trim()
-    .notEmpty()
-    .withMessage("El rol es obligatorio")
-    .bail()
-    .isIn([1, 2, 3])
-    .withMessage("rol debe ser 1 (médico), 2 (paciente) o 3 (admin)"),
 ];
 
 export const updateUsuarioValidator = [

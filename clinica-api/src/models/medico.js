@@ -149,6 +149,18 @@ const MedicoModel = {
     return rows[0].total;
   },
 
+  async findByIdUsuario(id_usuario) {
+    const [rows] = await pool.query(
+      `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
+              m.descripcion, m.valor_consulta, u.activo
+       FROM medicos m
+       JOIN usuarios u ON m.id_usuario = u.id_usuario
+       WHERE m.id_usuario = ?`,
+      [id_usuario],
+    );
+    return rows[0] ?? null;
+  },
+
   async findByMatricula(matricula) {
     // Unimos (JOIN) medicos con usuarios para leer el campo "activo". La matrícula no se repite y vive en "medicos", pero la marca de borrado (activo) está en "usuarios". Necesitamos saber si una matrícula repetida es de un médico activo (es duplicado) o de uno borrado (se puede revivir). Usamos las tablas reales y NO la vista v_medicos, porque la vista esconde los borrados.
     const [rows] = await pool.query(

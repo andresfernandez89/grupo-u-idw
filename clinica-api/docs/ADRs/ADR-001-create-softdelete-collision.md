@@ -149,6 +149,10 @@ convención pragmática, no REST puro.
 
 ## Punto de tensión: Usuarios
 
+> **Resuelto en ADR-003** (2026-06-13). La decisión pendiente documentada en esta sección
+> fue tomada y documentada en
+> [ADR-003: Registro público de usuarios con rol paciente por defecto](./ADR-003-registro-publico-usuarios.md).
+
 La entidad `usuarios` tiene dos campos UNIQUE (`documento` y `email`) y su gestión presenta
 una ambigüedad que el equipo debe resolver:
 

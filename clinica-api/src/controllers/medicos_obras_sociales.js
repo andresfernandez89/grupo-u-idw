@@ -21,7 +21,7 @@ export class MedicosObrasSocialesController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ success: false, error: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -39,7 +39,7 @@ export class MedicosObrasSocialesController {
 
       res.json(medicoObraSocialResponse(mos));
     } catch (err) {
-      res.status(500).json({ success: false, error: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -59,7 +59,7 @@ export class MedicosObrasSocialesController {
         return res.status(409).json({ success: false, message: err.message });
       }
 
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -78,7 +78,7 @@ export class MedicosObrasSocialesController {
 
       return res.status(204).send();
     } catch (err) {
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 }

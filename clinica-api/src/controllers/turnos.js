@@ -1,4 +1,6 @@
 import { turnoCreate, turnoResponse } from "../dtos/turnos.dto.js";
+import medicoService from "../services/medicos.js";
+import pacienteService from "../services/pacientes.js";
 import turnoService from "../services/turnos.js";
 
 export class TurnosController {
@@ -10,12 +12,34 @@ export class TurnosController {
       const order = req.query.order;
 
       const filters = {};
-      if (req.query.id_medico) filters.id_medico = req.query.id_medico;
-      if (req.query.id_paciente) filters.id_paciente = req.query.id_paciente;
       if (req.query.id_obra_social) filters.id_obra_social = req.query.id_obra_social;
       if (req.query.atendido !== undefined) filters.atendido = req.query.atendido;
       if (req.query.fecha_desde) filters.fecha_desde = req.query.fecha_desde;
       if (req.query.fecha_hasta) filters.fecha_hasta = req.query.fecha_hasta;
+
+      const rol = req.user?.rol;
+      if (rol === 1) {
+        const medico = await medicoService.findByIdUsuario(req.user.id_usuario);
+        if (!medico) {
+          return res.status(403).json({
+            success: false,
+            message: "No se encontró un médico asociado a tu usuario",
+          });
+        }
+        filters.id_medico = medico.id_medico;
+      } else if (rol === 2) {
+        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
+        if (!paciente) {
+          return res.status(403).json({
+            success: false,
+            message: "No se encontró un paciente asociado a tu usuario",
+          });
+        }
+        filters.id_paciente = paciente.id_paciente;
+      } else if (rol === 3) {
+        if (req.query.id_medico) filters.id_medico = req.query.id_medico;
+        if (req.query.id_paciente) filters.id_paciente = req.query.id_paciente;
+      }
 
       const resultado = await turnoService.browse({
         filters,
@@ -31,7 +55,7 @@ export class TurnosController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -47,15 +71,47 @@ export class TurnosController {
         });
       }
 
+      const rol = req.user?.rol;
+      if (rol === 1) {
+        const medico = await medicoService.findByIdUsuario(req.user.id_usuario);
+        if (!medico || turno.id_medico !== medico.id_medico) {
+          return res.status(403).json({
+            success: false,
+            message: "No tenés permisos para ver este turno",
+          });
+        }
+      } else if (rol === 2) {
+        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
+        if (!paciente || turno.id_paciente !== paciente.id_paciente) {
+          return res.status(403).json({
+            success: false,
+            message: "No tenés permisos para ver este turno",
+          });
+        }
+      }
+
       res.json(turnoResponse(turno));
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ success: false, message: err.message });
     }
   }
 
   async create(req, res) {
     try {
       const datos = turnoCreate(req.body);
+
+      const rol = req.user?.rol;
+      if (rol === 2) {
+        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
+        if (!paciente) {
+          return res.status(403).json({
+            success: false,
+            message: "No se encontró un paciente asociado a tu usuario",
+          });
+        }
+        datos.id_paciente = paciente.id_paciente;
+      }
+
       const nuevo = await turnoService.create(datos);
 
       return res.status(201).json({
@@ -70,7 +126,7 @@ export class TurnosController {
       if (err.message.includes("ya tiene un turno asignado")) {
         return res.status(409).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -98,20 +154,33 @@ export class TurnosController {
       if (err.message.includes("ya tiene un turno asignado")) {
         return res.status(409).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
   async marcarAtendido(req, res) {
     try {
       const { id } = req.params;
-      const actualizado = await turnoService.marcarAtendido(id);
+      const turno = await turnoService.readById(id);
 
-      if (!actualizado) {
+      if (!turno) {
         return res
           .status(404)
           .json({ success: false, message: "Turno no encontrado" });
       }
+
+      const rol = req.user?.rol;
+      if (rol === 1) {
+        const medico = await medicoService.findByIdUsuario(req.user.id_usuario);
+        if (!medico || turno.id_medico !== medico.id_medico) {
+          return res.status(403).json({
+            success: false,
+            message: "No tenés permisos para modificar este turno",
+          });
+        }
+      }
+
+      const actualizado = await turnoService.marcarAtendido(id);
 
       return res.status(200).json({
         success: true,
@@ -119,7 +188,7 @@ export class TurnosController {
         data: turnoResponse(actualizado),
       });
     } catch (err) {
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -141,7 +210,7 @@ export class TurnosController {
 
       return res.status(204).send();
     } catch (err) {
-      return res.status(500).json({ success: false, error: err.message });
+      return res.status(500).json({ success: false, message: err.message });
     }
   }
 }
