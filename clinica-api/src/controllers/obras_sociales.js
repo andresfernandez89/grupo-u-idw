@@ -47,12 +47,10 @@ export class ObrasSocialesController {
           .json({ success: false, message: "Obra social no encontrada" });
       }
       if (!deleted) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Error al eliminar la obra social",
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Error al eliminar la obra social",
+        });
       }
 
       return res.status(204).send();

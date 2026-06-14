@@ -85,21 +85,17 @@ export class MedicosObrasSocialesController {
       );
 
       if (deleted === null) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: "Relación médico-obra social no encontrada",
-          });
+        return res.status(404).json({
+          success: false,
+          message: "Relación médico-obra social no encontrada",
+        });
       }
 
       if (!deleted) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Error al eliminar la relación médico-obra social",
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Error al eliminar la relación médico-obra social",
+        });
       }
 
       return res.status(204).send();
