@@ -1,4 +1,4 @@
-import { DuplicateError } from "../utils/errors.js";
+import { DuplicateError, NotFoundError } from "../utils/errors.js";
 import {
   medicoObraSocialCreate,
   medicoObraSocialResponse,
@@ -41,16 +41,11 @@ export class MedicosObrasSocialesController {
       const { id } = req.params;
       const mos = await medicosObrasSocialesService.readById(id);
 
-      if (!mos) {
-        return res.status(404).json({
-          success: false,
-          message:
-            "No se encontró la relación médico-obra social con el id solicitado",
-        });
-      }
-
       res.json(medicoObraSocialResponse(mos));
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       res.status(500).json({ success: false, message: err.message });
     }
   }
@@ -71,6 +66,9 @@ export class MedicosObrasSocialesController {
     } catch (err) {
       if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
+      }       
+      if (err instanceof NotFoundError) {
+        return res.status(400).json({ success: false, message: err.message });
       }
 
       return res.status(500).json({ success: false, message: err.message });
@@ -98,6 +96,9 @@ export class MedicosObrasSocialesController {
     } catch (err) {
       if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
+      }
+      if (err instanceof NotFoundError) {
+        return res.status(400).json({ success: false, message: err.message });
       }
 
       return res.status(500).json({ success: false, message: err.message });

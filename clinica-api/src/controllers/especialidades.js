@@ -93,6 +93,9 @@ export class EspecialidadesController {
         data: especialidadesResponse(actualizada),
       });
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
@@ -124,6 +127,9 @@ export class EspecialidadesController {
 
       return res.status(204).send();
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       return res.status(500).json({
         success: false,
         message: error.message,

@@ -46,7 +46,13 @@ export class MedicosObrasSocialesService {
   }
 
   async readById(id) {
-    return await MedicoObraSocialModel.findById(id);
+    const medicoObraSocial = await MedicoObraSocialModel.findById(id);
+    if (!medicoObraSocial) {
+      throw new NotFoundError(
+        "No se encontró la relación médico-obra social con el id solicitado",
+      );
+    }
+    return medicoObraSocial;
   }
 
   async create({ id_medico, id_obra_social }) {
