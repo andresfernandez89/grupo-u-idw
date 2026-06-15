@@ -12,9 +12,7 @@ export async function testConexion() {
     const con = await pool.getConnection();
     console.log("Conexión con base de datos OK");
 
-    const [resulst] = await con.query(
-      "SELECT NOW() AS hora_servidor, DATABASE() AS base_datos",
-    );
+    const [resulst] = await con.query("SELECT NOW() AS hora_servidor, DATABASE() AS base_datos");
     console.log("Datos de prueba");
     console.table(resulst);
 
@@ -26,5 +24,20 @@ export async function testConexion() {
       msg: error.message,
     });
     process.exit(1);
+  }
+}
+
+export async function withTransaction(callback) {
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+    const result = await callback(conn);
+    await conn.commit();
+    return result;
+  } catch (err) {
+    await conn.rollback();
+    throw err;
+  } finally {
+    conn.release();
   }
 }
