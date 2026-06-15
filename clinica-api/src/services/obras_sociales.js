@@ -1,3 +1,4 @@
+import { DuplicateError, NotFoundError } from "../utils/errors.js";
 import ObraSocialModel from "../models/obra_social.js";
 
 export class ObrasSocialesService {
@@ -42,12 +43,18 @@ export class ObrasSocialesService {
   }
 
   async readById(id) {
-    return await ObraSocialModel.findById(id);
+    const obraSocial = await ObraSocialModel.findById(id);
+    if (!obraSocial) {
+      throw new NotFoundError("Obra social no encontrada");
+    }
+    return obraSocial;
   }
 
   async delete(id) {
     const existing = await ObraSocialModel.findById(id);
-    if (!existing) return null;
+    if (!existing) {
+      throw new NotFoundError("Obra social no encontrada");
+    }
 
     const affectedRows = await ObraSocialModel.delete(id);
     return affectedRows === 1;
@@ -59,7 +66,9 @@ export class ObrasSocialesService {
   ) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing && existing.id_obra_social !== id) {
-      throw new Error("El nombre de la obra social ya está registrado");
+      throw new DuplicateError(
+        "El nombre de la obra social ya está registrado",
+      );
     }
 
     const affectedRows = await ObraSocialModel.update(id, {
@@ -69,7 +78,9 @@ export class ObrasSocialesService {
       es_particular,
     });
 
-    if (affectedRows === 0) return null;
+    if (affectedRows === 0) {
+      throw new NotFoundError("Obra social no encontrada");
+    }
 
     return ObraSocialModel.findById(id);
   }
@@ -87,7 +98,9 @@ export class ObrasSocialesService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("El nombre de la obra social ya está registrado");
+      throw new DuplicateError(
+        "El nombre de la obra social ya está registrado",
+      );
     }
 
     // existing.activo === 0 → reactivar (ADR-001 Opción C)
@@ -123,7 +136,9 @@ export class ObrasSocialesService {
 
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new Error("La obra social indicada no existe o no está activa");
+      throw new NotFoundError(
+        "La obra social indicada no existe o no está activa",
+      );
     }
 
     const rows = await ObraSocialModel.findMedicos(id_obra_social, {

@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError, NotFoundError } from "../utils/errors.js";
 import MedicoModel from "../models/medico.js";
 import EspecialidadModel from "../models/especialidad.js";
 import { withTransaction } from "../config/db.js";
@@ -80,6 +81,11 @@ export class MedicosService {
     const total = await MedicoModel.countByEspecialidad(id_especialidad, {
       filters,
     });
+    if (!rows || rows.length === 0) {
+      throw new NotFoundError(
+        "No se encontraron médicos para la especialidad indicada",
+      );
+    }
 
     return {
       data: rows,
@@ -93,7 +99,11 @@ export class MedicosService {
   }
 
   async readById(id) {
-    return await MedicoModel.findById(id);
+    const medico = await MedicoModel.findById(id);
+    if (!medico) {
+      throw new NotFoundError("El médico indicado no existe o no está activo");
+    }
+    return medico
   }
 
   async findByIdUsuario(id_usuario) {
@@ -109,7 +119,7 @@ export class MedicosService {
   }) {
     const especialidad = await EspecialidadModel.findById(id_especialidad);
     if (!especialidad) {
-      throw new Error("La especialidad indicada no existe o no está activa");
+      throw new ForeignKeyError("La especialidad indicada no existe o no está activa");
     }
 
     const existing = await MedicoModel.findByMatricula(matricula);
@@ -125,7 +135,7 @@ export class MedicosService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("La matrícula ya está registrada");
+      throw new DuplicateError("La matrícula ya está registrada");
     }
 
     // existing.activo === 0 → reactivar usuario asociado + sobrescribir médico
@@ -149,12 +159,12 @@ export class MedicosService {
   ) {
     const especialidad = await EspecialidadModel.findById(id_especialidad);
     if (!especialidad) {
-      throw new Error("La especialidad indicada no existe o no está activa");
+      throw new ForeignKeyError("La especialidad indicada no existe o no está activa");
     }
 
     const isMatriculaExist = await MedicoModel.findByMatricula(matricula);
     if (isMatriculaExist && isMatriculaExist.id_medico !== id) {
-      throw new Error("La matrícula ya está registrada por otro médico");
+      throw new DuplicateError("La matrícula ya está registrada por otro médico");
     }
 
     const affectedRows = await MedicoModel.update(id, {
@@ -175,7 +185,7 @@ export class MedicosService {
   async delete(id) {
     const existing = await MedicoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("El médico indicado no existe o no está activo");
     }
     const affectedRows = await MedicoModel.delete(existing.id_usuario);
     return affectedRows === 1;
@@ -204,7 +214,7 @@ export class MedicosService {
 
     const medico = await MedicoModel.findById(id_medico);
     if (!medico) {
-      throw new Error("El médico indicado no existe o no está activo");
+      throw new NotFoundError("El médico indicado no existe o no está activo");
     }
 
     const rows = await MedicoModel.findObrasSociales(id_medico, {
@@ -213,7 +223,9 @@ export class MedicosService {
       sort: allowedSort,
       order: allowedOrder,
     });
-
+    if(!rows || rows.length === 0) {
+      throw new NotFoundError("El médico indicado no tiene obras sociales asignadas");
+    }
     const total = await MedicoModel.countObrasSociales(id_medico);
 
     return {

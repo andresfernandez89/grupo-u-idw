@@ -92,8 +92,9 @@ const MedicoObraSocialModel = {
     );
   },
 
-  async create({ id_medico, id_obra_social }) {
-    const [result] = await pool.query(
+  async create({ id_medico, id_obra_social }, conn) {
+    const db = conn || pool;
+    const [result] = await db.query(
       `INSERT INTO medicos_obras_sociales (id_medico, id_obra_social, activo)
        VALUES (?, ?, 1)`,
       [id_medico, id_obra_social],
@@ -105,8 +106,9 @@ const MedicoObraSocialModel = {
     };
   },
 
-  async deleteByMedicoObraSocial(id_medico, id_obra_social) {
-    const [result] = await pool.query(
+  async deleteByMedicoObraSocial(id_medico, id_obra_social, conn) {
+    const db = conn || pool;
+    const [result] = await db.query(
       "UPDATE medicos_obras_sociales SET activo = 0 WHERE id_medico = ? AND id_obra_social = ? AND activo = 1",
       [id_medico, id_obra_social],
     );

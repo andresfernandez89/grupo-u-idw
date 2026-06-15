@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError, NotFoundError } from "../utils/errors.js";
 import MedicoModel from "../models/medico.js";
 import ObraSocialModel from "../models/obra_social.js";
 import PacienteModel from "../models/paciente.js";
@@ -48,23 +49,27 @@ export class TurnosService {
   }
 
   async readById(id) {
-    return await TurnoModel.findById(id);
+    const turno = await TurnoModel.findById(id);
+    if (!turno) {
+      throw new NotFoundError("Turno no encontrado");
+    }
+    return turno;
   }
 
   async create({ id_medico, id_paciente, id_obra_social, fecha_hora }) {
     const medico = await MedicoModel.findById(id_medico);
     if (!medico) {
-      throw new Error("El médico indicado no existe o no está activo");
+      throw new ForeignKeyError("El médico indicado no existe o no está activo");
     }
 
     const paciente = await PacienteModel.findById(id_paciente);
     if (!paciente) {
-      throw new Error("El paciente indicado no existe o no está activo");
+      throw new ForeignKeyError("El paciente indicado no existe o no está activo");
     }
 
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new Error("La obra social indicada no existe o no está activa");
+      throw new ForeignKeyError("La obra social indicada no existe o no está activa");
     }
 
     const existeTurno = await TurnoModel.existsByMedicoYFecha(
@@ -72,9 +77,7 @@ export class TurnosService {
       fecha_hora,
     );
     if (existeTurno) {
-      throw new Error(
-        "El médico ya tiene un turno asignado en esa fecha y hora",
-      );
+      throw new DuplicateError("El médico ya tiene un turno asignado en esa fecha y hora");
     }
 
     // ─── Cálculo de valor_total (regla de negocio) ───
@@ -101,22 +104,22 @@ export class TurnosService {
   async update(id, { id_medico, id_paciente, id_obra_social, fecha_hora }) {
     const existing = await TurnoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     const medico = await MedicoModel.findById(id_medico);
     if (!medico) {
-      throw new Error("El médico indicado no existe o no está activo");
+      throw new ForeignKeyError("El médico indicado no existe o no está activo");
     }
 
     const paciente = await PacienteModel.findById(id_paciente);
     if (!paciente) {
-      throw new Error("El paciente indicado no existe o no está activo");
+      throw new ForeignKeyError("El paciente indicado no existe o no está activo");
     }
 
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new Error("La obra social indicada no existe o no está activa");
+      throw new ForeignKeyError("La obra social indicada no existe o no está activa");
     }
 
     if (
@@ -128,9 +131,7 @@ export class TurnosService {
         fecha_hora,
       );
       if (existeTurno) {
-        throw new Error(
-          "El médico ya tiene un turno asignado en esa fecha y hora",
-        );
+        throw new DuplicateError("El médico ya tiene un turno asignado en esa fecha y hora");
       }
     }
 
@@ -162,12 +163,12 @@ export class TurnosService {
   async marcarAtendido(id) {
     const existing = await TurnoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     const affectedRows = await TurnoModel.marcarAtendido(id);
     if (affectedRows === 0) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     return TurnoModel.findById(id);
@@ -176,7 +177,7 @@ export class TurnosService {
   async delete(id) {
     const existing = await TurnoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     const affectedRows = await TurnoModel.delete(id);

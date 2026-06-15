@@ -1,3 +1,4 @@
+import { DuplicateError, NotFoundError } from "../utils/errors.js";
 import {
   medicoObraSocialCreate,
   medicoObraSocialResponse,
@@ -40,16 +41,11 @@ export class MedicosObrasSocialesController {
       const { id } = req.params;
       const mos = await medicosObrasSocialesService.readById(id);
 
-      if (!mos) {
-        return res.status(404).json({
-          success: false,
-          message:
-            "No se encontró la relación médico-obra social con el id solicitado",
-        });
-      }
-
       res.json(medicoObraSocialResponse(mos));
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       res.status(500).json({ success: false, message: err.message });
     }
   }
@@ -68,8 +64,42 @@ export class MedicosObrasSocialesController {
         data: medicoObraSocialResponse(creado),
       });
     } catch (err) {
-      if (err.message.includes("ya tiene asignada")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
+      }       
+      if (err instanceof NotFoundError) {
+        return res.status(400).json({ success: false, message: err.message });
+      }
+
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  }
+
+  async update(req, res) {
+    try {
+      const { id_medico, id_obra_social } = req.params;
+      const datos = medicoObraSocialCreate(req.body);
+      const actualizado = await medicosObrasSocialesService.update(
+        id_medico,
+        id_obra_social,
+        datos,
+      );
+
+      const creado = await medicosObrasSocialesService.readById(
+        actualizado.id_medico_obra_social,
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: "Relación médico-obra social modificada exitosamente",
+        data: medicoObraSocialResponse(creado),
+      });
+    } catch (err) {
+      if (err instanceof DuplicateError) {
+        return res.status(409).json({ success: false, message: err.message });
+      }
+      if (err instanceof NotFoundError) {
+        return res.status(400).json({ success: false, message: err.message });
       }
 
       return res.status(500).json({ success: false, message: err.message });

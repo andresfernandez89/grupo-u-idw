@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import { clearCache } from "../config/cache.js";
 import EspecialidadModel from "../models/especialidad.js";
 
@@ -56,7 +57,9 @@ export class EspecialidadesService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("El nombre de la especialidad ya está registrado");
+      throw new DuplicateError(
+        "El nombre de la especialidad ya está registrado",
+      );
     }
 
     // existing.activo === 0 → reactivar (ADR-001 Opción C)
@@ -66,9 +69,16 @@ export class EspecialidadesService {
   }
 
   async update(id, { nombre }) {
+    const verificarId = await EspecialidadModel.findById(id);
+    if (!verificarId) {
+      throw new NotFoundError("Id de especialidad no encontrada");
+    }
+
     const existing = await EspecialidadModel.findByNombre(nombre);
     if (existing && existing.id_especialidad !== id) {
-      throw new Error("El nombre de la especialidad ya está registrado");
+      throw new DuplicateError(
+        "El nombre de la especialidad ya está registrado",
+      );
     }
 
     const affectedRows = await EspecialidadModel.update(id, nombre);
@@ -84,7 +94,7 @@ export class EspecialidadesService {
   async delete(id) {
     const existing = await EspecialidadModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Id de especialidad no encontrada");
     }
     const affectedRows = await EspecialidadModel.delete(id);
     clearCache("/especialidades");

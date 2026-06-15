@@ -1,3 +1,4 @@
+import { DuplicateError } from "../utils/errors.js";
 import UsuarioModel from "../models/usuario.js";
 
 export class UsuariosService {
@@ -45,7 +46,11 @@ export class UsuariosService {
   }
 
   async readById(id) {
-    return await UsuarioModel.findById(id);
+    const usuario = await UsuarioModel.findById(id);
+    if (!usuario) {
+      throw new NotFoundError("Usuario no encontrado");
+    }
+    return usuario;
   }
 
   async create({
@@ -60,12 +65,12 @@ export class UsuariosService {
 
     const emailExistente = await UsuarioModel.findByEmail(email);
     if (emailExistente?.activo === 1) {
-      throw new Error("El email ya está registrado");
+      throw new DuplicateError("El email ya está registrado");
     }
 
     const docExistente = await UsuarioModel.findByDocumento(documento);
     if (docExistente?.activo === 1) {
-      throw new Error("El documento ya está registrado");
+      throw new DuplicateError("El documento ya está registrado");
     }
 
     // ADR-001 Opción C: reactivar registro soft-deleted (documento tiene prioridad).
@@ -101,12 +106,12 @@ export class UsuariosService {
   ) {
     const emailExistente = await UsuarioModel.findByEmail(email);
     if (emailExistente && emailExistente.id_usuario !== id) {
-      throw new Error("El email ya está registrado por otro usuario");
+      throw new DuplicateError("El email ya está registrado por otro usuario");
     }
 
     const docExistente = await UsuarioModel.findByDocumento(documento);
     if (docExistente && docExistente.id_usuario !== id) {
-      throw new Error("El documento ya está registrado por otro usuario");
+      throw new DuplicateError("El documento ya está registrado por otro usuario");
     }
 
     const affectedRows = await UsuarioModel.update(id, {
@@ -120,7 +125,7 @@ export class UsuariosService {
     });
 
     if (affectedRows === 0) {
-      return null;
+      throw new NotFoundError("Usuario no encontrado");
     }
 
     return UsuarioModel.findById(id);
@@ -129,7 +134,7 @@ export class UsuariosService {
   async delete(id) {
     const existing = await UsuarioModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Usuario no encontrado");
     }
     const affectedRows = await UsuarioModel.delete(id);
     return affectedRows === 1;

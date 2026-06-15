@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
 import PacienteModel from "../models/paciente.js";
 import ObraSocialModel from "../models/obra_social.js";
 import { withTransaction } from "../config/db.js";
@@ -45,11 +46,19 @@ export class PacientesService {
   }
 
   async readById(id) {
-    return await PacienteModel.findById(id);
+    const paciente = await PacienteModel.findById(id);
+    if (!paciente) {
+      throw new NotFoundError("Paciente no encontrado");
+    }
+    return paciente;
   }
 
   async findByIdUsuario(id_usuario) {
-    return await PacienteModel.findByIdUsuario(id_usuario);
+    const paciente = await PacienteModel.findByIdUsuario(id_usuario);
+    if (!paciente) {
+      throw new NotFoundError("Paciente no encontrado para el usuario indicado");
+    }
+    return paciente;
   }
 
   async create({ id_usuario, id_obra_social }) {
@@ -63,7 +72,7 @@ export class PacientesService {
     }
 
     if (existing.activo === 1) {
-      throw new Error("El usuario ya tiene un paciente asociado");
+      throw new DuplicateError("El usuario ya tiene un paciente asociado");
     }
 
     // existing.activo === 0 → reactivar usuario + sobrescribir obra social
@@ -83,12 +92,12 @@ export class PacientesService {
 
     const existing = await PacienteModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Paciente no encontrado");
     }
 
     const affectedRows = await PacienteModel.update(id, { id_obra_social });
     if (affectedRows === 0) {
-      return null;
+      throw new Error("No se pudo actualizar el paciente");
     }
 
     return PacienteModel.findById(id);
@@ -101,15 +110,16 @@ export class PacientesService {
     }
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new Error("La obra social indicada no existe o no está activa");
+      throw new ForeignKeyError("La obra social indicada no existe o no está activa");
     }
   }
 
   async delete(id) {
     const existing = await PacienteModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Paciente no encontrado");
     }
+    
     const affectedRows = await PacienteModel.delete(existing.id_usuario);
     return affectedRows === 1;
   }

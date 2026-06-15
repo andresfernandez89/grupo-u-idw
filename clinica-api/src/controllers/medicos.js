@@ -1,3 +1,4 @@
+import { DuplicateError, ForeignKeyError, NotFoundError } from "../utils/errors.js";
 import { medicosCreate, medicosResponse } from "../dtos/medicos.dto.js";
 import { medicoObraSocialResponse } from "../dtos/medicos_obras_sociales.dto.js";
 import medicoService from "../services/medicos.js";
@@ -40,14 +41,11 @@ export class MedicosController {
       const { id } = req.params;
       const medicoEncontrado = await medicoService.readById(id);
 
-      if (!medicoEncontrado) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontró médico con el id solicitado",
-        });
-      }
       res.json(medicosResponse(medicoEncontrado));
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -70,19 +68,15 @@ export class MedicosController {
         { filters, sort, order, page, limit },
       );
 
-      if (!resultado.data || resultado.data.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontraron médicos para la especialidad solicitada",
-        });
-      }
-
       res.json({
         success: true,
         data: resultado.data.map(medicosResponse),
         pagination: resultado.pagination,
       });
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -98,10 +92,10 @@ export class MedicosController {
         data: medicosResponse(nuevoMedico),
       });
     } catch (error) {
-      if (error.message.includes("ya está registrada")) {
+      if (error instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: error.message });
       }
-      if (error.message.includes("no está activa")) {
+      if (error instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: error.message });
       }
 
@@ -132,10 +126,10 @@ export class MedicosController {
         data: medicosResponse(actualizado),
       });
     } catch (err) {
-      if (err.message.includes("ya está registrada")) {
+      if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
-      if (err.message.includes("no está activa")) {
+      if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
 
@@ -173,9 +167,10 @@ export class MedicosController {
         pagination: resultado.pagination,
       });
     } catch (error) {
-      if (error.message.includes("no existe o no está activo")) {
+      if (error instanceof NotFoundError) {
         return res.status(404).json({ success: false, message: error.message });
       }
+
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -184,12 +179,6 @@ export class MedicosController {
     try {
       const { id } = req.params;
       const deleted = await medicoService.delete(id);
-
-      if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Médico no encontrado" });
-      }
 
       if (!deleted) {
         return res.status(500).json({
@@ -200,6 +189,9 @@ export class MedicosController {
 
       return res.status(204).send();
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       return res.status(500).json({
         success: false,
         message: error.message,
