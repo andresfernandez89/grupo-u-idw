@@ -87,8 +87,12 @@ router.get(
  *         multipart/form-data:
  *           schema:
  *             type: object
- *             required: [email, contrasenia, rol, apellido, nombres]
+ *             required: [documento, email, contrasenia, rol, apellido, nombres]
  *             properties:
+ *               documento:
+ *                 type: string
+ *                 maxLength: 20
+ *                 description: Documento de identidad del usuario
  *               email:
  *                 type: string
  *                 format: email
