@@ -30,7 +30,7 @@ export class PacientesController {
         pagination: resultado.pagination,
       });
     } catch (err) {
-      res.status(500).json({ success: false, message: err.message });
+      res.status(500).json({ message: err.message });
     }
   }
 
@@ -39,16 +39,12 @@ export class PacientesController {
       const { id } = req.params;
       const paciente = await pacienteService.readById(id);
 
-      if (!paciente) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontró paciente con el id solicitado",
-        });
-      }
-
       res.json(pacienteResponse(paciente));
     } catch (err) {
-      res.status(500).json({ success: false, message: err.message });
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ message: err.message });
+      }
+      res.status(500).json({ message: err.message });
     }
   }
 
@@ -69,7 +65,7 @@ export class PacientesController {
       if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, message: err.message });
+      return res.status(500).json({ success: false, error: err.message });
     }
   }
 
@@ -79,22 +75,19 @@ export class PacientesController {
       const datos = pacienteCreate(req.body);
       const actualizado = await pacienteService.update(id, datos);
 
-      if (!actualizado) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Paciente no encontrado" });
-      }
-
       return res.status(200).json({
         success: true,
         message: "Paciente modificado exitosamente",
         data: pacienteResponse(actualizado),
       });
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
-      return res.status(500).json({ success: false, message: err.message });
+      return res.status(500).json({ success: false, error: err.message });
     }
   }
 
@@ -103,11 +96,6 @@ export class PacientesController {
       const { id } = req.params;
       const deleted = await pacienteService.delete(id);
 
-      if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Paciente no encontrado" });
-      }
       if (!deleted) {
         return res
           .status(500)
@@ -116,7 +104,10 @@ export class PacientesController {
 
       return res.status(204).send();
     } catch (err) {
-      return res.status(500).json({ success: false, message: err.message });
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
+      return res.status(500).json({ success: false, error: err.message });
     }
   }
 }

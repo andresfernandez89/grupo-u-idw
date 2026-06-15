@@ -69,13 +69,6 @@ export class TurnosController {
       const { id } = req.params;
       const turno = await turnoService.readById(id);
 
-      if (!turno) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontró turno con el id solicitado",
-        });
-      }
-
       const rol = req.user?.rol;
       if (rol === 1) {
         const medico = await medicoService.findByIdUsuario(req.user.id_usuario);
@@ -99,6 +92,9 @@ export class TurnosController {
 
       res.json(turnoResponse(turno));
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       res.status(500).json({ success: false, message: err.message });
     }
   }
@@ -112,12 +108,6 @@ export class TurnosController {
         const paciente = await pacienteService.findByIdUsuario(
           req.user.id_usuario,
         );
-        if (!paciente) {
-          return res.status(403).json({
-            success: false,
-            message: "No se encontró un paciente asociado a tu usuario",
-          });
-        }
         datos.id_paciente = paciente.id_paciente;
       }
 
@@ -129,6 +119,9 @@ export class TurnosController {
         data: turnoResponse(nuevo),
       });
     } catch (err) {
+      if (err instanceof NotFoundError) { 
+        return res.status(404).json({ success: false, message: err.message });
+      }
       if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
@@ -145,18 +138,15 @@ export class TurnosController {
       const datos = turnoCreate(req.body);
       const actualizado = await turnoService.update(id, datos);
 
-      if (!actualizado) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Turno no encontrado" });
-      }
-
       return res.status(200).json({
         success: true,
         message: "Turno modificado exitosamente",
         data: turnoResponse(actualizado),
       });
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       if (err instanceof ForeignKeyError) {
         return res.status(400).json({ success: false, message: err.message });
       }
@@ -171,12 +161,6 @@ export class TurnosController {
     try {
       const { id } = req.params;
       const turno = await turnoService.readById(id);
-
-      if (!turno) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Turno no encontrado" });
-      }
 
       const rol = req.user?.rol;
       if (rol === 1) {
@@ -197,6 +181,9 @@ export class TurnosController {
         data: turnoResponse(actualizado),
       });
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       return res.status(500).json({ success: false, message: err.message });
     }
   }
@@ -206,11 +193,6 @@ export class TurnosController {
       const { id } = req.params;
       const deleted = await turnoService.delete(id);
 
-      if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Turno no encontrado" });
-      }
       if (!deleted) {
         return res
           .status(500)
@@ -219,6 +201,9 @@ export class TurnosController {
 
       return res.status(204).send();
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       return res.status(500).json({ success: false, message: err.message });
     }
   }

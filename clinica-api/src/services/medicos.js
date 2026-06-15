@@ -81,6 +81,11 @@ export class MedicosService {
     const total = await MedicoModel.countByEspecialidad(id_especialidad, {
       filters,
     });
+    if (!rows || rows.length === 0) {
+      throw new NotFoundError(
+        "No se encontraron médicos para la especialidad indicada",
+      );
+    }
 
     return {
       data: rows,
@@ -94,7 +99,11 @@ export class MedicosService {
   }
 
   async readById(id) {
-    return await MedicoModel.findById(id);
+    const medico = await MedicoModel.findById(id);
+    if (!medico) {
+      throw new NotFoundError("El médico indicado no existe o no está activo");
+    }
+    return medico
   }
 
   async findByIdUsuario(id_usuario) {
@@ -176,7 +185,7 @@ export class MedicosService {
   async delete(id) {
     const existing = await MedicoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("El médico indicado no existe o no está activo");
     }
     const affectedRows = await MedicoModel.delete(existing.id_usuario);
     return affectedRows === 1;
@@ -214,7 +223,9 @@ export class MedicosService {
       sort: allowedSort,
       order: allowedOrder,
     });
-
+    if(!rows || rows.length === 0) {
+      throw new NotFoundError("El médico indicado no tiene obras sociales asignadas");
+    }
     const total = await MedicoModel.countObrasSociales(id_medico);
 
     return {

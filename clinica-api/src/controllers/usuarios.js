@@ -40,14 +40,11 @@ export class UsuariosController {
       const { id } = req.params;
       const usuarioEncontrado = await usuarioService.readById(id);
 
-      if (!usuarioEncontrado) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontró usuario con el id solicitado",
-        });
-      }
       res.json(usuariosResponse(usuarioEncontrado));
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -80,19 +77,15 @@ export class UsuariosController {
       const datos = usuariosCreate(req.body, req.file);
       const actualizado = await usuarioService.update(id, datos);
 
-      if (!actualizado) {
-        return res.status(404).json({
-          success: false,
-          message: "Usuario no encontrado",
-        });
-      }
-
       return res.status(200).json({
         success: true,
         message: "Usuario modificado exitosamente",
         data: usuariosResponse(actualizado),
       });
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
       }
@@ -109,12 +102,6 @@ export class UsuariosController {
       const { id } = req.params;
       const deleted = await usuarioService.delete(id);
 
-      if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Usuario no encontrado" });
-      }
-
       if (!deleted) {
         return res.status(500).json({
           success: false,
@@ -124,6 +111,9 @@ export class UsuariosController {
 
       return res.status(204).send();
     } catch (error) {
+      if (error instanceof NotFoundError) { 
+        return res.status(404).json({ success: false, message: error.message });
+      }
       return res.status(500).json({
         success: false,
         message: error.message,

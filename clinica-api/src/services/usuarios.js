@@ -46,7 +46,11 @@ export class UsuariosService {
   }
 
   async readById(id) {
-    return await UsuarioModel.findById(id);
+    const usuario = await UsuarioModel.findById(id);
+    if (!usuario) {
+      throw new NotFoundError("Usuario no encontrado");
+    }
+    return usuario;
   }
 
   async create({
@@ -121,7 +125,7 @@ export class UsuariosService {
     });
 
     if (affectedRows === 0) {
-      return null;
+      throw new NotFoundError("Usuario no encontrado");
     }
 
     return UsuarioModel.findById(id);
@@ -130,7 +134,7 @@ export class UsuariosService {
   async delete(id) {
     const existing = await UsuarioModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Usuario no encontrado");
     }
     const affectedRows = await UsuarioModel.delete(id);
     return affectedRows === 1;

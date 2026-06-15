@@ -42,11 +42,6 @@ export class ObrasSocialesController {
       const { id } = req.params;
       const deleted = await obrasSocialesService.delete(id);
 
-      if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Obra social no encontrada" });
-      }
       if (!deleted) {
         return res.status(500).json({
           success: false,
@@ -56,6 +51,9 @@ export class ObrasSocialesController {
 
       return res.status(204).send();
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       return res.status(500).json({ success: false, message: err.message });
     }
   }
@@ -66,12 +64,6 @@ export class ObrasSocialesController {
       const datos = obraSocialCreate(req.body);
       const actualizada = await obrasSocialesService.update(id, datos);
 
-      if (!actualizada) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Obra social no encontrada" });
-      }
-
       return res.status(200).json({
         success: true,
         message: "Obra social modificada exitosamente",
@@ -80,6 +72,9 @@ export class ObrasSocialesController {
     } catch (err) {
       if (err instanceof DuplicateError) {
         return res.status(409).json({ success: false, message: err.message });
+      }
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
       }
       return res.status(500).json({ success: false, message: err.message });
     }
@@ -141,15 +136,11 @@ export class ObrasSocialesController {
       const { id } = req.params;
       const obraSocial = await obrasSocialesService.readById(id);
 
-      if (!obraSocial) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontró obra social con el id solicitado",
-        });
-      }
-
       res.json({ success: true, data: obraSocialResponse(obraSocial) });
     } catch (err) {
+      if (err instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: err.message });
+      }
       res.status(500).json({ success: false, message: err.message });
     }
   }

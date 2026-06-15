@@ -1,4 +1,4 @@
-import { DuplicateError, ForeignKeyError } from "../utils/errors.js";
+import { DuplicateError, ForeignKeyError, NotFoundError } from "../utils/errors.js";
 import MedicoModel from "../models/medico.js";
 import ObraSocialModel from "../models/obra_social.js";
 import PacienteModel from "../models/paciente.js";
@@ -49,7 +49,11 @@ export class TurnosService {
   }
 
   async readById(id) {
-    return await TurnoModel.findById(id);
+    const turno = await TurnoModel.findById(id);
+    if (!turno) {
+      throw new NotFoundError("Turno no encontrado");
+    }
+    return turno;
   }
 
   async create({ id_medico, id_paciente, id_obra_social, fecha_hora }) {
@@ -100,7 +104,7 @@ export class TurnosService {
   async update(id, { id_medico, id_paciente, id_obra_social, fecha_hora }) {
     const existing = await TurnoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     const medico = await MedicoModel.findById(id_medico);
@@ -159,12 +163,12 @@ export class TurnosService {
   async marcarAtendido(id) {
     const existing = await TurnoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     const affectedRows = await TurnoModel.marcarAtendido(id);
     if (affectedRows === 0) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     return TurnoModel.findById(id);
@@ -173,7 +177,7 @@ export class TurnosService {
   async delete(id) {
     const existing = await TurnoModel.findById(id);
     if (!existing) {
-      return null;
+      throw new NotFoundError("Turno no encontrado");
     }
 
     const affectedRows = await TurnoModel.delete(id);

@@ -41,14 +41,11 @@ export class MedicosController {
       const { id } = req.params;
       const medicoEncontrado = await medicoService.readById(id);
 
-      if (!medicoEncontrado) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontró médico con el id solicitado",
-        });
-      }
       res.json(medicosResponse(medicoEncontrado));
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -71,19 +68,15 @@ export class MedicosController {
         { filters, sort, order, page, limit },
       );
 
-      if (!resultado.data || resultado.data.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No se encontraron médicos para la especialidad solicitada",
-        });
-      }
-
       res.json({
         success: true,
         data: resultado.data.map(medicosResponse),
         pagination: resultado.pagination,
       });
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       res.status(500).json({ success: false, message: error.message });
     }
   }
@@ -187,12 +180,6 @@ export class MedicosController {
       const { id } = req.params;
       const deleted = await medicoService.delete(id);
 
-      if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Médico no encontrado" });
-      }
-
       if (!deleted) {
         return res.status(500).json({
           success: false,
@@ -202,6 +189,9 @@ export class MedicosController {
 
       return res.status(204).send();
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
       return res.status(500).json({
         success: false,
         message: error.message,
