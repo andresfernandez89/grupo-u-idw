@@ -1,11 +1,7 @@
 import { body, param, query } from "express-validator";
 
 const paginationValidators = [
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("page debe ser un entero >= 1")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("page debe ser un entero >= 1").toInt(),
 
   query("limit")
     .optional()
@@ -16,9 +12,7 @@ const paginationValidators = [
   query("sort")
     .optional()
     .isIn(["id_medico", "matricula", "valor_consulta", "apellido", "nombres"])
-    .withMessage(
-      "sort debe ser id_medico, matricula, valor_consulta, apellido o nombres",
-    ),
+    .withMessage("sort debe ser id_medico, matricula, valor_consulta, apellido o nombres"),
 
   query("order")
     .optional()
@@ -104,11 +98,7 @@ export const getByEspecialidadMedicoValidator = [
 ];
 
 export const getByIdMedicoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
 
 export const createMedicoValidator = [
@@ -139,11 +129,7 @@ export const createMedicoValidator = [
     .withMessage("La matrícula debe ser un entero positivo")
     .toInt(),
 
-  body("descripcion")
-    .optional()
-    .trim()
-    .isString()
-    .withMessage("La descripción debe ser un texto"),
+  body("descripcion").optional().trim().isString().withMessage("La descripción debe ser un texto"),
 
   body("valor_consulta")
     .trim()
@@ -158,11 +144,7 @@ export const createMedicoValidator = [
 ];
 
 export const updateMedicoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .toInt()
-    .withMessage("El id debe ser un entero positivo"),
+  param("id").trim().isInt({ min: 1 }).toInt().withMessage("El id debe ser un entero positivo"),
 
   body("id_usuario")
     .trim()
@@ -191,11 +173,7 @@ export const updateMedicoValidator = [
     .withMessage("La matrícula debe ser un entero positivo")
     .toInt(),
 
-  body("descripcion")
-    .optional()
-    .trim()
-    .isString()
-    .withMessage("La descripción debe ser un texto"),
+  body("descripcion").optional().trim().isString().withMessage("La descripción debe ser un texto"),
 
   body("valor_consulta")
     .trim()
@@ -220,9 +198,5 @@ export const getObrasSocialesMedicoValidator = [
 ];
 
 export const deleteMedicoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];

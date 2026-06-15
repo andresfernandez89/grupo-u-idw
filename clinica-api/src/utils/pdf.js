@@ -129,15 +129,7 @@ function drawTable(doc, columnas, filas) {
 
 export function generarPdf(
   res,
-  {
-    titulo,
-    filename,
-    fechaDesde,
-    fechaHasta,
-    columnas,
-    filas,
-    landscape = false,
-  },
+  { titulo, filename, fechaDesde, fechaHasta, columnas, filas, landscape = false },
 ) {
   const doc = new PDFDocument({
     size: "A4",

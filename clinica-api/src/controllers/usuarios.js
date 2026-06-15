@@ -109,9 +109,7 @@ export class UsuariosController {
       const deleted = await usuarioService.delete(id);
 
       if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Usuario no encontrado" });
+        return res.status(404).json({ success: false, message: "Usuario no encontrado" });
       }
 
       if (!deleted) {

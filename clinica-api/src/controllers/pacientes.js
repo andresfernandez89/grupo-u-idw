@@ -12,8 +12,7 @@ export class PacientesController {
       const filters = {};
       if (req.query.apellido) filters.apellido = req.query.apellido;
       if (req.query.nombres) filters.nombres = req.query.nombres;
-      if (req.query.id_obra_social !== undefined)
-        filters.id_obra_social = req.query.id_obra_social;
+      if (req.query.id_obra_social !== undefined) filters.id_obra_social = req.query.id_obra_social;
 
       const resultado = await pacienteService.browse({
         filters,
@@ -79,9 +78,7 @@ export class PacientesController {
       const actualizado = await pacienteService.update(id, datos);
 
       if (!actualizado) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Paciente no encontrado" });
+        return res.status(404).json({ success: false, message: "Paciente no encontrado" });
       }
 
       return res.status(200).json({
@@ -103,14 +100,10 @@ export class PacientesController {
       const deleted = await pacienteService.delete(id);
 
       if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Paciente no encontrado" });
+        return res.status(404).json({ success: false, message: "Paciente no encontrado" });
       }
       if (!deleted) {
-        return res
-          .status(500)
-          .json({ success: false, message: "Error al eliminar el paciente" });
+        return res.status(500).json({ success: false, message: "Error al eliminar el paciente" });
       }
 
       return res.status(204).send();

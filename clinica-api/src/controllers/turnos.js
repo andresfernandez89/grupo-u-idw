@@ -12,10 +12,8 @@ export class TurnosController {
       const order = req.query.order;
 
       const filters = {};
-      if (req.query.id_obra_social)
-        filters.id_obra_social = req.query.id_obra_social;
-      if (req.query.atendido !== undefined)
-        filters.atendido = req.query.atendido;
+      if (req.query.id_obra_social) filters.id_obra_social = req.query.id_obra_social;
+      if (req.query.atendido !== undefined) filters.atendido = req.query.atendido;
       if (req.query.fecha_desde) filters.fecha_desde = req.query.fecha_desde;
       if (req.query.fecha_hasta) filters.fecha_hasta = req.query.fecha_hasta;
 
@@ -30,9 +28,7 @@ export class TurnosController {
         }
         filters.id_medico = medico.id_medico;
       } else if (rol === 2) {
-        const paciente = await pacienteService.findByIdUsuario(
-          req.user.id_usuario,
-        );
+        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
         if (!paciente) {
           return res.status(403).json({
             success: false,
@@ -85,9 +81,7 @@ export class TurnosController {
           });
         }
       } else if (rol === 2) {
-        const paciente = await pacienteService.findByIdUsuario(
-          req.user.id_usuario,
-        );
+        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
         if (!paciente || turno.id_paciente !== paciente.id_paciente) {
           return res.status(403).json({
             success: false,
@@ -108,9 +102,7 @@ export class TurnosController {
 
       const rol = req.user?.rol;
       if (rol === 2) {
-        const paciente = await pacienteService.findByIdUsuario(
-          req.user.id_usuario,
-        );
+        const paciente = await pacienteService.findByIdUsuario(req.user.id_usuario);
         if (!paciente) {
           return res.status(403).json({
             success: false,
@@ -145,9 +137,7 @@ export class TurnosController {
       const actualizado = await turnoService.update(id, datos);
 
       if (!actualizado) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Turno no encontrado" });
+        return res.status(404).json({ success: false, message: "Turno no encontrado" });
       }
 
       return res.status(200).json({
@@ -172,9 +162,7 @@ export class TurnosController {
       const turno = await turnoService.readById(id);
 
       if (!turno) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Turno no encontrado" });
+        return res.status(404).json({ success: false, message: "Turno no encontrado" });
       }
 
       const rol = req.user?.rol;
@@ -206,14 +194,10 @@ export class TurnosController {
       const deleted = await turnoService.delete(id);
 
       if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Turno no encontrado" });
+        return res.status(404).json({ success: false, message: "Turno no encontrado" });
       }
       if (!deleted) {
-        return res
-          .status(500)
-          .json({ success: false, message: "Error al eliminar el turno" });
+        return res.status(500).json({ success: false, message: "Error al eliminar el turno" });
       }
 
       return res.status(204).send();

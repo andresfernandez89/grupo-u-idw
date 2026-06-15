@@ -14,8 +14,7 @@ export class MedicosObrasSocialesController {
 
       const filters = {};
       if (req.query.id_medico) filters.id_medico = req.query.id_medico;
-      if (req.query.id_obra_social)
-        filters.id_obra_social = req.query.id_obra_social;
+      if (req.query.id_obra_social) filters.id_obra_social = req.query.id_obra_social;
 
       const resultado = await medicosObrasSocialesService.browse({
         filters,
@@ -43,8 +42,7 @@ export class MedicosObrasSocialesController {
       if (!mos) {
         return res.status(404).json({
           success: false,
-          message:
-            "No se encontró la relación médico-obra social con el id solicitado",
+          message: "No se encontró la relación médico-obra social con el id solicitado",
         });
       }
 
@@ -58,9 +56,7 @@ export class MedicosObrasSocialesController {
     try {
       const datos = medicoObraSocialCreate(req.body);
       const nuevo = await medicosObrasSocialesService.create(datos);
-      const creado = await medicosObrasSocialesService.readById(
-        nuevo.id_medico_obra_social,
-      );
+      const creado = await medicosObrasSocialesService.readById(nuevo.id_medico_obra_social);
 
       return res.status(201).json({
         success: true,
@@ -79,10 +75,7 @@ export class MedicosObrasSocialesController {
   async delete(req, res) {
     try {
       const { id_medico, id_obra_social } = req.params;
-      const deleted = await medicosObrasSocialesService.delete(
-        id_medico,
-        id_obra_social,
-      );
+      const deleted = await medicosObrasSocialesService.delete(id_medico, id_obra_social);
 
       if (deleted === null) {
         return res.status(404).json({

@@ -1,11 +1,7 @@
 import { body, param, query } from "express-validator";
 
 export const getByIdEspecialidadValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
 
 export const createEspecialidadValidator = [
@@ -21,11 +17,7 @@ export const createEspecialidadValidator = [
 ];
 
 export const updateEspecialidadValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .toInt()
-    .withMessage("El id debe ser un entero positivo"),
+  param("id").trim().isInt({ min: 1 }).toInt().withMessage("El id debe ser un entero positivo"),
 
   body("nombre")
     .trim()
@@ -50,11 +42,7 @@ export const browseEspecialidadValidator = [
     .isLength({ max: 120 })
     .withMessage("El nombre no puede superar 120 caracteres"),
 
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("page debe ser un entero >= 1")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("page debe ser un entero >= 1").toInt(),
 
   query("limit")
     .optional()
@@ -75,9 +63,5 @@ export const browseEspecialidadValidator = [
 ];
 
 export const deleteEspecialidadValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];

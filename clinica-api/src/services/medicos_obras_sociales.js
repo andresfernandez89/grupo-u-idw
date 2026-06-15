@@ -12,11 +12,7 @@ export class MedicosObrasSocialesService {
     filters = {},
   } = {}) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_medico_obra_social",
-      "id_medico",
-      "id_obra_social",
-    ].includes(sort)
+    const allowedSort = ["id_medico_obra_social", "id_medico", "id_obra_social"].includes(sort)
       ? sort
       : "id_medico_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -59,11 +55,10 @@ export class MedicosObrasSocialesService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    const existing =
-      await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
-        id_medico,
-        id_obra_social,
-      );
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
+      id_medico,
+      id_obra_social,
+    );
 
     if (!existing) {
       return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
@@ -85,10 +80,7 @@ export class MedicosObrasSocialesService {
   }
 
   async delete(id_medico, id_obra_social) {
-    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
-      id_medico,
-      id_obra_social,
-    );
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(id_medico, id_obra_social);
     if (!existing) return null;
 
     const affectedRows = await MedicoObraSocialModel.deleteByMedicoObraSocial(

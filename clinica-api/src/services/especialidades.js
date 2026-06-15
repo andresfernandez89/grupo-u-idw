@@ -2,17 +2,9 @@ import { clearCache } from "../config/cache.js";
 import EspecialidadModel from "../models/especialidad.js";
 
 export class EspecialidadesService {
-  async browse({
-    filters = {},
-    page = 1,
-    limit = 10,
-    sort = "id_especialidad",
-    order = "asc",
-  }) {
+  async browse({ filters = {}, page = 1, limit = 10, sort = "id_especialidad", order = "asc" }) {
     const offset = (page - 1) * limit;
-    const allowedSort = ["id_especialidad", "nombre"].includes(sort)
-      ? sort
-      : "id_especialidad";
+    const allowedSort = ["id_especialidad", "nombre"].includes(sort) ? sort : "id_especialidad";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
       ? order.toLowerCase()
       : "asc";

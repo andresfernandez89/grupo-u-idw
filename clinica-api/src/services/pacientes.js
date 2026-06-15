@@ -3,20 +3,9 @@ import ObraSocialModel from "../models/obra_social.js";
 import { withTransaction } from "../config/db.js";
 
 export class PacientesService {
-  async browse({
-    filters = {},
-    page = 1,
-    limit = 10,
-    sort = "id_paciente",
-    order = "asc",
-  } = {}) {
+  async browse({ filters = {}, page = 1, limit = 10, sort = "id_paciente", order = "asc" } = {}) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_paciente",
-      "apellido",
-      "nombres",
-      "id_obra_social",
-    ].includes(sort)
+    const allowedSort = ["id_paciente", "apellido", "nombres", "id_obra_social"].includes(sort)
       ? sort
       : "id_paciente";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())

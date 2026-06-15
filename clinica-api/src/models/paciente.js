@@ -94,13 +94,11 @@ const PacienteModel = {
 
   async reactivate(conn, { id_paciente, id_usuario, id_obra_social }) {
     // Reactiva el usuario asociado y sobrescribe la obra social del paciente. Debe correr dentro de una transacción.
-    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [
-      id_usuario,
+    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [id_usuario]);
+    await conn.query("UPDATE pacientes SET id_obra_social = ? WHERE id_paciente = ?", [
+      id_obra_social,
+      id_paciente,
     ]);
-    await conn.query(
-      "UPDATE pacientes SET id_obra_social = ? WHERE id_paciente = ?",
-      [id_obra_social, id_paciente],
-    );
   },
 
   async delete(id_usuario) {

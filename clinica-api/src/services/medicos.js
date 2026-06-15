@@ -3,13 +3,7 @@ import EspecialidadModel from "../models/especialidad.js";
 import { withTransaction } from "../config/db.js";
 
 export class MedicosService {
-  async browse({
-    filters = {},
-    page = 1,
-    limit = 10,
-    sort = "id_medico",
-    order = "asc",
-  } = {}) {
+  async browse({ filters = {}, page = 1, limit = 10, sort = "id_medico", order = "asc" } = {}) {
     const offset = (page - 1) * limit;
     const allowedSort = [
       "id_medico",
@@ -47,13 +41,7 @@ export class MedicosService {
 
   async findByEspecialidad(
     id_especialidad,
-    {
-      filters = {},
-      page = 1,
-      limit = 10,
-      sort = "id_medico",
-      order = "asc",
-    } = {},
+    { filters = {}, page = 1, limit = 10, sort = "id_medico", order = "asc" } = {},
   ) {
     const offset = (page - 1) * limit;
     const allowedSort = [
@@ -100,13 +88,7 @@ export class MedicosService {
     return await MedicoModel.findByIdUsuario(id_usuario);
   }
 
-  async create({
-    id_usuario,
-    id_especialidad,
-    matricula,
-    descripcion,
-    valor_consulta,
-  }) {
+  async create({ id_usuario, id_especialidad, matricula, descripcion, valor_consulta }) {
     const especialidad = await EspecialidadModel.findById(id_especialidad);
     if (!especialidad) {
       throw new Error("La especialidad indicada no existe o no está activa");
@@ -143,10 +125,7 @@ export class MedicosService {
     return await MedicoModel.findById(existing.id_medico);
   }
 
-  async update(
-    id,
-    { id_usuario, id_especialidad, matricula, descripcion, valor_consulta },
-  ) {
+  async update(id, { id_usuario, id_especialidad, matricula, descripcion, valor_consulta }) {
     const especialidad = await EspecialidadModel.findById(id_especialidad);
     if (!especialidad) {
       throw new Error("La especialidad indicada no existe o no está activa");
@@ -183,19 +162,10 @@ export class MedicosService {
 
   async getObrasSociales(
     id_medico,
-    {
-      page = 1,
-      limit = 10,
-      sort = "id_medico_obra_social",
-      order = "asc",
-    } = {},
+    { page = 1, limit = 10, sort = "id_medico_obra_social", order = "asc" } = {},
   ) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_medico_obra_social",
-      "id_medico",
-      "id_obra_social",
-    ].includes(sort)
+    const allowedSort = ["id_medico_obra_social", "id_medico", "id_obra_social"].includes(sort)
       ? sort
       : "id_medico_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())

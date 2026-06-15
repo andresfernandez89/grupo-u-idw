@@ -67,24 +67,14 @@ export class TurnosService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    const existeTurnoMedico = await TurnoModel.existsByMedicoYFecha(
-      id_medico,
-      fecha_hora,
-    );
+    const existeTurnoMedico = await TurnoModel.existsByMedicoYFecha(id_medico, fecha_hora);
     if (existeTurnoMedico) {
-      throw new Error(
-        "El médico ya tiene un turno asignado en esa fecha y hora",
-      );
+      throw new Error("El médico ya tiene un turno asignado en esa fecha y hora");
     }
 
-    const existeTurnoPaciente = await TurnoModel.existsByPacienteYFecha(
-      id_paciente,
-      fecha_hora,
-    );
+    const existeTurnoPaciente = await TurnoModel.existsByPacienteYFecha(id_paciente, fecha_hora);
     if (existeTurnoPaciente) {
-      throw new Error(
-        "El paciente ya tiene un turno asignado en esa fecha y hora",
-      );
+      throw new Error("El paciente ya tiene un turno asignado en esa fecha y hora");
     }
 
     // ─── Cálculo de valor_total (regla de negocio) ───
@@ -129,15 +119,9 @@ export class TurnosService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    const existeTurnoMedico = await TurnoModel.existsByMedicoYFecha(
-      id_medico,
-      fecha_hora,
-      id,
-    );
+    const existeTurnoMedico = await TurnoModel.existsByMedicoYFecha(id_medico, fecha_hora, id);
     if (existeTurnoMedico) {
-      throw new Error(
-        "El médico ya tiene un turno asignado en esa fecha y hora",
-      );
+      throw new Error("El médico ya tiene un turno asignado en esa fecha y hora");
     }
 
     const existeTurnoPaciente = await TurnoModel.existsByPacienteYFecha(
@@ -146,9 +130,7 @@ export class TurnosService {
       id,
     );
     if (existeTurnoPaciente) {
-      throw new Error(
-        "El paciente ya tiene un turno asignado en esa fecha y hora",
-      );
+      throw new Error("El paciente ya tiene un turno asignado en esa fecha y hora");
     }
 
     // ─── Cálculo de valor_total (regla de negocio) ───

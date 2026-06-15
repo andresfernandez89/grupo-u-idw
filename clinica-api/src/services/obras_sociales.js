@@ -9,11 +9,7 @@ export class ObrasSocialesService {
     filters = {},
   } = {}) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_obra_social",
-      "nombre",
-      "porcentaje_descuento",
-    ].includes(sort)
+    const allowedSort = ["id_obra_social", "nombre", "porcentaje_descuento"].includes(sort)
       ? sort
       : "id_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -53,10 +49,7 @@ export class ObrasSocialesService {
     return affectedRows === 1;
   }
 
-  async update(
-    id,
-    { nombre, descripcion, porcentaje_descuento, es_particular },
-  ) {
+  async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing && existing.id_obra_social !== id) {
       throw new Error("El nombre de la obra social ya está registrado");
@@ -102,19 +95,10 @@ export class ObrasSocialesService {
 
   async getMedicos(
     id_obra_social,
-    {
-      page = 1,
-      limit = 10,
-      sort = "id_medico_obra_social",
-      order = "asc",
-    } = {},
+    { page = 1, limit = 10, sort = "id_medico_obra_social", order = "asc" } = {},
   ) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_medico_obra_social",
-      "id_medico",
-      "id_obra_social",
-    ].includes(sort)
+    const allowedSort = ["id_medico_obra_social", "id_medico", "id_obra_social"].includes(sort)
       ? sort
       : "id_medico_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())

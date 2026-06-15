@@ -12,9 +12,7 @@ export async function testConexion() {
     const con = await pool.getConnection();
     console.log("Conexión con base de datos OK");
 
-    const [resulst] = await con.query(
-      "SELECT NOW() AS hora_servidor, DATABASE() AS base_datos",
-    );
+    const [resulst] = await con.query("SELECT NOW() AS hora_servidor, DATABASE() AS base_datos");
     console.log("Datos de prueba");
     console.table(resulst);
 

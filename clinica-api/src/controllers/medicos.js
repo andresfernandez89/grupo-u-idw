@@ -11,8 +11,7 @@ export class MedicosController {
       const order = req.query.order;
 
       const filters = {};
-      if (req.query.id_especialidad)
-        filters.id_especialidad = req.query.id_especialidad;
+      if (req.query.id_especialidad) filters.id_especialidad = req.query.id_especialidad;
       if (req.query.matricula) filters.matricula = req.query.matricula;
       if (req.query.apellido) filters.apellido = req.query.apellido;
       if (req.query.nombres) filters.nombres = req.query.nombres;
@@ -65,10 +64,13 @@ export class MedicosController {
       if (req.query.apellido) filters.apellido = req.query.apellido;
       if (req.query.nombres) filters.nombres = req.query.nombres;
 
-      const resultado = await medicoService.findByEspecialidad(
-        id_especialidad,
-        { filters, sort, order, page, limit },
-      );
+      const resultado = await medicoService.findByEspecialidad(id_especialidad, {
+        filters,
+        sort,
+        order,
+        page,
+        limit,
+      });
 
       if (!resultado.data || resultado.data.length === 0) {
         return res.status(404).json({
@@ -166,9 +168,7 @@ export class MedicosController {
       res.json({
         success: true,
         message:
-          data.length === 0
-            ? "El médico solicitado no tiene obras sociales asignadas"
-            : undefined,
+          data.length === 0 ? "El médico solicitado no tiene obras sociales asignadas" : undefined,
         data,
         pagination: resultado.pagination,
       });
@@ -186,9 +186,7 @@ export class MedicosController {
       const deleted = await medicoService.delete(id);
 
       if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Médico no encontrado" });
+        return res.status(404).json({ success: false, message: "Médico no encontrado" });
       }
 
       if (!deleted) {

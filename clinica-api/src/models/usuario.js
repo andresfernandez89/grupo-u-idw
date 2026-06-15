@@ -113,27 +113,10 @@ const UsuarioModel = {
     return rows[0] ?? null;
   },
 
-  async create({
-    documento,
-    apellido,
-    nombres,
-    email,
-    contrasenia,
-    foto_path,
-    rol,
-  }) {
+  async create({ documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
     const [result] = await pool.query(
       "INSERT INTO usuarios (documento, apellido, nombres, email, contrasenia, foto_path, rol, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        documento,
-        apellido,
-        nombres,
-        email,
-        hashContrasenia(contrasenia),
-        foto_path || "",
-        rol,
-        1,
-      ],
+      [documento, apellido, nombres, email, hashContrasenia(contrasenia), foto_path || "", rol, 1],
     );
     return {
       id_usuario: result.insertId,
@@ -147,46 +130,22 @@ const UsuarioModel = {
     };
   },
 
-  async update(
-    id,
-    { documento, apellido, nombres, email, contrasenia, foto_path, rol },
-  ) {
+  async update(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
     const [result] = await pool.query(
       `UPDATE usuarios
        SET documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
        WHERE id_usuario = ? AND activo = 1`,
-      [
-        documento,
-        apellido,
-        nombres,
-        email,
-        hashContrasenia(contrasenia),
-        foto_path || "",
-        rol,
-        id,
-      ],
+      [documento, apellido, nombres, email, hashContrasenia(contrasenia), foto_path || "", rol, id],
     );
     return result.affectedRows;
   },
 
-  async reactivate(
-    id,
-    { documento, apellido, nombres, email, contrasenia, foto_path, rol },
-  ) {
+  async reactivate(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
     const [result] = await pool.query(
       `UPDATE usuarios
        SET activo = 1, documento = ?, apellido = ?, nombres = ?, email = ?, contrasenia = ?, foto_path = ?, rol = ?
        WHERE id_usuario = ?`,
-      [
-        documento,
-        apellido,
-        nombres,
-        email,
-        hashContrasenia(contrasenia),
-        foto_path || "",
-        rol,
-        id,
-      ],
+      [documento, apellido, nombres, email, hashContrasenia(contrasenia), foto_path || "", rol, id],
     );
     return result.affectedRows;
   },

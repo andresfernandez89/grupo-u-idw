@@ -1,7 +1,4 @@
-import {
-  especialidadesCreate,
-  especialidadesResponse,
-} from "../dtos/especialidades.dto.js";
+import { especialidadesCreate, especialidadesResponse } from "../dtos/especialidades.dto.js";
 
 import especialidadService from "../services/especialidades.js";
 
@@ -109,9 +106,7 @@ export class EspecialidadesController {
       const deleted = await especialidadService.delete(id);
 
       if (deleted === null) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Especialidad no encontrada" });
+        return res.status(404).json({ success: false, message: "Especialidad no encontrada" });
       }
 
       if (!deleted) {

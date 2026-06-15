@@ -1,11 +1,7 @@
 import { body, param, query } from "express-validator";
 
 const paginationValidators = [
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("page debe ser un entero >= 1")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("page debe ser un entero >= 1").toInt(),
 
   query("limit")
     .optional()
@@ -86,11 +82,7 @@ export const createObraSocialValidator = [
 ];
 
 export const updateObraSocialValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 
   body("nombre")
     .trim()
@@ -131,27 +123,15 @@ export const updateObraSocialValidator = [
 ];
 
 export const deleteObraSocialValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
 
 export const getMedicosObraSocialValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 
   ...paginationValidators,
 ];
 
 export const getByIdObraSocialValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];

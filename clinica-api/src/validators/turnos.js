@@ -1,11 +1,7 @@
 import { body, param, query } from "express-validator";
 
 const paginationValidators = [
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("page debe ser un entero >= 1")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("page debe ser un entero >= 1").toInt(),
 
   query("limit")
     .optional()
@@ -15,14 +11,7 @@ const paginationValidators = [
 
   query("sort")
     .optional()
-    .isIn([
-      "id_turno_reserva",
-      "fecha_hora",
-      "valor_total",
-      "atendido",
-      "id_medico",
-      "id_paciente",
-    ])
+    .isIn(["id_turno_reserva", "fecha_hora", "valor_total", "atendido", "id_medico", "id_paciente"])
     .withMessage(
       "sort debe ser id_turno_reserva, fecha_hora, valor_total, atendido, id_medico o id_paciente",
     ),
@@ -53,11 +42,7 @@ export const browseTurnoValidator = [
     .withMessage("id_obra_social debe ser un entero positivo")
     .toInt(),
 
-  query("atendido")
-    .optional()
-    .isIn(["0", "1"])
-    .withMessage("atendido debe ser 0 o 1")
-    .toInt(),
+  query("atendido").optional().isIn(["0", "1"]).withMessage("atendido debe ser 0 o 1").toInt(),
 
   query("fecha_desde")
     .optional()
@@ -75,11 +60,7 @@ export const browseTurnoValidator = [
 ];
 
 export const getByIdTurnoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
 
 export const createTurnoValidator = [
@@ -113,17 +94,11 @@ export const createTurnoValidator = [
     .bail()
     .trim()
     .isISO8601()
-    .withMessage(
-      "fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)",
-    ),
+    .withMessage("fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)"),
 ];
 
 export const updateTurnoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 
   body("id_medico")
     .notEmpty()
@@ -155,23 +130,13 @@ export const updateTurnoValidator = [
     .bail()
     .trim()
     .isISO8601()
-    .withMessage(
-      "fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)",
-    ),
+    .withMessage("fecha_hora debe tener un formato de fecha y hora válido (ISO 8601)"),
 ];
 
 export const deleteTurnoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
 
 export const marcarAtendidoValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
