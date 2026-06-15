@@ -91,6 +91,42 @@ export class MedicosObrasSocialesService {
     };
   }
 
+  async update(id_medico_viejo, id_obra_social_vieja, { id_medico, id_obra_social }) {
+    const oldRelation = await MedicoObraSocialModel.findByMedicoObraSocial(
+      id_medico_viejo,
+      id_obra_social_vieja,
+    );
+    if (!oldRelation) {
+      throw new NotFoundError("No se encontró la relación a reemplazar");
+    }
+
+    const medico = await MedicoModel.findById(id_medico);
+    if (!medico) throw new NotFoundError("El nuevo médico no existe o no está activo");
+
+    const obraSocial = await ObraSocialModel.findById(id_obra_social);
+    if (!obraSocial) throw new NotFoundError("La nueva obra social no existe o no está activa");
+
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(id_medico, id_obra_social);
+    if (existing?.activo === 1) {
+      throw new DuplicateError("El médico ya tiene asignada esa obra social");
+    }
+
+    return await withTransaction(async (conn) => {
+      await MedicoObraSocialModel.deleteByMedicoObraSocial(id_medico_viejo, id_obra_social_vieja, conn);
+
+      if (!existing) {
+        return await MedicoObraSocialModel.create({ id_medico, id_obra_social }, conn);
+      }
+
+      await MedicoObraSocialModel.reactivate(conn, { id_medico, id_obra_social });
+      return {
+        id_medico_obra_social: existing.id_medico_obra_social,
+        id_medico,
+        id_obra_social,
+      };
+    });
+  }
+
   async delete(id_medico, id_obra_social) {
     const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
       id_medico,

@@ -77,21 +77,22 @@ export class MedicosObrasSocialesController {
 
   async update(req, res) {
     try {
-      const { id } = req.params;
+      const { id_medico, id_obra_social } = req.params;
       const datos = medicoObraSocialCreate(req.body);
-      const actualizado = await medicosObrasSocialesService.update(id, datos);
+      const actualizado = await medicosObrasSocialesService.update(
+        id_medico,
+        id_obra_social,
+        datos,
+      );
 
-      if (!actualizado) {
-        return res.status(404).json({
-          success: false,
-          message: "Relación médico-obra social no encontrada",
-        });
-      }
+      const creado = await medicosObrasSocialesService.readById(
+        actualizado.id_medico_obra_social,
+      );
 
       return res.status(200).json({
         success: true,
         message: "Relación médico-obra social modificada exitosamente",
-        data: medicoObraSocialResponse(actualizado),
+        data: medicoObraSocialResponse(creado),
       });
     } catch (err) {
       if (err instanceof DuplicateError) {
