@@ -137,13 +137,29 @@ const TurnoModel = {
     return rows[0].total;
   },
 
-  async existsByMedicoYFecha(id_medico, fecha_hora) {
-    const [rows] = await pool.query(
-      `SELECT 1 FROM turnos_reservas
-       WHERE id_medico = ? AND fecha_hora = ? AND activo = 1
-       LIMIT 1`,
-      [id_medico, fecha_hora],
-    );
+  async existsByMedicoYFecha(id_medico, fecha_hora, excludeId = null) {
+    let sql = `SELECT 1 FROM turnos_reservas
+       WHERE id_medico = ? AND fecha_hora = ? AND activo = 1`;
+    const params = [id_medico, fecha_hora];
+    if (excludeId) {
+      sql += " AND id_turno_reserva != ?";
+      params.push(excludeId);
+    }
+    sql += " LIMIT 1";
+    const [rows] = await pool.query(sql, params);
+    return rows.length > 0;
+  },
+
+  async existsByPacienteYFecha(id_paciente, fecha_hora, excludeId = null) {
+    let sql = `SELECT 1 FROM turnos_reservas
+       WHERE id_paciente = ? AND fecha_hora = ? AND activo = 1`;
+    const params = [id_paciente, fecha_hora];
+    if (excludeId) {
+      sql += " AND id_turno_reserva != ?";
+      params.push(excludeId);
+    }
+    sql += " LIMIT 1";
+    const [rows] = await pool.query(sql, params);
     return rows.length > 0;
   },
 

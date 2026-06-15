@@ -1,9 +1,14 @@
+function normalizeFechaHora(fechaHora) {
+  if (!fechaHora) return fechaHora;
+  return fechaHora.trim().replace(/\.\d{3}Z$/, "Z");
+}
+
 export function turnoCreate(body) {
   return {
     id_medico: parseInt(body?.id_medico, 10),
     id_paciente: parseInt(body?.id_paciente, 10),
     id_obra_social: parseInt(body?.id_obra_social, 10),
-    fecha_hora: body?.fecha_hora?.trim(),
+    fecha_hora: normalizeFechaHora(body?.fecha_hora),
   };
 }
 

@@ -67,13 +67,23 @@ export class TurnosService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    const existeTurno = await TurnoModel.existsByMedicoYFecha(
+    const existeTurnoMedico = await TurnoModel.existsByMedicoYFecha(
       id_medico,
       fecha_hora,
     );
-    if (existeTurno) {
+    if (existeTurnoMedico) {
       throw new Error(
         "El médico ya tiene un turno asignado en esa fecha y hora",
+      );
+    }
+
+    const existeTurnoPaciente = await TurnoModel.existsByPacienteYFecha(
+      id_paciente,
+      fecha_hora,
+    );
+    if (existeTurnoPaciente) {
+      throw new Error(
+        "El paciente ya tiene un turno asignado en esa fecha y hora",
       );
     }
 
@@ -83,7 +93,7 @@ export class TurnosService {
     if (obraSocial.es_particular === 1) {
       valor_total = valorConsulta;
     } else {
-      const descuento = parseFloat(obraSocial.porcentaje_descuento);
+      const descuento = parseFloat(obraSocial.porcentaje_descuento) / 100;
       valor_total = valorConsulta - descuento * valorConsulta;
     }
 
@@ -119,19 +129,26 @@ export class TurnosService {
       throw new Error("La obra social indicada no existe o no está activa");
     }
 
-    if (
-      id_medico !== existing.id_medico ||
-      fecha_hora !== existing.fecha_hora
-    ) {
-      const existeTurno = await TurnoModel.existsByMedicoYFecha(
-        id_medico,
-        fecha_hora,
+    const existeTurnoMedico = await TurnoModel.existsByMedicoYFecha(
+      id_medico,
+      fecha_hora,
+      id,
+    );
+    if (existeTurnoMedico) {
+      throw new Error(
+        "El médico ya tiene un turno asignado en esa fecha y hora",
       );
-      if (existeTurno) {
-        throw new Error(
-          "El médico ya tiene un turno asignado en esa fecha y hora",
-        );
-      }
+    }
+
+    const existeTurnoPaciente = await TurnoModel.existsByPacienteYFecha(
+      id_paciente,
+      fecha_hora,
+      id,
+    );
+    if (existeTurnoPaciente) {
+      throw new Error(
+        "El paciente ya tiene un turno asignado en esa fecha y hora",
+      );
     }
 
     // ─── Cálculo de valor_total (regla de negocio) ───
@@ -140,7 +157,7 @@ export class TurnosService {
     if (obraSocial.es_particular === 1) {
       valor_total = valorConsulta;
     } else {
-      const descuento = parseFloat(obraSocial.porcentaje_descuento);
+      const descuento = parseFloat(obraSocial.porcentaje_descuento) / 100;
       valor_total = valorConsulta - descuento * valorConsulta;
     }
 
