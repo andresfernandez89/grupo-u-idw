@@ -72,10 +72,7 @@ export class TurnosService {
       throw new ForeignKeyError("La obra social indicada no existe o no está activa");
     }
 
-    const existeTurno = await TurnoModel.existsByMedicoYFecha(
-      id_medico,
-      fecha_hora,
-    );
+    const existeTurno = await TurnoModel.existsByMedicoYFecha(id_medico, fecha_hora);
     if (existeTurno) {
       throw new DuplicateError("El médico ya tiene un turno asignado en esa fecha y hora");
     }
@@ -122,14 +119,8 @@ export class TurnosService {
       throw new ForeignKeyError("La obra social indicada no existe o no está activa");
     }
 
-    if (
-      id_medico !== existing.id_medico ||
-      fecha_hora !== existing.fecha_hora
-    ) {
-      const existeTurno = await TurnoModel.existsByMedicoYFecha(
-        id_medico,
-        fecha_hora,
-      );
+    if (id_medico !== existing.id_medico || fecha_hora !== existing.fecha_hora) {
+      const existeTurno = await TurnoModel.existsByMedicoYFecha(id_medico, fecha_hora);
       if (existeTurno) {
         throw new DuplicateError("El médico ya tiene un turno asignado en esa fecha y hora");
       }

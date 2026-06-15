@@ -86,10 +86,7 @@ const MedicoModel = {
     return rows[0] ?? null;
   },
 
-  async findByEspecialidad(
-    id_especialidad,
-    { filters, limit, offset, sort, order },
-  ) {
+  async findByEspecialidad(id_especialidad, { filters, limit, offset, sort, order }) {
     let sql = `SELECT m.id_medico, m.id_usuario, m.id_especialidad, m.matricula,
                         m.descripcion, m.valor_consulta,
                         e.nombre AS especialidad,
@@ -174,13 +171,7 @@ const MedicoModel = {
     return rows[0] ?? null;
   },
 
-  async create({
-    id_usuario,
-    id_especialidad,
-    matricula,
-    descripcion,
-    valor_consulta,
-  }) {
+  async create({ id_usuario, id_especialidad, matricula, descripcion, valor_consulta }) {
     const [result] = await pool.query(
       "INSERT INTO medicos (id_usuario, id_especialidad, matricula, descripcion, valor_consulta) VALUES (?, ?, ?, ?, ?)",
       [id_usuario, id_especialidad, matricula, descripcion, valor_consulta],
@@ -195,10 +186,7 @@ const MedicoModel = {
     };
   },
 
-  async update(
-    id,
-    { id_usuario, id_especialidad, matricula, descripcion, valor_consulta },
-  ) {
+  async update(id, { id_usuario, id_especialidad, matricula, descripcion, valor_consulta }) {
     // Guarda defensiva: solo actualiza si el usuario asociado está activo,
     // para no mutar un médico soft-deleted.
     const [result] = await pool.query(
@@ -213,20 +201,11 @@ const MedicoModel = {
 
   async reactivate(
     conn,
-    {
-      id_medico,
-      id_usuario,
-      id_especialidad,
-      matricula,
-      descripcion,
-      valor_consulta,
-    },
+    { id_medico, id_usuario, id_especialidad, matricula, descripcion, valor_consulta },
   ) {
     // Reactiva el usuario ya asociado a esa matrícula (id_usuario NO cambia, ADR-001)
     // y sobrescribe los campos del médico. Debe correr dentro de una transacción.
-    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [
-      id_usuario,
-    ]);
+    await conn.query("UPDATE usuarios SET activo = 1 WHERE id_usuario = ?", [id_usuario]);
     await conn.query(
       `UPDATE medicos
        SET id_especialidad = ?, matricula = ?, descripcion = ?, valor_consulta = ?

@@ -50,11 +50,7 @@ export const browseUsuariosValidator = [
     .withMessage("rol debe ser 1 (médico), 2 (paciente) o 3 (admin)")
     .toInt(),
 
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("page debe ser un entero >= 1")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("page debe ser un entero >= 1").toInt(),
 
   query("limit")
     .optional()
@@ -65,9 +61,7 @@ export const browseUsuariosValidator = [
   query("sort")
     .optional()
     .isIn(["id_usuario", "apellido", "nombres", "email", "documento", "rol"])
-    .withMessage(
-      "sort debe ser id_usuario, apellido, nombres, email, documento o rol",
-    ),
+    .withMessage("sort debe ser id_usuario, apellido, nombres, email, documento o rol"),
 
   query("order")
     .optional()
@@ -77,11 +71,7 @@ export const browseUsuariosValidator = [
 ];
 
 export const getByIdUsuarioValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];
 
 export const createUsuarioValidator = [
@@ -124,24 +114,13 @@ export const createUsuarioValidator = [
     .withMessage("Debe ser un email válido")
     .normalizeEmail(),
 
-  body("contrasenia")
-    .trim()
-    .notEmpty()
-    .withMessage("La contraseña es obligatoria"),
+  body("contrasenia").trim().notEmpty().withMessage("La contraseña es obligatoria"),
 
-  body("foto_path")
-    .optional()
-    .trim()
-    .isString()
-    .withMessage("La foto_path debe ser un texto"),
+  body("foto_path").optional().trim().isString().withMessage("La foto_path debe ser un texto"),
 ];
 
 export const updateUsuarioValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .toInt()
-    .withMessage("El id debe ser un entero positivo"),
+  param("id").trim().isInt({ min: 1 }).toInt().withMessage("El id debe ser un entero positivo"),
 
   body("documento")
     .trim()
@@ -182,16 +161,9 @@ export const updateUsuarioValidator = [
     .withMessage("Debe ser un email válido")
     .normalizeEmail(),
 
-  body("contrasenia")
-    .trim()
-    .notEmpty()
-    .withMessage("La contraseña es obligatoria"),
+  body("contrasenia").trim().notEmpty().withMessage("La contraseña es obligatoria"),
 
-  body("foto_path")
-    .optional()
-    .trim()
-    .isString()
-    .withMessage("La foto_path debe ser un texto"),
+  body("foto_path").optional().trim().isString().withMessage("La foto_path debe ser un texto"),
 
   body("rol")
     .trim()
@@ -203,9 +175,5 @@ export const updateUsuarioValidator = [
 ];
 
 export const deleteUsuarioValidator = [
-  param("id")
-    .trim()
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un entero positivo")
-    .toInt(),
+  param("id").trim().isInt({ min: 1 }).withMessage("El id debe ser un entero positivo").toInt(),
 ];

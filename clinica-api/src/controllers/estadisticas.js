@@ -120,8 +120,7 @@ export class EstadisticasController {
         filas,
       });
     } catch (err) {
-      if (!res.headersSent)
-        res.status(500).json({ success: false, message: err.message });
+      if (!res.headersSent) res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -179,8 +178,7 @@ export class EstadisticasController {
         filas,
       });
     } catch (err) {
-      if (!res.headersSent)
-        res.status(500).json({ success: false, message: err.message });
+      if (!res.headersSent) res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -243,8 +241,7 @@ export class EstadisticasController {
         filas,
       });
     } catch (err) {
-      if (!res.headersSent)
-        res.status(500).json({ success: false, message: err.message });
+      if (!res.headersSent) res.status(500).json({ success: false, message: err.message });
     }
   }
 
@@ -288,8 +285,7 @@ export class EstadisticasController {
         filas,
       });
     } catch (err) {
-      if (!res.headersSent)
-        res.status(500).json({ success: false, message: err.message });
+      if (!res.headersSent) res.status(500).json({ success: false, message: err.message });
     }
   }
 }

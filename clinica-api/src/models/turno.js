@@ -147,13 +147,7 @@ const TurnoModel = {
     return rows.length > 0;
   },
 
-  async create({
-    id_medico,
-    id_paciente,
-    id_obra_social,
-    fecha_hora,
-    valor_total,
-  }) {
+  async create({ id_medico, id_paciente, id_obra_social, fecha_hora, valor_total }) {
     const [result] = await pool.query(
       `INSERT INTO turnos_reservas (id_medico, id_paciente, id_obra_social, fecha_hora, valor_total, atentido, activo)
        VALUES (?, ?, ?, ?, ?, 0, 1)`,
@@ -169,10 +163,7 @@ const TurnoModel = {
     };
   },
 
-  async update(
-    id,
-    { id_medico, id_paciente, id_obra_social, fecha_hora, valor_total },
-  ) {
+  async update(id, { id_medico, id_paciente, id_obra_social, fecha_hora, valor_total }) {
     const [result] = await pool.query(
       `UPDATE turnos_reservas
        SET id_medico = ?, id_paciente = ?, id_obra_social = ?, fecha_hora = ?, valor_total = ?

@@ -13,11 +13,7 @@ export class MedicosObrasSocialesService {
     filters = {},
   } = {}) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_medico_obra_social",
-      "id_medico",
-      "id_obra_social",
-    ].includes(sort)
+    const allowedSort = ["id_medico_obra_social", "id_medico", "id_obra_social"].includes(sort)
       ? sort
       : "id_medico_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -48,9 +44,7 @@ export class MedicosObrasSocialesService {
   async readById(id) {
     const medicoObraSocial = await MedicoObraSocialModel.findById(id);
     if (!medicoObraSocial) {
-      throw new NotFoundError(
-        "No se encontró la relación médico-obra social con el id solicitado",
-      );
+      throw new NotFoundError("No se encontró la relación médico-obra social con el id solicitado");
     }
     return medicoObraSocial;
   }
@@ -66,11 +60,10 @@ export class MedicosObrasSocialesService {
       throw new NotFoundError("La obra social indicada no existe o no está activa");
     }
 
-    const existing =
-      await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
-        id_medico,
-        id_obra_social,
-      );
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
+      id_medico,
+      id_obra_social,
+    );
 
     if (!existing) {
       return await MedicoObraSocialModel.create({ id_medico, id_obra_social });
@@ -106,13 +99,20 @@ export class MedicosObrasSocialesService {
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) throw new NotFoundError("La nueva obra social no existe o no está activa");
 
-    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(id_medico, id_obra_social);
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocialSinActivo(
+      id_medico,
+      id_obra_social,
+    );
     if (existing?.activo === 1) {
       throw new DuplicateError("El médico ya tiene asignada esa obra social");
     }
 
     return await withTransaction(async (conn) => {
-      await MedicoObraSocialModel.deleteByMedicoObraSocial(id_medico_viejo, id_obra_social_vieja, conn);
+      await MedicoObraSocialModel.deleteByMedicoObraSocial(
+        id_medico_viejo,
+        id_obra_social_vieja,
+        conn,
+      );
 
       if (!existing) {
         return await MedicoObraSocialModel.create({ id_medico, id_obra_social }, conn);
@@ -128,10 +128,7 @@ export class MedicosObrasSocialesService {
   }
 
   async delete(id_medico, id_obra_social) {
-    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(
-      id_medico,
-      id_obra_social,
-    );
+    const existing = await MedicoObraSocialModel.findByMedicoObraSocial(id_medico, id_obra_social);
     if (!existing) return null;
 
     const affectedRows = await MedicoObraSocialModel.deleteByMedicoObraSocial(

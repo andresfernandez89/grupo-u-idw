@@ -111,7 +111,7 @@ export class UsuariosController {
 
       return res.status(204).send();
     } catch (error) {
-      if (error instanceof NotFoundError) { 
+      if (error instanceof NotFoundError) {
         return res.status(404).json({ success: false, message: error.message });
       }
       return res.status(500).json({

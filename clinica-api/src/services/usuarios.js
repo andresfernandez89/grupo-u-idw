@@ -2,22 +2,11 @@ import { DuplicateError } from "../utils/errors.js";
 import UsuarioModel from "../models/usuario.js";
 
 export class UsuariosService {
-  async browse({
-    filters = {},
-    page = 1,
-    limit = 10,
-    sort = "id_usuario",
-    order = "asc",
-  }) {
+  async browse({ filters = {}, page = 1, limit = 10, sort = "id_usuario", order = "asc" }) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_usuario",
-      "apellido",
-      "nombres",
-      "email",
-      "documento",
-      "rol",
-    ].includes(sort)
+    const allowedSort = ["id_usuario", "apellido", "nombres", "email", "documento", "rol"].includes(
+      sort,
+    )
       ? sort
       : "id_usuario";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -53,14 +42,7 @@ export class UsuariosService {
     return usuario;
   }
 
-  async create({
-    documento,
-    apellido,
-    nombres,
-    email,
-    contrasenia,
-    foto_path,
-  }) {
+  async create({ documento, apellido, nombres, email, contrasenia, foto_path }) {
     const ROL_PACIENTE = 2;
 
     const emailExistente = await UsuarioModel.findByEmail(email);
@@ -100,10 +82,7 @@ export class UsuariosService {
     });
   }
 
-  async update(
-    id,
-    { documento, apellido, nombres, email, contrasenia, foto_path, rol },
-  ) {
+  async update(id, { documento, apellido, nombres, email, contrasenia, foto_path, rol }) {
     const emailExistente = await UsuarioModel.findByEmail(email);
     if (emailExistente && emailExistente.id_usuario !== id) {
       throw new DuplicateError("El email ya está registrado por otro usuario");

@@ -1,11 +1,7 @@
 import { body, param, query } from "express-validator";
 
 const paginationValidators = [
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("page debe ser un entero >= 1")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("page debe ser un entero >= 1").toInt(),
 
   query("limit")
     .optional()
@@ -16,9 +12,7 @@ const paginationValidators = [
   query("sort")
     .optional()
     .isIn(["id_medico_obra_social", "id_medico", "id_obra_social"])
-    .withMessage(
-      "sort debe ser id_medico_obra_social, id_medico o id_obra_social",
-    ),
+    .withMessage("sort debe ser id_medico_obra_social, id_medico o id_obra_social"),
 
   query("order")
     .optional()

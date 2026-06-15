@@ -10,11 +10,7 @@ export class ObrasSocialesService {
     filters = {},
   } = {}) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_obra_social",
-      "nombre",
-      "porcentaje_descuento",
-    ].includes(sort)
+    const allowedSort = ["id_obra_social", "nombre", "porcentaje_descuento"].includes(sort)
       ? sort
       : "id_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -60,15 +56,10 @@ export class ObrasSocialesService {
     return affectedRows === 1;
   }
 
-  async update(
-    id,
-    { nombre, descripcion, porcentaje_descuento, es_particular },
-  ) {
+  async update(id, { nombre, descripcion, porcentaje_descuento, es_particular }) {
     const existing = await ObraSocialModel.findByNombre(nombre);
     if (existing && existing.id_obra_social !== id) {
-      throw new DuplicateError(
-        "El nombre de la obra social ya está registrado",
-      );
+      throw new DuplicateError("El nombre de la obra social ya está registrado");
     }
 
     const affectedRows = await ObraSocialModel.update(id, {
@@ -98,9 +89,7 @@ export class ObrasSocialesService {
     }
 
     if (existing.activo === 1) {
-      throw new DuplicateError(
-        "El nombre de la obra social ya está registrado",
-      );
+      throw new DuplicateError("El nombre de la obra social ya está registrado");
     }
 
     // existing.activo === 0 → reactivar (ADR-001 Opción C)
@@ -115,19 +104,10 @@ export class ObrasSocialesService {
 
   async getMedicos(
     id_obra_social,
-    {
-      page = 1,
-      limit = 10,
-      sort = "id_medico_obra_social",
-      order = "asc",
-    } = {},
+    { page = 1, limit = 10, sort = "id_medico_obra_social", order = "asc" } = {},
   ) {
     const offset = (page - 1) * limit;
-    const allowedSort = [
-      "id_medico_obra_social",
-      "id_medico",
-      "id_obra_social",
-    ].includes(sort)
+    const allowedSort = ["id_medico_obra_social", "id_medico", "id_obra_social"].includes(sort)
       ? sort
       : "id_medico_obra_social";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
@@ -136,9 +116,7 @@ export class ObrasSocialesService {
 
     const obraSocial = await ObraSocialModel.findById(id_obra_social);
     if (!obraSocial) {
-      throw new NotFoundError(
-        "La obra social indicada no existe o no está activa",
-      );
+      throw new NotFoundError("La obra social indicada no existe o no está activa");
     }
 
     const rows = await ObraSocialModel.findMedicos(id_obra_social, {

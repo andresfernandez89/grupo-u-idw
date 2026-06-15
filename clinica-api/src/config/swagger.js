@@ -1,8 +1,7 @@
 import swaggerJsdoc from "swagger-jsdoc";
 
 const port = process.env.PORT || 3000;
-const swaggerServerUrl =
-  process.env.SWAGGER_SERVER_URL || `http://localhost:${port}/api/v1`;
+const swaggerServerUrl = process.env.SWAGGER_SERVER_URL || `http://localhost:${port}/api/v1`;
 
 const options = {
   definition: {
@@ -93,12 +92,7 @@ const options = {
         },
         MedicoCreate: {
           type: "object",
-          required: [
-            "id_usuario",
-            "id_especialidad",
-            "matricula",
-            "valor_consulta",
-          ],
+          required: ["id_usuario", "id_especialidad", "matricula", "valor_consulta"],
           properties: {
             id_usuario: {
               type: "integer",
@@ -182,8 +176,7 @@ const options = {
             id_obra_social: {
               type: "integer",
               nullable: true,
-              description:
-                "ID de la obra social. Enviar null para paciente particular",
+              description: "ID de la obra social. Enviar null para paciente particular",
               minimum: 1,
             },
           },
@@ -333,12 +326,7 @@ const options = {
         },
         TurnoCreate: {
           type: "object",
-          required: [
-            "id_medico",
-            "id_paciente",
-            "id_obra_social",
-            "fecha_hora",
-          ],
+          required: ["id_medico", "id_paciente", "id_obra_social", "fecha_hora"],
           properties: {
             id_medico: {
               type: "integer",

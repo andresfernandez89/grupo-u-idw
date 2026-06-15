@@ -3,17 +3,9 @@ import { clearCache } from "../config/cache.js";
 import EspecialidadModel from "../models/especialidad.js";
 
 export class EspecialidadesService {
-  async browse({
-    filters = {},
-    page = 1,
-    limit = 10,
-    sort = "id_especialidad",
-    order = "asc",
-  }) {
+  async browse({ filters = {}, page = 1, limit = 10, sort = "id_especialidad", order = "asc" }) {
     const offset = (page - 1) * limit;
-    const allowedSort = ["id_especialidad", "nombre"].includes(sort)
-      ? sort
-      : "id_especialidad";
+    const allowedSort = ["id_especialidad", "nombre"].includes(sort) ? sort : "id_especialidad";
     const allowedOrder = ["asc", "desc"].includes(order?.toLowerCase())
       ? order.toLowerCase()
       : "asc";
@@ -57,9 +49,7 @@ export class EspecialidadesService {
     }
 
     if (existing.activo === 1) {
-      throw new DuplicateError(
-        "El nombre de la especialidad ya está registrado",
-      );
+      throw new DuplicateError("El nombre de la especialidad ya está registrado");
     }
 
     // existing.activo === 0 → reactivar (ADR-001 Opción C)
@@ -76,9 +66,7 @@ export class EspecialidadesService {
 
     const existing = await EspecialidadModel.findByNombre(nombre);
     if (existing && existing.id_especialidad !== id) {
-      throw new DuplicateError(
-        "El nombre de la especialidad ya está registrado",
-      );
+      throw new DuplicateError("El nombre de la especialidad ya está registrado");
     }
 
     const affectedRows = await EspecialidadModel.update(id, nombre);

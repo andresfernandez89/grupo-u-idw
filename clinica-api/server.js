@@ -13,9 +13,7 @@ function validateEnv() {
   if (!process.env.CORS_ORIGIN) missing.push("CORS_ORIGIN");
 
   if (missing.length > 0) {
-    throw new Error(
-      `Faltan variables de entorno obligatorias: ${missing.join(", ")}`,
-    );
+    throw new Error(`Faltan variables de entorno obligatorias: ${missing.join(", ")}`);
   }
 }
 

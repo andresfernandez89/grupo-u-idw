@@ -11,10 +11,7 @@ export const localStrategy = new LocalStrategy(
   },
   async (email, contrasenia, done) => {
     try {
-      const usuario = await UsuarioModel.findByEmailYPassword(
-        email,
-        contrasenia,
-      );
+      const usuario = await UsuarioModel.findByEmailYPassword(email, contrasenia);
 
       if (!usuario) {
         return done(null, false, {

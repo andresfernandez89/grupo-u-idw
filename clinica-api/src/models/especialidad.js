@@ -2,8 +2,7 @@ import { pool } from "../config/db.js";
 
 const EspecialidadModel = {
   async findEspecialidades({ filters, limit, offset, sort, order }) {
-    let sql =
-      "SELECT id_especialidad, nombre, activo FROM especialidades WHERE activo = 1";
+    let sql = "SELECT id_especialidad, nombre, activo FROM especialidades WHERE activo = 1";
     const params = [];
 
     if (filters.nombre) {
@@ -57,10 +56,10 @@ const EspecialidadModel = {
   },
 
   async create(nombre) {
-    const [result] = await pool.query(
-      "INSERT INTO especialidades (nombre, activo) VALUES (?, ?)",
-      [nombre, 1],
-    );
+    const [result] = await pool.query("INSERT INTO especialidades (nombre, activo) VALUES (?, ?)", [
+      nombre,
+      1,
+    ]);
     return { id_especialidad: result.insertId, nombre, activo: 1 };
   },
 
