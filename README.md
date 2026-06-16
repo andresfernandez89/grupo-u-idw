@@ -26,10 +26,13 @@ cd clinica-api
 # 2. Instalar dependencias
 npm install
 
-# 3. Copiar el archivo de variables de entorno y completarlo
+# 3. Ejecutar los stored procedures; al utilizar este comando, te va a solicitar que ingreses la password de tu DB
+mysql -u {tu_DB_USER} -p {tu_DB_NAME} < database/stored_procedures.sql
+
+# 4. Copiar el archivo de variables de entorno y completarlo
 cp .env.example .env
 
-# 4. Iniciar el servidor en desarrollo (recarga automática con --watch)
+# 5. Iniciar el servidor en desarrollo (recarga automática con --watch)
 npm run dev
 
 # O iniciar en modo producción
@@ -66,6 +69,7 @@ CORS_ORIGIN=http://localhost:3000
 # JWT
 JWT_SECRET=una_clave_secreta
 ```
+
 ---
 
 ## Estructura del proyecto
@@ -208,17 +212,17 @@ Allí podés ver todos los endpoints, schemas, parámetros y probar los requests
 
 ## Endpoints principales
 
-| Recurso | Ruta base |
-|---------|-----------|
-| Autenticación | `/api/v1/auth` |
-| Especialidades | `/api/v1/especialidades` |
-| Médicos | `/api/v1/medicos` |
-| Obras sociales | `/api/v1/obras-sociales` |
+| Recurso                | Ruta base                        |
+| ---------------------- | -------------------------------- |
+| Autenticación          | `/api/v1/auth`                   |
+| Especialidades         | `/api/v1/especialidades`         |
+| Médicos                | `/api/v1/medicos`                |
+| Obras sociales         | `/api/v1/obras-sociales`         |
 | Médicos-Obras sociales | `/api/v1/medicos-obras-sociales` |
-| Pacientes | `/api/v1/pacientes` |
-| Turnos | `/api/v1/turnos` |
-| Estadísticas | `/api/v1/estadisticas` |
-| Usuarios | `/api/v1/usuarios` |
+| Pacientes              | `/api/v1/pacientes`              |
+| Turnos                 | `/api/v1/turnos`                 |
+| Estadísticas           | `/api/v1/estadisticas`           |
+| Usuarios               | `/api/v1/usuarios`               |
 
 ### Exportación de estadísticas a PDF
 
@@ -233,8 +237,8 @@ Los siguientes endpoints devuelven un archivo PDF descargable:
 
 ## Roles de usuario
 
-| Rol | Valor numérico |
-|-----|---------------|
-| Médico | `1` |
-| Paciente | `2` |
-| Administrador | `3` |
+| Rol           | Valor numérico |
+| ------------- | -------------- |
+| Médico        | `1`            |
+| Paciente      | `2`            |
+| Administrador | `3`            |
