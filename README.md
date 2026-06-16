@@ -26,8 +26,21 @@ cd clinica-api
 # 2. Instalar dependencias
 npm install
 
-# 3. Ejecutar los stored procedures; al utilizar este comando, te va a solicitar que ingreses la password de tu DB
+# 3. Ejecutar los stored procedures
+#
+# Los stored procedures se encuentran en database/stored_procedures.sql.
+# Podés cargarlos de cualquiera de estas dos formas:
+#
+# Opción A — por consola con el cliente de MySQL:
 mysql -u {tu_DB_USER} -p {tu_DB_NAME} < database/stored_procedures.sql
+#
+#   Al ejecutar este comando, el cliente te pedirá la contraseña de tu
+#   usuario de base de datos.
+#
+# Opción B — mediante un administrador de base de datos:
+#   Abrí database/stored_procedures.sql en tu herramienta preferida
+#   (phpMyAdmin, MySQL Workbench, DBeaver, TablePlus, etc.) y ejecutalo
+#   directamente sobre la base de datos correspondiente.
 
 # 4. Copiar el archivo de variables de entorno y completarlo
 cp .env.example .env
